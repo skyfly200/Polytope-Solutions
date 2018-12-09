@@ -1,8 +1,6 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+<template lang="pug">
+  .home
+    .brand-name Polytope Solutions
 </template>
 
 <script lang="ts">
@@ -16,3 +14,9 @@ import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 })
 export default class Home extends Vue {}
 </script>
+
+<style lang="sass">
+.brand-name
+  font-family: "Sirin Stencil", cursive
+  font-size: 4em
+</style>
