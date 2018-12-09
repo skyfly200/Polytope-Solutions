@@ -1,24 +1,25 @@
-<template>
-  <div id="app">
-    <router-view/>
-  </div>
+<template lang="pug">
+#app
+  router-view
+  footer#footer &copy;Copyright Skyler Fly-Wilson 2018
 </template>
 
 <style lang="sass">
+html, body
+  height: 100%
+
+body
+  background-color: black
+
 #app
   font-family: 'Rajdhani', Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: white
-  background-color: black
-  min-height: 100vh
-
-#nav
-  padding: 30px
-  a
-    font-weight: bold
-    color: #2c3e50
-    &.router-link-exact-active
-      color: #42b983
+  height: 100%
+  #footer
+    width: 100%
+    text-align: center
+    font-size: 1rem
 </style>
