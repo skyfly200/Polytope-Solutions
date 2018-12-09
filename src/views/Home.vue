@@ -28,9 +28,9 @@ export default class Home extends Vue {}
     flex-direction: column
     align-items: center
     justify-content: center
-    .icon img
-      filter: invert(100%)
-      width: 30%
+    .logo img
+        filter: invert(100%)
+        width: 40%
     .brand-name
       font-family: "Sirin Stencil", cursive
       font-size: 7rem
