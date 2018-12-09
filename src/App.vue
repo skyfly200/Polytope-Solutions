@@ -5,9 +5,6 @@
 </template>
 
 <style lang="sass">
-html, body
-  height: 100%
-
 body
   background-color: black
 
