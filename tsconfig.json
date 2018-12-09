@@ -6,6 +6,7 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "strictFunctionTypes": false,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -33,9 +34,10 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "node_modules/vuetify/types"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules/^(?!vuetify/types).*$"
   ]
 }
