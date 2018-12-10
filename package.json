@@ -43,6 +43,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "typescript": "^3.0.0",
+    "vue-cli-plugin-netlify-lambda": "^0.1.0",
     "vue-cli-plugin-pug": "^1.0.7",
     "vue-cli-plugin-vuetify": "^0.4.6",
     "vue-template-compiler": "^2.5.17",
