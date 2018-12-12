@@ -7,23 +7,38 @@ v-container(fluid).home
     .slogan Gain Higher Perspectives
   v-layout.content(v-if="true")
     v-flex(xs10 offset-xs1)
-      .blurb Lost in a sea of information?
-      .blurb Unable to see the undercurrents?
-      .blurb We help you take a step back.
-      .blurb To look at your problems from new angles.
-      .blurb Custom data analysis and visualization.
-      .blurb Specialized to your unique problems.
-      .blurb Solving your puzzles is our specialty.
+      .blurb
+        i.fas.fa-globe.fa-5x.fa-rotate-270
+        span  We help you take a step back.
+      .blurb
+        i.fas.fa-cube.fa-5x
+        span  Look at your problems from new angles.
+      .blurb
+        i.fas.fa-compass.fa-5x
+        span  To explore novel solutions.
+      .blurb
+        i.fas.fa-code.fa-5x
+        span  Using the latest technology.
+      .blurb
+        i.fas.fa-drafting-compass.fa-5x
+        span  Specialy drafted to your unique problems.
+      .blurb
+        i.fas.fa-crosshairs.fa-5x
+        span  Helping you refine and achieve your visions.
+      .blurb
+        i.fas.fa-puzzle-piece.fa-5x
+        span Solving your puzzles is our specialty.
     v-flex(xs10 offset-xs1)
-      v-card.call-to-action
-      .action-header Let us help you find solutions today!
-      v-form
-        v-text-field(label="Your Name" required)
-        v-text-field(label="Company Name" required)
-        v-text-field(label="Industry" required)
-        v-text-field(label="Email" required)
-        v-textarea(label="Tell us a little about your problem" required)
-        v-btn(type="submit" ) Send
+      v-card.call-to-action.pa-5
+        i.fas.fa-rocket.fa-5x
+        .action-header Let us help you find solutions today!
+        v-form
+          v-text-field(label="Your Name" required)
+          v-text-field(label="Company Name" required)
+          v-text-field(label="Industry" required)
+          v-text-field(label="Email" required)
+          v-textarea(label="Tell us a little about your problem" required)
+          v-btn(type="submit" ) Send
 
 </template>
 
@@ -62,7 +77,12 @@ export default class Home extends Vue {}
       margin: 20px
     .blurb
       font-size: 2.2rem
-      margin: 20rem 0
+      margin: 75% 0
+      display: flex
+      flex-direction: column
+      align-items: center
+      i
+        margin: 5%
     .action-header
       font-size: 2.5rem
 </style>
