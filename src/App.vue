@@ -1,5 +1,5 @@
 <template lang="pug">
-#app
+v-app(dark)#app
   router-view
   footer#footer &copy;Copyright Skyler Fly-Wilson 2018
 </template>
@@ -15,6 +15,7 @@ body
   text-align: center
   color: white
   height: 100%
+  background-color: black
   #footer
     width: 100%
     text-align: center
