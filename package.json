@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "lambda-serve": "netlify-lambda serve src/lambda",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
@@ -11,6 +12,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
+    "dotenv": "^6.2.0",
+    "mailgun-js": "^0.22.0",
     "register-service-worker": "^1.5.2",
     "roboto-fontface": "*",
     "vue": "^2.5.18",
