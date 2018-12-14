@@ -1,8 +1,10 @@
 require("dotenv").config();
 const mailgun = require("mailgun-js");
 const apiKey = process.env.MAILGUN_API_KEY;
-const domain = process.env.DOMAIN;
-const mg = mailgun({ apiKey, domain });
+const apiUrl = process.env.DOMAIN;
+console.log(apiKey);
+console.log(apiUrl);
+const mg = mailgun({ apiKey, apiUrl });
 
 const generateResponse = (body, statusCode) => {
   return {
