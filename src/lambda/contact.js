@@ -66,10 +66,7 @@ exports.handler = async (event, context, callback) => {
   // attempt to send email
   try {
     const result = await sendEmail(email);
-    response = generateResponse(
-      JSON.stringify({ result: result.message }),
-      200
-    );
+    response = generateResponse(JSON.stringify({ result: result }), 200);
     callback(null, response);
     return;
   } catch {
