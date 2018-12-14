@@ -2,8 +2,6 @@ require("dotenv").config();
 const mailgun = require("mailgun-js");
 const apiKey = process.env.MAILGUN_API_KEY;
 const apiUrl = process.env.DOMAIN;
-console.log(apiKey);
-console.log(apiUrl);
 const mg = mailgun({ apiKey, apiUrl });
 
 const generateResponse = (body, statusCode) => {
@@ -14,7 +12,7 @@ const generateResponse = (body, statusCode) => {
       "content-type": "application/json"
     },
     statusCode: statusCode,
-    body: `{\"result\": ${body.message}}`
+    body: body
   };
 };
 
@@ -58,14 +56,18 @@ exports.handler = async (event, context, callback) => {
 
   try {
     const result = await sendEmail(email);
+    response = generateResponse(
+      JSON.stringify({ result: result.message }),
+      200
+    );
+    callback(null, response);
+    return;
   } catch {
     response = generateResponse(
       JSON.stringify({ status: "Error Sending Email" }),
       200
     );
     callback(null, response);
+    return;
   }
-
-  response = generateResponse(result, 200);
-  callback(null, response);
 };
