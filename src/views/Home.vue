@@ -30,7 +30,7 @@ v-container(fluid).home
         span Solving your puzzles is our specialty.
     v-flex(xs10 offset-xs1)
       v-card#contact-form.pa-5
-        template.call-to-action(v-if="!sent")
+        .call-to-action(v-if="!sent")
           i.fas.fa-rocket.fa-5x
           .action-header Let us help you find solutions today!
           v-form(@submit.prevent="sendContact")
@@ -39,8 +39,8 @@ v-container(fluid).home
             v-text-field(label="Industry" v-model="industry" required)
             v-text-field(label="Email" v-model="email" required)
             v-textarea(label="Tell us a little about your problem" v-model="problem" required)
-            v-btn(type="submit") Send
-        template.form-confirmation(v-else)
+            v-btn(type="submit" @click.prevent="sendContact") Send
+        .form-confirmation(v-else)
           .action-header Thanks for reaching out! We will be in touch very soon.
           .response {{ response }}
 </template>
