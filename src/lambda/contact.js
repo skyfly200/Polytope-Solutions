@@ -13,7 +13,7 @@ const generateResponse = (body, statusCode) => {
       "content-type": "application/json"
     },
     statusCode: statusCode,
-    body: body
+    body: JSON.stringify(body)
   };
 };
 
@@ -29,10 +29,7 @@ exports.handler = async (event, context, callback) => {
 
   // complain if method is not POST or event body is empty
   if (event.httpMethod !== "POST" || !event.body) {
-    response = generateResponse(
-      JSON.stringify({ status: "Invalid Request" }),
-      200
-    );
+    response = generateResponse({ status: "Invalid Request" }, 200);
     callback(null, response);
     return;
   }
@@ -47,10 +44,7 @@ exports.handler = async (event, context, callback) => {
     !data.industry ||
     !data.problem
   ) {
-    response = generateResponse(
-      JSON.stringify({ status: "missing-information" }),
-      200
-    );
+    response = generateResponse({ status: "missing-information" }, 200);
     callback(null, response);
     return;
   }
@@ -66,14 +60,11 @@ exports.handler = async (event, context, callback) => {
   // attempt to send email
   try {
     const result = await sendEmail(email);
-    response = generateResponse(JSON.stringify({ result: result }), 200);
+    response = generateResponse({ result: result }, 200);
     callback(null, response);
     return;
   } catch {
-    response = generateResponse(
-      JSON.stringify({ status: "Error Sending Email" }),
-      200
-    );
+    response = generateResponse({ status: "Error Sending Email" }, 200);
     callback(null, response);
     return;
   }
