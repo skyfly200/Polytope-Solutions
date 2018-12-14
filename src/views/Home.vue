@@ -47,7 +47,7 @@ v-container(fluid).home
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 @Component({
   components: {},
@@ -61,29 +61,36 @@ import axios from "axios";
       sent: false,
       response: ""
     };
-  },
-  methods: {
-    sendContact(): void {
-      axios
-        .post("https://polytopesolutions.com/.netlify/functions/contact", {
-          name: "",
-          companyName: "",
-          industry: "",
-          email: "",
-          problem: ""
-        })
-        .then(function(response) {
-          console.log(response);
-          this.sent = true;
-          this.response = response;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    }
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  name: string = "";
+  company: string = "";
+  industry: string = "";
+  email: string = "";
+  problem: string = "";
+  sent: boolean = false;
+  response: any = null;
+  sendContact(): void {
+    let t = this;
+    axios
+      .post("https://polytopesolutions.com/.netlify/functions/contact", {
+        name: "",
+        companyName: "",
+        industry: "",
+        email: "",
+        problem: ""
+      })
+      .then(function(response) {
+        console.log(response);
+        t.sent = true;
+        t.response = response;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+}
 </script>
 
 <style lang="sass">
