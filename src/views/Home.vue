@@ -1,48 +1,47 @@
 <template lang="pug">
 v-container(fluid).home
   v-layout#landing
-    .logo
+    .logo(data-aos="fade-up" data-aos-delay="500")
       img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
-    .brand-name Polytope Solutions
-    .slogan Gain Higher Perspectives
+    .brand-name(data-aos="fade") Polytope Solutions
+    .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
   v-layout.content(v-if="true")
     v-flex(xs10 offset-xs1)
-      .blurb
+      .blurb(data-aos="zoom-out")
         i.fas.fa-globe.fa-5x.fa-rotate-270
         span  We help you take a step back.
-      .blurb
+      .blurb(data-aos="flip-down")
         i.fas.fa-cube.fa-5x
         span  Look at your problems from new angles.
-      .blurb
+      .blurb(data-aos="flip-up")
         i.fas.fa-compass.fa-5x
         span  To explore novel solutions.
-      .blurb
+      .blurb(data-aos="zoom-in")
         i.fas.fa-code.fa-5x
         span  Using the latest technology.
-      .blurb
+      .blurb(data-aos="flip-left")
         i.fas.fa-drafting-compass.fa-5x
         span  Specialy drafted to your unique problems.
-      .blurb
+      .blurb(data-aos="flip-right")
         i.fas.fa-crosshairs.fa-5x
         span  Helping you refine and achieve your visions.
-      .blurb
+      .blurb(data-aos="zoom-out-down")
         i.fas.fa-puzzle-piece.fa-5x
         span Solving your puzzles is our specialty.
     v-flex(xs10 offset-xs1)
-      v-card#contact-form.pa-5
-        .call-to-action(v-if="!sent")
-          i.fas.fa-rocket.fa-5x
-          .action-header Let us help you find solutions today!
-          v-form(@submit.prevent="sendContact")
-            v-text-field(label="Your Name" v-model="name" required)
-            v-text-field(label="Company Name" v-model="company" required)
-            v-text-field(label="Industry" v-model="industry" required)
-            v-text-field(label="Email" v-model="email" required)
-            v-textarea(label="Tell us a little about your problem" v-model="problem" required)
-            v-btn(type="submit" @click.prevent="sendContact") Send
-        .form-confirmation(v-else)
-          .action-header Thanks for reaching out! We will be in touch very soon.
-          .response {{ response }}
+      v-card#contact-form.pa-5.call-to-action(v-if="!sent" data-aos="zoom-in-up")
+        i.fas.fa-rocket.fa-5x
+        .action-header Let us help you find solutions today!
+        v-form(@submit.prevent="sendContact")
+          v-text-field(label="Your Name" v-model="name" required)
+          v-text-field(label="Company Name" v-model="company" required)
+          v-text-field(label="Industry" v-model="industry" required)
+          v-text-field(label="Email" v-model="email" required)
+          v-textarea(label="Tell us a little about your problem" v-model="problem" required)
+          v-btn(type="submit" @click.prevent="sendContact") Send
+      v-card#contact-form.pa-5.form-confirmation(v-else)
+        .action-header Thanks for reaching out! We will be in touch very soon.
+        .response {{ response }}
 </template>
 
 <script lang="ts">
@@ -50,18 +49,7 @@ import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 
 @Component({
-  components: {},
-  data: function(): Object {
-    return {
-      name: "",
-      company: "",
-      industry: "",
-      email: "",
-      problem: "",
-      sent: false,
-      response: ""
-    };
-  }
+  components: {}
 })
 export default class Home extends Vue {
   name: string = "";
