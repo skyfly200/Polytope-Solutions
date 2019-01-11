@@ -6,6 +6,10 @@ import store from "./store";
 import "./registerServiceWorker";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@fortawesome/fontawesome-free/js/all.js";
+import AOS from "aos";
+
+// initialize animate on scroll library
+AOS.init();
 
 Vue.config.productionTip = false;
 
