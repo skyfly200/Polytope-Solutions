@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
+    "@types/aos": "^3.0.0",
     "aos": "^2.3.4",
     "axios": "^0.18.0",
     "dotenv": "^6.2.0",
