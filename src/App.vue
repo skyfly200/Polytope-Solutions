@@ -5,6 +5,9 @@ v-app(dark)#app
 </template>
 
 <style lang="sass">
+*
+  box-sizing: border-box
+
 body
   background-color: black
 
@@ -14,7 +17,6 @@ body
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: white
-  height: 100%
   background-color: black
   #footer
     width: 100%
