@@ -1,71 +1,47 @@
 require("dotenv").config();
-const mailgun = require("mailgun-js");
+import querystring from "querystring";
 const apiKey = process.env.MAILGUN_API_KEY;
-const apiUrl = process.env.DOMAIN;
+const domain = process.env.DOMAIN;
 const contactEmail = process.env.CONTACT_EMAIL;
-const mg = mailgun({ apiKey, apiUrl });
+const mailgun = require("mailgun-js")({ apiKey, domain });
 
 const generateResponse = (body, statusCode) => {
   return {
-    headers: {
-      "access-control-allow-methods": "POST",
-      "access-control-allow-origin": "*",
-      "content-type": "application/json"
-    },
     statusCode: statusCode,
     body: JSON.stringify(body)
   };
 };
 
-const sendEmail = data => {
-  const { from, to, subject, text } = data;
-  const email = { from, to, subject, text };
-
-  return mg.messages().send(email);
-};
-
-exports.handler = async (event, context, callback) => {
-  var response;
-
-  // complain if method is not POST or event body is empty
-  if (event.httpMethod !== "POST" || !event.body) {
-    response = generateResponse({ status: "Invalid Request" }, 200);
-    callback(null, response);
-    return;
+exports.handler = function(event, context, callback) {
+  if (event.httpMethod !== "POST") {
+    // Only run on POST requests
+    return callback(null, generateResponse("Method Not Allowed", 405));
+  } else if (!event.body) {
+    // complain if event body is empty
+    return callback(null, generateResponse("Invalid Request", 204));
   }
-  const { body } = event;
-  const data = JSON.parse(body);
-
   //-- Make sure we have all required data. Otherwise, complain.
-  if (
-    !data.email ||
-    !data.name ||
-    !data.company ||
-    !data.industry ||
-    !data.problem
-  ) {
-    response = generateResponse({ status: "missing-information" }, 200);
-    callback(null, response);
-    return;
+  const data = JSON.parse(event.body);
+  if (!data.name || !data.email || !data.message) {
+    return callback(null, generateResponse("Missing Information", 204));
   }
-
-  // build the email object
+  // build the email object from the request body
   const email = {
     from: data.email,
     to: contactEmail,
-    subject: data.company + " (" + data.industry + ") - " + data.name,
-    text: data.problem
+    subject: data.subject ? data.subject : "Contact Form - " + data.name,
+    text: data.message,
+    html: ""
   };
-
   // attempt to send email
   try {
-    const result = await sendEmail(email);
-    response = generateResponse({ result: result }, 200);
-    callback(null, response);
-    return;
-  } catch {
-    response = generateResponse({ status: "Error Sending Email" }, 200);
-    callback(null, response);
-    return;
+    mailgun.messages().send(email, (error, body) => {
+      let resp = generateResponse({ body }, 200);
+      return callback(null, resp);
+    });
+  } catch (error) {
+    let resp = generateResponse("Server Error", 500);
+    console.error(error);
+    return callback(error);
   }
 };
