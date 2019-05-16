@@ -29,31 +29,16 @@ v-container(fluid).home
       .blurb(data-aos="zoom-out-down" data-aos-anchor-placement="top-center")
         i.fas.fa-puzzle-piece.fa-5x
         span Solving your puzzles is our specialty.
-    v-flex(xs10 offset-xs1)
-      v-card#contact-form.pa-5.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
-        i.fas.fa-rocket.fa-5x
-        .action-header Let us help you find solutions today!
-        v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-          v-text-field(label="Your Name" v-model="name" :rules="rules.name" required)
-          v-text-field(label="Company Name" v-model="company")
-          v-text-field(label="Industry" v-model="industry")
-          v-text-field(label="Email" v-model="email" :rules="rules.email" required)
-          v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
-          v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
-          v-btn(@click="clearForm") Reset
-          v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
-      v-card#contact-form.pa-5.form-confirmation(v-else)
-        .action-header Thanks for reaching out! We will be in touch very soon.
-        .response {{ response }}
-        v-btn(@click="sent = false") Back
+    ContactForm
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
+import ContactForm from "@/components/ContactForm.vue";
 
 @Component({
-  components: {}
+  components: { ContactForm }
 })
 export default class Home extends Vue {
   name: string = "";
