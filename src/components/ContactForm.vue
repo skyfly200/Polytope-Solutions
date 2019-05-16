@@ -10,7 +10,7 @@ v-flex(xs10 offset-xs1)
       v-text-field(label="Email" v-model="email" :rules="rules.email" required)
       v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
       v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
-      v-btn(@click="clearForm") Reset
+      v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs") Reset
       v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
   v-card#contact-form.pa-5.form-confirmation(v-else)
     .action-header Thanks for reaching out! We will be in touch very soon.
