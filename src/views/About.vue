@@ -6,11 +6,8 @@
     .brand-name(data-aos="fade" data-aos-delay="250") Polytope Solutions
     .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
   section.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
-    i.fas.fa-globe.fa-5x.fa-rotate-270
-    span  We help you take a step back.
-  section.blurb(data-aos="flip-down" data-aos-anchor-placement="top-center")
-    i.fas.fa-cube.fa-5x
-    span  Look at your problems from new angles.
+    h2 About us
+    p More info soon to come
 </template>
 
 <script lang="ts">
@@ -19,7 +16,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {}
 })
-export default class Home extends Vue {}
+export default class About extends Vue {}
 </script>
 
 <style lang="sass">
@@ -43,21 +40,4 @@ export default class Home extends Vue {}
     .slogan
       font-size: 2.5rem
       margin: 2rem
-
-  .content
-    display: flex
-    flex-direction: column
-    justify-content: center
-    p
-      margin: 20px
-    .blurb
-      font-size: 2.2rem
-      height: 100vh
-      display: flex
-      flex-direction: column
-      align-items: center
-      i
-        margin: 5%
-    .action-header
-      font-size: 2.5rem
 </style>
