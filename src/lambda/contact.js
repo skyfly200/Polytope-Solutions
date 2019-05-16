@@ -24,9 +24,9 @@ exports.handler = function(event, context, callback) {
   }
   //-- Make sure we have all required data. Otherwise, complain.
   const data = JSON.parse(event.body);
-  console.log(data);
   if (!data.name || !data.email || !data.needs) {
     console.log("Missing info");
+    console.log(data);
     return callback(null, generateResponse("Missing Information", 204));
   }
   // build the email object from the request body
