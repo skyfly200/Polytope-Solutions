@@ -41,7 +41,8 @@ v-container(fluid).home
           v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
           v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
           v-btn(@click="clearForm") Reset
-          v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
+          v-alert(:value="alert" :type="alertType" dismissible)
+            span{{ alert }}
       v-card#contact-form.pa-5.form-confirmation(v-else)
         .action-header Thanks for reaching out! We will be in touch very soon.
         .response {{ response }}
@@ -94,7 +95,7 @@ export default class Home extends Vue {
           t.alertType = "success";
         })
         .catch(function(error) {
-          t.alert = "Error sending: " + error;
+          t.alert = error;
           t.alertType = "error";
           console.log(error);
         });
