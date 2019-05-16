@@ -1,6 +1,6 @@
 <template lang="pug">
-v-flex(xs10 offset-xs1)
-  v-card#contact-form.pa-5.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
+v-flex(sm10 offset-sm1)
+  v-card#contact-form.pa-3.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
     i.fas.fa-rocket.fa-5x
     .action-header Let us help you find solutions today!
     v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
@@ -12,7 +12,7 @@ v-flex(xs10 offset-xs1)
       v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
       v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs") Reset
       v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
-  v-card#contact-form.pa-5.form-confirmation(v-else)
+  v-card#contact-form.pa-3.form-confirmation(v-else)
     .action-header Thanks for reaching out! We will be in touch very soon.
     .response {{ response }}
     v-btn(@click="sent = false") Back
@@ -82,5 +82,7 @@ export default class ContactForm extends Vue {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+.action-header
+  font-size: 2.5rem
 </style>

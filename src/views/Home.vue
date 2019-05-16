@@ -43,7 +43,7 @@ import ContactForm from "@/components/ContactForm.vue";
 export default class Home extends Vue {}
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .home
   section
     scroll-snap-align: center
@@ -79,6 +79,4 @@ export default class Home extends Vue {}
       justify-content: center
       i
         margin: 5%
-    .action-header
-      font-size: 2.5rem
 </style>
