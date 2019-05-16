@@ -22,13 +22,11 @@ exports.handler = function(event, context, callback) {
   }
   //-- Make sure we have all required data. Otherwise, complain.
   const data = JSON.parse(event.body);
-  if (!data.name || !data.email || !data.message) {
+  if (!data.name || !data.email || !data.needs) {
     return callback(null, generateResponse("Missing Information", 204));
   }
   // build the email object from the request body
   const email = {
-    company: "",
-    industry: "",
     from: data.email,
     to: contactEmail,
     subject: "Contact Form - " + data.name,

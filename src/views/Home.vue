@@ -35,8 +35,8 @@ v-container(fluid).home
         .action-header Let us help you find solutions today!
         v-form(@submit.prevent="sendContact")
           v-text-field(label="Your Name" v-model="name" required)
-          v-text-field(label="Company Name" v-model="company" required)
-          v-text-field(label="Industry" v-model="industry" required)
+          v-text-field(label="Company Name" v-model="company")
+          v-text-field(label="Industry" v-model="industry")
           v-text-field(label="Email" v-model="email" required)
           v-textarea(label="Tell us a little about your needs" v-model="needs" required)
           v-btn(type="submit" @click.prevent="sendContact") Send
@@ -59,16 +59,16 @@ export default class Home extends Vue {
   email: string = "";
   needs: string = "";
   sent: boolean = false;
-  response: any = null;
+  response: (AxiosResponse | null) = null;
   sendContact(): void {
     let t = this;
     axios
       .post("https://polytopesolutions.com/.netlify/functions/contact", {
-        name: "",
-        company: "",
-        industry: "",
-        email: "",
-        needs: ""
+        name: this.name,
+        company: this.company,
+        industry: this.industry,
+        email: this.email,
+        needs: this.needs
       })
       .then(function(response) {
         console.log(response);
