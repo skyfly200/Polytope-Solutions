@@ -33,16 +33,19 @@ v-container(fluid).home
       v-card#contact-form.pa-5.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
         i.fas.fa-rocket.fa-5x
         .action-header Let us help you find solutions today!
-        v-form(@submit.prevent="sendContact")
-          v-text-field(label="Your Name" v-model="name" required)
+        v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
+          v-text-field(label="Your Name" v-model="name" :rules="rules.name" required)
           v-text-field(label="Company Name" v-model="company")
           v-text-field(label="Industry" v-model="industry")
-          v-text-field(label="Email" v-model="email" required)
-          v-textarea(label="Tell us a little about your needs" v-model="needs" required)
-          v-btn(type="submit" @click.prevent="sendContact") Send
+          v-text-field(label="Email" v-model="email" :rules="rules.email" required)
+          v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
+          v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
+          v-btn(@click="clearForm") Reset
+          v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
       v-card#contact-form.pa-5.form-confirmation(v-else)
         .action-header Thanks for reaching out! We will be in touch very soon.
         .response {{ response }}
+        v-btn(@click="sent = false") Back
 </template>
 
 <script lang="ts">
@@ -58,26 +61,59 @@ export default class Home extends Vue {
   industry: string = "";
   email: string = "";
   needs: string = "";
+  rules = {
+    name: [ (v: string) => !!v || 'Name is required' ],
+    email: [
+      (v: string) => !!v || 'E-mail is required',
+      (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+    ],
+    needs: [ (v: string) => !!v || 'Body is required' ]
+  };
+  valid: boolean = false;
+  alert: string = "";
+  alertType: string = "info";
   sent: boolean = false;
   response: (AxiosResponse | null) = null;
+
   sendContact(): void {
-    let t = this;
-    axios
-      .post("https://polytopesolutions.com/.netlify/functions/contact", {
-        name: this.name,
-        company: this.company,
-        industry: this.industry,
-        email: this.email,
-        needs: this.needs
-      })
-      .then(function(response) {
-        console.log(response);
-        t.sent = true;
-        t.response = response;
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    if (this.valid) {
+      let t = this;
+      axios
+        .post("https://polytopesolutions.com/.netlify/functions/contact", {
+          name: this.name,
+          company: this.company,
+          industry: this.industry,
+          email: this.email,
+          needs: this.needs
+        })
+        .then(function(response) {
+          console.log(response);
+          t.sent = true;
+          t.response = response;
+          this.alert = "Message Sent";
+          this.alertType = "success";
+        })
+        .catch(function(error) {
+          this.alert = "Error sending: " + error;
+          this.alertType = "error";
+          console.log(error);
+        });
+    } else {
+      this.alert = "Fix form validation errors";
+      this.alert = "Error sending: " + error;
+      this.alertType = "error";
+      this.alertType = "warning";
+    }
+  }
+
+  clearForm(): void {
+    this.name = "";
+    this.company = "";
+    this.email = "";
+    this.industry = "";
+    this.needs = "";
+    this.alert = "";
+    this.alertType = "info";
   }
 }
 </script>
