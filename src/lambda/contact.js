@@ -27,11 +27,18 @@ exports.handler = function(event, context, callback) {
   }
   // build the email object from the request body
   const email = {
+    company: "",
+    industry: "",
     from: data.email,
     to: contactEmail,
-    subject: data.subject ? data.subject : "Contact Form - " + data.name,
-    text: data.message,
-    html: ""
+    subject: "Contact Form - " + data.name,
+    html: `
+      <h1>${data.company}</h1>
+      <h2>${data.industry}</h2>
+      <h3>${data.name}</h3>
+      <h4>${data.email}</h4>
+      <p>${data.needs}</p>
+      `
   };
   // attempt to send email
   try {
@@ -41,7 +48,6 @@ exports.handler = function(event, context, callback) {
     });
   } catch (error) {
     let resp = generateResponse("Server Error", 500);
-    console.error(error);
-    return callback(error);
+    return callback(error, resp);
   }
 };

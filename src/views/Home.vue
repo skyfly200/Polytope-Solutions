@@ -65,7 +65,7 @@ export default class Home extends Vue {
     axios
       .post("https://polytopesolutions.com/.netlify/functions/contact", {
         name: "",
-        companyName: "",
+        company: "",
         industry: "",
         email: "",
         needs: ""
