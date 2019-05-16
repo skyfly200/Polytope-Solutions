@@ -90,28 +90,24 @@ export default class Home extends Vue {
           console.log(response);
           t.sent = true;
           t.response = response;
-          this.alert = "Message Sent";
-          this.alertType = "success";
+          t.alert = "Message Sent";
+          t.alertType = "success";
         })
         .catch(function(error) {
-          this.alert = "Error sending: " + error;
-          this.alertType = "error";
+          t.alert = "Error sending: " + error;
+          t.alertType = "error";
           console.log(error);
         });
     } else {
-      this.alert = "Fix form validation errors";
-      this.alert = "Error sending: " + error;
+      this.alert = "Please fix form errors";
       this.alertType = "error";
       this.alertType = "warning";
     }
   }
 
   clearForm(): void {
-    this.name = "";
-    this.company = "";
-    this.email = "";
-    this.industry = "";
-    this.needs = "";
+    let form = this.$refs.form as HTMLFormElement;
+    form.reset();
     this.alert = "";
     this.alertType = "info";
   }
