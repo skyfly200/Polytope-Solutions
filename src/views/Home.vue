@@ -40,63 +40,7 @@ import ContactForm from "@/components/ContactForm.vue";
 @Component({
   components: { ContactForm }
 })
-export default class Home extends Vue {
-  name: string = "";
-  company: string = "";
-  industry: string = "";
-  email: string = "";
-  needs: string = "";
-  rules = {
-    name: [ (v: string) => !!v || 'Name is required' ],
-    email: [
-      (v: string) => !!v || 'E-mail is required',
-      (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-    ],
-    needs: [ (v: string) => !!v || 'Body is required' ]
-  };
-  valid: boolean = false;
-  alert: string = "";
-  alertType: string = "info";
-  sent: boolean = false;
-  response: (AxiosResponse | null) = null;
-
-  sendContact(): void {
-    if (this.valid) {
-      let t = this;
-      axios
-        .post("https://polytopesolutions.com/.netlify/functions/contact", {
-          name: this.name,
-          company: this.company,
-          industry: this.industry,
-          email: this.email,
-          needs: this.needs
-        })
-        .then(function(response) {
-          console.log(response);
-          t.sent = true;
-          t.response = response;
-          t.alert = "Message Sent";
-          t.alertType = "success";
-        })
-        .catch(function(error) {
-          t.alert = error;
-          t.alertType = "error";
-          console.log(error);
-        });
-    } else {
-      this.alert = "Please fix form errors";
-      this.alertType = "error";
-      this.alertType = "warning";
-    }
-  }
-
-  clearForm(): void {
-    let form = this.$refs.form as HTMLFormElement;
-    form.reset();
-    this.alert = "";
-    this.alertType = "info";
-  }
-}
+export default class Home extends Vue {}
 </script>
 
 <style lang="sass">
