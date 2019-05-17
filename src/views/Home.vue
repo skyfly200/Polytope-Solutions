@@ -30,27 +30,23 @@ v-container(fluid).home
         i.fas.fa-puzzle-piece.fa-5x
         span Solving your puzzles is our specialty.
     ContactForm
-  footer#footer &copy; Skyler Fly-Wilson {{ new Date().getFullYear() }}
+  Footer
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import ContactForm from "@/components/ContactForm.vue";
+import Footer from "@/components/Footer.vue";
 
 @Component({
-  components: { ContactForm }
+  components: { ContactForm, Footer }
 })
 export default class Home extends Vue {}
 </script>
 
 <style lang="sass" scoped>
 .home
-  #footer
-    width: 100%
-    text-align: center
-    font-size: 1rem
-
   section
     scroll-snap-align: center
 
