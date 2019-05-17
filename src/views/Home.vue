@@ -3,18 +3,9 @@ v-container(fluid).home
   Landing
   v-layout.blurbs
     v-flex(xs10 offset-xs1)
-      .blurb(data-aos="flip-down" data-aos-anchor-placement="top-center")
-        i.fas.fa-cube.fa-5x
-        span  Look at your problems from new angles.
-      .blurb(data-aos="zoom-in" data-aos-anchor-placement="top-center")
-        i.fas.fa-code.fa-5x
-        span  Using the latest technology.
-      .blurb(data-aos="flip-left" data-aos-anchor-placement="top-center")
-        i.fas.fa-drafting-compass.fa-5x
-        span  Specialy drafted to your unique needs.
-      .blurb(data-aos="flip-right" data-aos-anchor-placement="top-center")
-        i.fas.fa-crosshairs.fa-5x
-        span  Helping you refine and achieve your visions.
+      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
+        i.fas.fa-5x(:class="b.icon")
+        span {{ b.text }}
   v-layout.solutions-header
     h1 Offered Solutions
   v-layout.solutions(wrap)
@@ -50,6 +41,12 @@ export default class Home extends Vue {
     brand: {title: "Brand", path: "/brand", img: "", list: []},
     data: {title: "Data", path: "/brand", img: "", list: []}
   };
+  blurbs: object = [
+    {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles."},
+    {"icon": {"fa-code": "true"}, "aos": "flip-down", "text": "Using the latest technology."},
+    {"icon": {"fa-drafting-compass": "true"}, "aos": "flip-down", "text": "Specialy drafted to your unique needs."},
+    {"icon": {"fa-crosshairs": "true"}, "aos": "flip-down", "text": "Helping you refine and achieve your visions."}
+  ];
 }
 </script>
 
