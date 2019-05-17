@@ -35,11 +35,12 @@ exports.handler = function(event, context, callback) {
     to: contactEmail,
     subject: "Contact Form - " + data.name,
     html: `
-      <h1>${data.company}</h1>
-      <h2>${data.industry}</h2>
-      <h3>${data.name}</h3>
-      <h4>${data.email}</h4>
-      <p>${data.needs}</p>
+      <h1>New Polytope Solutions Contact Form Entry</h1>
+      <h2><b>Company:</b> ${data.company}</h2>
+      <h3><b>Industry:</b>${data.industry}</h3>
+      <h4><b>Name:</b>${data.name}</h4>
+      <h4><b>Email:</b>${data.email}</h4>
+      <p><b>Needs:</b>${data.needs}</p>
       `
   };
   // attempt to send email
