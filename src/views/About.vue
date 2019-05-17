@@ -8,13 +8,15 @@
   section.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
     h2 About us
     p More info soon to come
+  Footer
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import Footer from "@/components/Footer.vue";
 
 @Component({
-  components: {}
+  components: { Footer }
 })
 export default class About extends Vue {}
 </script>
