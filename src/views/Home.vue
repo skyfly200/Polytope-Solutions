@@ -30,6 +30,7 @@ v-container(fluid).home
         i.fas.fa-puzzle-piece.fa-5x
         span Solving your puzzles is our specialty.
     ContactForm
+  footer#footer &copy; Skyler Fly-Wilson {{ new Date().getFullYear() }}
 </template>
 
 <script lang="ts">
@@ -45,6 +46,11 @@ export default class Home extends Vue {}
 
 <style lang="sass" scoped>
 .home
+  #footer
+    width: 100%
+    text-align: center
+    font-size: 1rem
+
   section
     scroll-snap-align: center
 
