@@ -2,16 +2,11 @@
 v-container(fluid).home
   Landing
   v-layout.content
+
     v-flex(xs10 offset-xs1)
-      .blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
-        i.fas.fa-globe.fa-5x.fa-rotate-270
-        span  We help you take a step back.
       .blurb(data-aos="flip-down" data-aos-anchor-placement="top-center")
         i.fas.fa-cube.fa-5x
         span  Look at your problems from new angles.
-      .blurb(data-aos="flip-up" data-aos-anchor-placement="top-center")
-        i.fas.fa-compass.fa-5x
-        span  To explore novel solutions.
       .blurb(data-aos="zoom-in" data-aos-anchor-placement="top-center")
         i.fas.fa-code.fa-5x
         span  Using the latest technology.
@@ -21,9 +16,6 @@ v-container(fluid).home
       .blurb(data-aos="flip-right" data-aos-anchor-placement="top-center")
         i.fas.fa-crosshairs.fa-5x
         span  Helping you refine and achieve your visions.
-      .blurb(data-aos="zoom-out-down" data-aos-anchor-placement="top-center")
-        i.fas.fa-puzzle-piece.fa-5x
-        span Solving your puzzles is our specialty.
   v-layout.contact
     ContactForm
   Footer
