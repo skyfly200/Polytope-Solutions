@@ -11,7 +11,7 @@ v-container(fluid).home
   v-layout.solutions(wrap)
     v-flex.solution(md4 sm6 xs12 v-for="s in solutions")
       v-card
-        v-img(src="s.img")
+        v-img(:src="s.img")
         v-card-title
           h1 {{ s.title }}
         v-card-text
@@ -37,9 +37,9 @@ import Footer from "@/components/Footer.vue";
 })
 export default class Home extends Vue {
   solutions: object = {
-    web: {title: "Web", path: "/web", img: "", list: []},
-    brand: {title: "Brand", path: "/brand", img: "", list: []},
-    data: {title: "Data", path: "/brand", img: "", list: []}
+    web: {title: "Web", path: "/web", img: "http://lorempixel.com/640/480/abstract", list: []},
+    brand: {title: "Brand", path: "/brand", img: "http://lorempixel.com/640/480/abstract", list: []},
+    data: {title: "Data", path: "/brand", img: "http://lorempixel.com/640/480/abstract", list: []}
   };
   blurbs: object = [
     {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles."},
