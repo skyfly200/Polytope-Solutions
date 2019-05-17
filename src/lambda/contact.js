@@ -33,14 +33,16 @@ exports.handler = function(event, context, callback) {
   const email = {
     from: data.email,
     to: contactEmail,
-    subject: "Contact Form - " + data.name,
+    subject: "Contact Form - " + data.name + " - " + data.company,
     html: `
-      <h1>New Polytope Solutions Contact Form Entry</h1>
+      <h1>New Inquiry to Polytope Solutions</h1>
       <h2><b>Company:</b> ${data.company}</h2>
       <h3><b>Industry:</b>${data.industry}</h3>
       <h4><b>Name:</b>${data.name}</h4>
       <h4><b>Email:</b>${data.email}</h4>
-      <p><b>Needs:</b>${data.needs}</p>
+      <h4>${new Date().toLocaleString()}</h4>
+      <h4><b>Needs:</b></h4>
+      <p>${data.needs}</p>
       `
   };
   // attempt to send email
