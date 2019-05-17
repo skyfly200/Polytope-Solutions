@@ -15,21 +15,20 @@ export default class Landing extends Vue {
 </script>
 
 <style lang="sass" scoped>
-  #landing
-    height: 100vh
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    scroll-snap-align: center
-    .logo img
-        filter: invert(100%)
-        width: 40%
-    .brand-name
-      font-family: "Sirin Stencil", cursive
-      font-size: 7rem
-    .slogan
-      font-size: 2.5rem
-      margin: 2rem
-
+#landing
+  height: 100vh
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  scroll-snap-align: center
+  .logo img
+      filter: invert(100%)
+      width: 40%
+  .brand-name
+    font-family: "Sirin Stencil", cursive
+    font-size: 7rem
+  .slogan
+    font-size: 2.5rem
+    margin: 2rem
 </style>
