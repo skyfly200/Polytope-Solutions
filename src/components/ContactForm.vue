@@ -35,7 +35,7 @@ export default class ContactForm extends Vue {
       (v: string) => !!v || 'E-mail is required',
       (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid'
     ],
-    needs: [ (v: string) => !!v || 'Body is required' ]
+    needs: [ (v: string) => !!v || 'This field is required' ]
   };
   valid: boolean = false;
   alert: string = "";
