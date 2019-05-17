@@ -1,11 +1,10 @@
 <template lang="pug">
 v-container(fluid).home
   v-layout#landing
-    section
-      .logo(data-aos="fade-up" data-aos-delay="500")
-        img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
-      .brand-name(data-aos="fade" data-aos-delay="250") Polytope Solutions
-      .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
+    .logo(data-aos="fade-up" data-aos-delay="500")
+      img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
+    .brand-name(data-aos="fade" data-aos-delay="250") Polytope Solutions
+    .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
   v-layout.content(v-if="true")
     v-flex(xs10 offset-xs1)
       .blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
@@ -47,15 +46,13 @@ export default class Home extends Vue {}
 
 <style lang="sass" scoped>
 .home
-  section
-    scroll-snap-align: center
-
   #landing
     height: 100vh
     display: flex
     flex-direction: column
     align-items: center
     justify-content: center
+    scroll-snap-align: center
     .logo img
         filter: invert(100%)
         width: 40%
