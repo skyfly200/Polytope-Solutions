@@ -6,8 +6,11 @@
     .brand-name(data-aos="fade" data-aos-delay="250") Polytope Solutions
     .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
   v-layout.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
-    h1 About us
-    h3 More info soon to come
+    v-flex(sm10 offset-sm1)
+      v-card.pa3.about-card
+        v-card-title
+          h1 About us
+        h3 More info soon to come
   Footer
 </template>
 
@@ -41,6 +44,8 @@ export default class About extends Vue {}
       font-size: 2.5rem
       margin: 2rem
   .blurb
-    margin-top: 25vh
-    height: 50vh
+    width: 100%
+    margin: 30vh 0 35vh 0
+  .about-card
+    min-height: 20vh
 </style>
