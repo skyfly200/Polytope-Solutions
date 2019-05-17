@@ -4,8 +4,8 @@ v-flex(sm10 offset-sm1)
     i.fas.fa-rocket.fa-5x
     .action-header Let us help you find solutions today!
     v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-      v-text-field(label="Your Name" v-model="name" :rules="rules.name" required)
-      v-text-field(label="Company Name" v-model="company")
+      v-text-field(label="Name" v-model="name" :rules="rules.name" required)
+      v-text-field(label="Company" v-model="company")
       v-text-field(label="Industry" v-model="industry")
       v-text-field(label="Email" v-model="email" :rules="rules.email" required)
       v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
