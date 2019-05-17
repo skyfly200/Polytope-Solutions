@@ -4,11 +4,11 @@ v-flex(sm10 offset-sm1)
     i.fas.fa-rocket.fa-5x
     .action-header Let us help you find solutions today!
     v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-      v-text-field(label="Name" v-model="name" :rules="rules.name" required)
-      v-text-field(label="Company" v-model="company")
-      v-text-field(label="Industry" v-model="industry")
-      v-text-field(label="Email" v-model="email" :rules="rules.email" required)
-      v-textarea(label="Tell us about your needs" v-model="needs" :rules="rules.needs" auto-grow required)
+      v-text-field(name="name" label="Name" v-model="name" :rules="rules.name" placeholder="John Smith" autocomplete="name" required)
+      v-text-field(name="company" label="Company" v-model="company" placeholder="Regolith Redistributors")
+      v-text-field(name="industry" label="Industry" v-model="industry" placeholder="Aerospace")
+      v-text-field(name="email" type="email" label="Email" v-model="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
+      v-textarea(name="needs" label="Tell us about your needs" v-model="needs" :rules="rules.needs" placeholder="Our company needs help with..." auto-grow required)
       v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
       v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs") Reset
       v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
