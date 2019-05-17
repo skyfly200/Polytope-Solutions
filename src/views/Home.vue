@@ -1,7 +1,7 @@
 <template lang="pug">
 v-container(fluid).home
   Landing
-  v-layout.content(v-if="true")
+  v-layout.content
     v-flex(xs10 offset-xs1)
       .blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
         i.fas.fa-globe.fa-5x.fa-rotate-270
@@ -24,6 +24,7 @@ v-container(fluid).home
       .blurb(data-aos="zoom-out-down" data-aos-anchor-placement="top-center")
         i.fas.fa-puzzle-piece.fa-5x
         span Solving your puzzles is our specialty.
+  v-layout.contact
     ContactForm
   Footer
 </template>
@@ -58,4 +59,6 @@ export default class Home extends Vue {}
       justify-content: center
       i
         margin: 5%
+  .contact
+    hin-height: 100vh
 </style>

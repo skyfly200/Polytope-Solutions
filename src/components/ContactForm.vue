@@ -1,6 +1,6 @@
 <template lang="pug">
-v-flex(sm10 offset-sm1)
-  v-card#contact-form.pa-3.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
+v-flex#contact-form(sm10 offset-sm1)
+  v-card.pa-3.call-to-action(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center" data-aos-offset="-200")
     i.fas.fa-rocket.fa-5x
     .action-header Let us help you find solutions today!
     v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
@@ -83,6 +83,8 @@ export default class ContactForm extends Vue {
 </script>
 
 <style lang="sass" scoped>
+#contact-form
+  padding: 10vh 0
 .action-header
   font-size: 2.5rem
 </style>
