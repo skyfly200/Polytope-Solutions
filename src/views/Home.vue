@@ -18,45 +18,17 @@ v-container(fluid).home
   v-layout.solutions-header
     h1 Offered Solutions
   v-layout.solutions(wrap)
-    v-flex.solution
+    v-flex.solution(md4 sm6 xs12 v-for="s in solutions")
       v-card
-        v-img(src="")
+        v-img(src="s.img")
         v-card-title
-          h1 Web
+          h1 {{ s.title }}
         v-card-text
           h2 List
           ul
-            li Item 1
-            li Item 2
-            li Item 3
+            li(v-for="i in s.list")
         v-card-actions
-          v-btn(to="#") More
-    v-flex.solution
-      v-card
-        v-img(src="")
-        v-card-title
-          h1 Brand
-        v-card-text
-          h2 List
-          ul
-            li Item 1
-            li Item 2
-            li Item 3
-        v-card-actions
-          v-btn(to="#") More
-    v-flex.solution
-      v-card
-        v-img(src="")
-        v-card-title
-          h1 Data
-        v-card-text
-          h2 List
-          ul
-            li Item 1
-            li Item 2
-            li Item 3
-        v-card-actions
-          v-btn(to="#") More
+          v-btn(:to="s.path") More
   v-layout.contact
     ContactForm
   Footer
@@ -72,7 +44,13 @@ import Footer from "@/components/Footer.vue";
 @Component({
   components: { Landing, ContactForm, Footer }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  solutions: object = {
+    web: {title: "Web", path: "/web", img: "", list: []},
+    brand: {title: "Brand", path: "/brand", img: "", list: []},
+    data: {title: "Data", path: "/brand", img: "", list: []}
+  };
+}
 </script>
 
 <style lang="sass" scoped>
