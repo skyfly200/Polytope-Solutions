@@ -4,7 +4,6 @@ footer#footer &copy; Skyler Fly-Wilson {{ new Date().getFullYear() }}
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import axios, { AxiosResponse } from "axios";
 
 @Component({})
 export default class Footer extends Vue {
