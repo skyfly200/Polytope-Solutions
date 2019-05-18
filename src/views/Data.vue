@@ -10,7 +10,10 @@
           v-layout.pa3(wrap)
             v-flex.description(xl6 lg12)
               h2 Description
-              p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              p IOT, Sensors, Networking, Logging, Display, Analysis
+              p Data Collection, Organization, Transformation, Visualization
+              p Insights, Analytics, Planning, Projection, Action
+              p Databases, Machine Learning, Data Science
               v-img(:src="img")
             v-flex.features(xl6 lg12)
               h2 List

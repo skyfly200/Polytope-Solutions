@@ -19,7 +19,7 @@ v-container(fluid).home
           v-layout.pa3(wrap)
             v-flex.description(xl6 lg12)
               h2 Description
-              p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              p {{ s.description }}
             v-flex.features(xl6 lg12)
               h2 List
               ul.list
@@ -48,18 +48,34 @@ export default class Home extends Vue {
       title: "Web",
       path: "/web",
       img: "http://lorempixel.com/640/480/abstract/5",
+      description: `Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms
+        Accounts, Chat, Profiles, Groups, Activities, Relationships
+        Domains, Hosting, DNS, Email, SMS
+        Continuous, Integration, Testing & Deployment
+        `,
       list: ["Item 1", "Item 2", "Item 3", "Item 4"]
     },
     brand: {
       title: "Brand",
       path: "/brand",
       img: "http://lorempixel.com/640/480/abstract/3",
+      description: `Youtube, Instagram, Facebook, Twitter, Podcasts
+        Presence, Message, Aesthetic, Following, Communication
+        Stories, Process, Promotions, Personable Posts
+        Content Creation, Scheduling, Strategy, Targeting
+        Audio / Video Production, Photography, Web / Print Ads
+        `,
       list: ["Item 1", "Item 2", "Item 3", "Item 4"]
     },
     data: {
       title: "Data",
       path: "/brand",
       img: "http://lorempixel.com/640/480/abstract/1",
+      description: `IOT, Sensors, Networking, Logging, Display, Analysis
+        Data Collection, Organization, Transformation, Visualization
+        Insights, Analytics, Planning, Projection, Action
+        Databases, Machine Learning, Data Science
+        `,
       list: ["Item 1", "Item 2", "Item 3", "Item 4"]
     }
   };
