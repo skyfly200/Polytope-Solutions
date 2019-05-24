@@ -1,7 +1,6 @@
 <template lang="pug">
 v-app(dark)#app
   router-view
-  footer#footer &copy;Copyright Skyler Fly-Wilson 2018
 </template>
 
 <style lang="sass">
@@ -18,8 +17,4 @@ body
   text-align: center
   color: white
   background-color: black
-  #footer
-    width: 100%
-    text-align: center
-    font-size: 1rem
 </style>
