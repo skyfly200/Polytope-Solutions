@@ -9,7 +9,7 @@ v-container(fluid).home
   v-layout.solutions-header#solutions
     h1 Offered Solutions
   v-layout.solutions(wrap)
-    v-flex.solution(lg4 md6 xs12 v-for="s in solutions")
+    v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
       v-card
         v-img(:src="s.img")
         v-card-title
@@ -23,7 +23,7 @@ v-container(fluid).home
             v-flex.features(xl6 lg12)
               h2 List
               ul.list
-                li(v-for="i in s.list") {{ i }}
+                li(v-for="i in s.list" :key="i") {{ i }}
         v-divider
         v-card-actions
           v-btn(:to="s.path") More

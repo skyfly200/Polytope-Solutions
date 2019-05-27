@@ -1,38 +1,25 @@
 <template lang="pug">
 .web
-  v-layout.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
-    v-flex(sm10 offset-sm1)
-      v-card.pa3.web-card
-        v-card-title
-          h1 {{ title }}
-        v-divider
-        v-card-text
-          v-layout.pa3(wrap)
-            v-flex.description(xl6 lg12)
-              h2 Description
-              p Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms
-              p Accounts, Chat, Profiles, Groups, Activities, Relationships
-              p Domains, Hosting, DNS, Email, SMS
-              p Continuous, Integration, Testing & Deployment
-              v-img(:src="img")
-            v-flex.features(xl6 lg12)
-              h2 List
-              ul.list
-                li(v-for="i in list") {{ i }}
-  Footer
+  Base(:title="title" :img="img" :list="list" :blurbs="blurbs")
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Footer from "@/components/Footer.vue";
+import Base from "@/components/Base.vue";
 
 @Component({
-  components: { Footer }
+  components: { Base }
 })
 export default class Web extends Vue {
   img:string = "http://lorempixel.com/640/480/abstract/3";
   title:string = "Brand";
   list:Array<string> = ["Item 1", "Item 2", "Item 3", "Item 4"];
+  blurbs:Array<string> = [
+    "Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms",
+    "Accounts, Chat, Profiles, Groups, Activities, Relationships",
+    "Domains, Hosting, DNS, Email, SMS",
+    "Continuous, Integration, Testing & Deployment"
+  ];
 }
 </script>
 
