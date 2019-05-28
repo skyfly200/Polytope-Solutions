@@ -3,7 +3,7 @@ v-container(fluid).home
   Landing
   v-layout.blurbs
     v-flex(xs10 offset-xs1)
-      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="bottom-bottom")
+      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
         i.fas.fa-5x(:class="b.icon")
         span {{ b.text }}
   #solutions
@@ -81,10 +81,10 @@ export default class Home extends Vue {
     }
   };
   blurbs: object = [
-    {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles."},
-    {"icon": {"fa-code": "true"}, "aos": "flip-down", "text": "Using the latest technology."},
-    {"icon": {"fa-drafting-compass": "true"}, "aos": "flip-down", "text": "Specialy drafted to your unique needs."},
-    {"icon": {"fa-crosshairs": "true"}, "aos": "flip-down", "text": "Helping you refine and achieve your visions."}
+    {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles"},
+    {"icon": {"fa-code": "true"}, "aos": "flip-down", "text": "Using the latest technology"},
+    {"icon": {"fa-drafting-compass": "true"}, "aos": "flip-down", "text": "Specialy drafted to your unique needs"},
+    {"icon": {"fa-crosshairs": "true"}, "aos": "flip-down", "text": "Helping you refine and achieve your visions"}
   ];
 }
 </script>
