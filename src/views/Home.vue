@@ -15,7 +15,7 @@ v-container(fluid).home
         v-card-title
           h1 {{ s.title }}
         v-divider
-        v-card-text
+        v-card-text.content
           v-layout.pa3(wrap)
             v-flex.description(xl6 lg12)
               h2 Description
@@ -113,6 +113,11 @@ export default class Home extends Vue {
     .solution
       .v-card
         margin: 1em
+        display: flex
+        flex-direction: column
+        height: 100%
+        .content
+          flex-grow: 1
         .list
           text-align: left
         .features
