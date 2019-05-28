@@ -19,8 +19,7 @@ v-layout.ma-4.solution
                         slot
             v-divider
             v-card-actions
-                v-btn(:to="/form/ + topic" color="primary" large)
-                    h2 Inquire
+                v-btn(:to="/form/ + topic" color="primary" large) Inquire
 </template>
 
 <script lang="ts">

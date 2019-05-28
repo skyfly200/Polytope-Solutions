@@ -7,20 +7,20 @@ Base
                     .step
                         component.form(:is="topics[topic][n-1].component")
                         .buttons
-                            v-btn(v-if="!firstStep" @click="back") Back
-                            v-btn(@click="next") Next
+                            v-btn(v-if="!firstStep" @click="back" depressed) Back
+                            v-btn(@click="next" depressed) Next
             v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount + 1)" :complete="sent") Verify and Send
             v-stepper-content(:step="stepCount + 1")
                 .verify(v-if="!sent")
                     h1 Verify Your Info
                     p show entered data here
                     .buttons
-                        v-btn(@click="back") Back
-                        v-btn(@click="send") Send
+                        v-btn(@click="back" depressed) Back
+                        v-btn(@click="send" depressed) Send
                 .confirmation(v-else)
                     h1 Sent!
                     .buttons
-                        v-btn(to="/") Back to Home
+                        v-btn(to="/" color="primary") Back to Home
 </template>
 
 <script lang="ts">
