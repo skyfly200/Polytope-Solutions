@@ -1,6 +1,5 @@
 <template lang="pug">
-.page
-    Nav
+Base
     v-stepper(v-model="currentStep" vertical)
             template(v-for="n in stepCount")
                 v-stepper-step(:step="n" @click="select($event, n)" :complete="currentStep > n" :key="n + '-step'") {{ topics[topic][n-1].title }}
@@ -22,19 +21,17 @@
                     h1 Sent!
                     .buttons
                         v-btn(to="/") Back to Home
-    Footer
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Nav from "@/components/Nav.vue";
+import Base from "@/components/Base.vue";
 import Identity from "@/components/fieldsets/Identity.vue";
 import Background from "@/components/fieldsets/Background.vue";
 import Inquery from "@/components/fieldsets/Inquery.vue";
-import Footer from "@/components/Footer.vue";
 
 @Component({
-    components: { Nav, Identity, Background, Inquery, Footer }
+    components: { Base, Identity, Background, Inquery }
 })
 export default class Form extends Vue {
     currentStep:number = 1;
