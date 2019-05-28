@@ -3,14 +3,14 @@ v-container(fluid).home
   Landing
   v-layout.blurbs
     v-flex(xs10 offset-xs1)
-      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
+      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="bottom-bottom")
         i.fas.fa-5x(:class="b.icon")
         span {{ b.text }}
   v-layout.solutions-header#solutions
     h1 Offered Solutions
   v-layout.solutions(wrap)
     v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
-      v-card(data-aos="flip-down" data-aos-anchor-placement="center-center")
+      v-card(data-aos="flip-down" data-aos-anchor-placement="bottom-bottom" data-aos-easing="ease-in-cubic")
         v-img(:src="s.img")
         v-card-title
           h1 {{ s.title }}
