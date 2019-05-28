@@ -2,7 +2,7 @@
 .page
     Nav
     slot
-    footer
+    Footer
 </template>
 
 <script lang="ts">
