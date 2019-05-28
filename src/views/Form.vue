@@ -8,7 +8,7 @@
             <v-divider></v-divider>
             v-stepper-step(@click="goto($event, 3)" :complete="currentStep > 3" step="3") Step 3
             <v-divider></v-divider>
-            v-stepper-step(:complete="sent" step="4") Done
+            v-stepper-step(@click="goto($event, 4)" :complete="sent" step="4") Done
         v-stepper-items
             v-stepper-content(v-for="n in (steps - 1)" :step="n" :key="n")
                 Survey.form
@@ -52,7 +52,7 @@ export default class Form extends Vue {
         if (!this.firstStep) this.currentStep--;
     }
     goto($event:any, n:number) {
-        if (!!n && (n <= this.completed)) this.currentStep = n;
+        if (!!n && !this.sent && (n <= this.completed + 1)) this.currentStep = n;
     }
 
     send() {
@@ -90,7 +90,10 @@ export default class Form extends Vue {
         flex-direction: column
         justify-content: space-between
     .v-stepper__wrapper
-        height: 100%
+        flex-grow: 1
+        display: flex
+        flex-direction: column
+        margin: auto
     .verify
         height: 100%
     .buttons
