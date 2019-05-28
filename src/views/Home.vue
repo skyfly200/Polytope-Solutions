@@ -6,27 +6,28 @@ v-container(fluid).home
       .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="bottom-bottom")
         i.fas.fa-5x(:class="b.icon")
         span {{ b.text }}
-  v-layout.solutions-header#solutions
-    h1 Offered Solutions
-  v-layout.solutions(wrap)
-    v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
-      v-card(data-aos="flip-down" data-aos-anchor-placement="bottom-bottom" data-aos-easing="ease-in-cubic")
-        v-img(:src="s.img")
-        v-card-title
-          h1 {{ s.title }}
-        v-divider
-        v-card-text.content
-          v-layout.pa3(wrap)
-            v-flex.description(xl6 lg12)
-              h2 Description
-              p {{ s.description }}
-            v-flex.features(xl6 lg12)
-              h2 List
-              ul.list
-                li(v-for="i in s.list" :key="i") {{ i }}
-        v-divider
-        v-card-actions
-          v-btn(:to="s.path") More
+  #solutions
+    v-layout.solutions-header
+      h1 Solutions
+    v-layout.solutions(wrap)
+      v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
+        v-card(data-aos="flip-down" data-aos-anchor-placement="bottom-bottom" data-aos-easing="ease-in-cubic")
+          v-img(:src="s.img")
+          v-card-title
+            h1 {{ s.title }}
+          v-divider
+          v-card-text.content
+            v-layout.pa3(wrap)
+              v-flex.description(xl6 lg12)
+                h2 Description
+                p {{ s.description }}
+              v-flex.features(xl6 lg12)
+                h2 List
+                ul.list
+                  li(v-for="i in s.list" :key="i") {{ i }}
+          v-divider
+          v-card-actions
+            v-btn(:to="s.path") More
   v-layout.contact
     ContactForm
   Footer
@@ -105,12 +106,16 @@ export default class Home extends Vue {
       justify-content: center
       i
         margin: 5%
-  .solutions-header
-    justify-content: center
-    padding: 2em
+  #solutions
+    margin: 55vh 0
+    .solutions-header
+      justify-content: center
+      padding: 2em
+      font-size: 1.8em
   .solutions
     justify-content: space-between
     .solution
+      margin: 2em 0
       .v-card
         margin: 1em
         display: flex
