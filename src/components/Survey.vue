@@ -1,7 +1,7 @@
 <template lang="pug">
 v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-    v-text-field(name="name" label="Name" v-model="name" :rules="rules.name" placeholder="John Smith" autocomplete="name" required)
-    v-text-field(name="company" label="Company" v-model="company" placeholder="Regolith Redistributors")
+    v-text-field(name="name" label="Full Name" v-model="name" :rules="rules.name" placeholder="John Smith" autocomplete="name" required)
+    v-text-field(name="company" label="Company Name" v-model="company" placeholder="Regolith Redistributors")
     v-text-field(name="industry" label="Industry" v-model="industry" placeholder="Aerospace")
     v-text-field(name="email" type="email" label="Email" v-model="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
     v-textarea(name="needs" label="Tell us about your needs" v-model="needs" :rules="rules.needs" placeholder="Our company needs help with..." auto-grow required)
