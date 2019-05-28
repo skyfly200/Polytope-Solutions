@@ -1,10 +1,9 @@
 <template lang="pug">
 v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-    v-text-field(name="name" label="Full Name" v-model="name" :rules="rules.name" placeholder="John Smith" autocomplete="name" required)
-    v-text-field(name="company" label="Company Name" v-model="company" placeholder="Regolith Redistributors")
-    v-text-field(name="industry" label="Industry" v-model="industry" placeholder="Aerospace")
-    v-text-field(name="email" type="email" label="Email" v-model="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
-    v-textarea(name="needs" label="Tell us about your needs" v-model="needs" :rules="rules.needs" placeholder="Our company needs help with..." auto-grow required)
+    v-text-field(name="company" label="Company Name" v-model="company" placeholder="Regolith Redistributors" required)
+    v-text-field(name="industry" label="Industry" v-model="industry" placeholder="Aerospace" required)
+    v-text-field(name="role" label="Role" v-model="role" :rules="rules.role" placeholder="Rock Inspector" required)
+    v-textarea(name="about" label="Tell us about your company" v-model="about" :rules="rules.about" placeholder="About your company" auto-grow required)
 </template>
 
 <script lang="ts">
@@ -12,7 +11,7 @@ import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 
 @Component({})
-export default class Survey extends Vue {
+export default class Background extends Vue {
   name: string = "";
   company: string = "";
   industry: string = "";
