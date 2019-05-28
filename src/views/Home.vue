@@ -27,7 +27,7 @@ v-container(fluid).home
                   li(v-for="i in s.list" :key="i") {{ i }}
           v-divider
           v-card-actions
-            v-btn(:to="s.path") More
+            v-btn(:to="s.path" color="primary") More
   v-layout.contact
     ContactForm
   Footer
@@ -62,7 +62,6 @@ export default class Home extends Vue {
       img: "http://lorempixel.com/640/480/abstract/3",
       description: `Youtube, Instagram, Facebook, Twitter, Podcasts
         Presence, Message, Aesthetic, Following, Communication
-        Stories, Process, Promotions, Personable Posts
         Content Creation, Scheduling, Strategy, Targeting
         Audio / Video Production, Photography, Web / Print Ads
         `,
@@ -121,12 +120,17 @@ export default class Home extends Vue {
         display: flex
         flex-direction: column
         height: 100%
+        .v-image__image
+          height: 300px
         .content
           flex-grow: 1
         .list
           text-align: left
         .features
           padding-left: 1em
+        .v-card__actions
+          padding: 1em 0
+          margin: 0 auto
   .contact
     hin-height: 100vh
 </style>
