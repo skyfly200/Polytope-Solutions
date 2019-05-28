@@ -11,7 +11,7 @@ v-container(fluid).home
       h1 Solutions
     v-layout.solutions(wrap)
       v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
-        v-card(data-aos="flip-down" data-aos-anchor-placement="bottom-bottom" data-aos-easing="ease-in-cubic")
+        v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
           v-img(:src="s.img")
           v-card-title
             h1 {{ s.title }}
