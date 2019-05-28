@@ -96,7 +96,7 @@ export default class Form extends Vue {
     .v-stepper__content
         text-align: right
         flex-direction: column
-    .verify
+    .verify, .confirmation
         text-align: center
         .buttons 
             text-align: right
