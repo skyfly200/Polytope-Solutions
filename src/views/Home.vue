@@ -46,7 +46,7 @@ export default class Home extends Vue {
   solutions: object = {
     web: {
       title: "Web",
-      path: "/web",
+      path: "/solution/web",
       img: "http://lorempixel.com/640/480/abstract/5",
       description: `Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms
         Accounts, Chat, Profiles, Groups, Activities, Relationships
@@ -57,7 +57,7 @@ export default class Home extends Vue {
     },
     brand: {
       title: "Brand",
-      path: "/brand",
+      path: "/solution/brand",
       img: "http://lorempixel.com/640/480/abstract/3",
       description: `Youtube, Instagram, Facebook, Twitter, Podcasts
         Presence, Message, Aesthetic, Following, Communication
@@ -69,7 +69,7 @@ export default class Home extends Vue {
     },
     data: {
       title: "Data",
-      path: "/brand",
+      path: "/solution/data",
       img: "http://lorempixel.com/640/480/abstract/1",
       description: `IOT, Sensors, Networking, Logging, Display, Analysis
         Data Collection, Organization, Transformation, Visualization

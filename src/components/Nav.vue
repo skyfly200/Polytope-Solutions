@@ -5,9 +5,9 @@ v-toolbar#nav
     v-toolbar-title Polytope Solutions
     v-spacer
     v-btn(to="/" flat) Home
-    v-btn(to="/brand" flat) Brand
-    v-btn(to="/data" flat) Data
-    v-btn(to="/web" flat) Web
+    v-btn(to="/solution/brand" flat) Brand
+    v-btn(to="/solution/data" flat) Data
+    v-btn(to="/solution/web" flat) Web
 </template>
 
 <script lang="ts">

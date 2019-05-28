@@ -20,22 +20,11 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      path: "/web",
-      name: "web",
+      path: "/solution/:topic",
+      name: "solution",
       component: () =>
-        import(/* webpackChunkName: "web" */ "./views/Web.vue")
-    },
-    {
-      path: "/brand",
-      name: "brand",
-      component: () =>
-        import(/* webpackChunkName: "brand" */ "./views/Brand.vue")
-    },
-    {
-      path: "/data",
-      name: "data",
-      component: () =>
-        import(/* webpackChunkName: "data" */ "./views/Data.vue")
+        import(/* webpackChunkName: "web" */ "./views/Solutions.vue"),
+      props: true 
     },
     {
       path: "/form/:topic",

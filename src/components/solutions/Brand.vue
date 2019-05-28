@@ -1,14 +1,13 @@
 <template lang="pug">
-.brand
-  Base(:title="title" :img="img" :list="list" :blurbs="blurbs")
+Solution.brand(:title="title" :img="img" :topic="topic" :list="list" :blurbs="blurbs")
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Base from "@/components/Base.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import Solution from "./Solution.vue";
 
 @Component({
-  components: { Base }
+  components: { Solution }
 })
 export default class Brand extends Vue {
   img:string = "http://lorempixel.com/640/480/abstract/3";
@@ -21,6 +20,7 @@ export default class Brand extends Vue {
     "Content Creation, Scheduling, Strategy, Targeting",
     "Audio / Video Production, Photography, Web / Print Ads",
   ];
+  @Prop(String) readonly topic!: string;
 }
 </script>
 

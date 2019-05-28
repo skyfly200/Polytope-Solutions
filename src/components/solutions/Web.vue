@@ -1,18 +1,17 @@
 <template lang="pug">
-.web
-  Base(:title="title" :img="img" :list="list" :blurbs="blurbs")
+Solution.web(:title="title" :img="img" :topic="topic" :list="list" :blurbs="blurbs")
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Base from "@/components/Base.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import Solution from "./Solution.vue";
 
 @Component({
-  components: { Base }
+  components: { Solution }
 })
 export default class Web extends Vue {
-  img:string = "http://lorempixel.com/640/480/abstract/3";
-  title:string = "Brand";
+  img:string = "http://lorempixel.com/640/480/abstract/5";
+  title:string = "Web";
   list:Array<string> = ["Item 1", "Item 2", "Item 3", "Item 4"];
   blurbs:Array<string> = [
     "Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms",
@@ -20,6 +19,7 @@ export default class Web extends Vue {
     "Domains, Hosting, DNS, Email, SMS",
     "Continuous, Integration, Testing & Deployment"
   ];
+  @Prop(String) readonly topic!: string;
 }
 </script>
 
