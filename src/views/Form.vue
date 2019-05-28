@@ -17,9 +17,10 @@
                     v-btn(@click="next") Next
             v-stepper-content(:step="steps")
                 .verify(v-if="!sent")
-                    h1 Verify
+                    h1 Verify Your Info
                     p show entered data here
                     .buttons
+                        v-btn(@click="back") Back
                         v-btn(@click="send") Send
                 .confirmation(v-else)
                     h1 Sent!
@@ -90,12 +91,11 @@ export default class Form extends Vue {
         flex-direction: column
         justify-content: space-between
     .v-stepper__wrapper
-        flex-grow: 1
-        display: flex
-        flex-direction: column
-        margin: auto
-    .verify
         height: 100%
+    .verify
+        width: 100%
+    .confirmation
+        margin: 20% 0
     .buttons
         flex-grow: 1
         padding-bottom: 1em
