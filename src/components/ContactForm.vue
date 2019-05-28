@@ -1,6 +1,6 @@
 <template lang="pug">
 v-flex#contact-form(sm10 offset-sm1)
-  v-card.pa-3(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="center-center")
+  v-card.pa-3(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="top-center")
     v-card-text
       .call-to-action
         i.fas.fa-rocket.fa-5x
