@@ -9,17 +9,18 @@ v-layout.ma-4.solution
             v-card-text
                 v-layout.pa3(wrap)
                     v-flex.description(lg6 md12)
-                        h2 Description
+                        h2.pa-3 Description
                         p(v-for="b in blurbs" :key="b") {{ b }}
                     v-flex.features(lg6 md12)
-                        h2 List
+                        h2.pa-3 List
                         ul.list
                             li(v-for="i in list" :key="i") {{ i }}
                     v-flex.content(xs12)
                         slot
             v-divider
             v-card-actions
-                v-btn(:to="/form/ + topic" color="primary" large) Inquire
+                v-btn(:to="/form/ + topic" color="primary" large)
+                    h2 Inquire
 </template>
 
 <script lang="ts">
@@ -38,7 +39,9 @@ export default class Solution extends Vue {
     .card
         width: 100%
     .v-card__actions a
-        margin: auto
+        margin: 1em auto
     .image
         height: 300px
+    .list
+        text-align: left
 </style>
