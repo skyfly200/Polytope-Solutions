@@ -13,15 +13,18 @@ Base
             v-stepper-content(:step="stepCount+1")
                 .verify(v-if="!sent")
                     h1 Verify & Send
-                    p verify your information
-                    p select a section above if you need to make any changes
-                    v-divider
-                    .verify.pa-3(v-for="n in stepCount")
-                        h2 {{ topics[topic][n-1].title }}
-                        template(v-for="(v, i) in data[n-1]")
-                            h4(v-if="i !== 'valid'") {{ i }}:&nbsp;
-                            span(v-if="i !== 'valid'") {{ v }}
-                        v-divider
+                    p verify your information and click send
+                    p click back or select a section above if you need to make any changes
+                    v-card
+                        v-card-text
+                            .verify(v-for="n in stepCount")
+                                .section.pa-3
+                                    h2 {{ topics[topic][n-1].title }}
+                                    template(v-for="(v, i) in data[n-1]")
+                                        h4(v-if="i !== 'valid'") {{ i }}:&nbsp;
+                                        span(v-if="i !== 'valid'") {{ v }}
+                                v-divider
+                            v-checkbox(v-model="verified" input-value="true" value label="Everything looks good. Send Away!")
                     .buttons
                         v-btn(@click="back" depressed) Back
                         v-btn(@click="send" depressed) Send
@@ -33,6 +36,8 @@ Base
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import axios, { AxiosResponse } from "axios";
+
 import Base from "@/components/Base.vue";
 import Identity from "@/components/fieldsets/Identity.vue";
 import Background from "@/components/fieldsets/Background.vue";
@@ -52,6 +57,7 @@ export default class Form extends Vue {
     };
     data:Array<any> = Array.from({length: this.stepCount}, v => {});
     valid: boolean = false;
+    verified: boolean = false;
 
     @Prop(String) readonly topic!: string;
 
@@ -100,7 +106,21 @@ export default class Form extends Vue {
     }
 
     send(): void {
-        this.sent = true;
+        if (this.verified) {
+            let t = this;
+            axios
+                .post("https://polytopesolutions.com/.netlify/functions/form", {
+                    data: this.data,
+                    topic: this.topic
+                })
+                .then(function(response) {
+                    console.log(response);
+                    t.sent = true;
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        }
     }
 }
 </script>
