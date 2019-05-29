@@ -1,15 +1,15 @@
 <template lang="pug">
 Base
-    v-stepper(v-model="currentStep" vertical)
+    v-stepper(v-model="currentStep" vertical non-linear)
             template(v-for="n in stepCount")
-                v-stepper-step(:step="n" @click="select($event, n)" :complete="currentStep > n" :key="n + '-step'") {{ topics[topic][n-1].title }}
+                v-stepper-step.indigo--text.text--darken-2(:step="n" @click="select($event, n)" :complete="currentStep > n" color="secondary" :key="n + '-step'") {{ topics[topic][n-1].title }}
                 v-stepper-content(:step="n" :key="n + '-content'")
                     .step
                         component.form(:is="topics[topic][n-1].component" @update="update($event)")
                         .buttons
                             v-btn(v-if="!firstStep" @click="back" depressed) Back
                             v-btn(@click="next" :disabled="!valid" depressed) Next
-            v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount+1)" :complete="sent") Verify and Send
+            v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount+1)" color="secondary" light :complete="sent") Verify and Send
             v-stepper-content(:step="stepCount+1")
                 .verify(v-if="!sent")
                     h1 Verify & Send
@@ -135,6 +135,9 @@ export default class Form extends Vue {
         flex-grow: 1
         display: flex
         flex-direction: column
+    .v-stepper__step__step
+        color: black
+        font-weight: bold
     .v-stepper__content
         text-align: right
         flex-direction: column
