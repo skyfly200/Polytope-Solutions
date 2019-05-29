@@ -1,5 +1,5 @@
 <template lang="pug">
-v-toolbar#nav
+v-toolbar#nav(color="primary")
     router-link(to="/")
         v-avatar
             v-img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
