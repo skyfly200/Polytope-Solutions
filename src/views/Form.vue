@@ -5,15 +5,23 @@ Base
                 v-stepper-step(:step="n" @click="select($event, n)" :complete="currentStep > n" :key="n + '-step'") {{ topics[topic][n-1].title }}
                 v-stepper-content(:step="n" :key="n + '-content'")
                     .step
-                        component.form(:is="topics[topic][n-1].component")
+                        component.form(:is="topics[topic][n-1].component" @update="update($event)")
                         .buttons
                             v-btn(v-if="!firstStep" @click="back" depressed) Back
-                            v-btn(@click="next" depressed) Next
-            v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount + 1)" :complete="sent") Verify and Send
-            v-stepper-content(:step="stepCount + 1")
+                            v-btn(@click="next" :disabled="!valid" depressed) Next
+            v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount+1)" :complete="sent") Verify and Send
+            v-stepper-content(:step="stepCount+1")
                 .verify(v-if="!sent")
-                    h1 Verify Your Info
-                    p show entered data here
+                    h1 Verify & Send
+                    p verify your information
+                    p select a section above if you need to make any changes
+                    v-divider
+                    .verify.pa-3(v-for="n in stepCount")
+                        h2 {{ topics[topic][n-1].title }}
+                        template(v-for="(v, i) in data[n-1]")
+                            h4(v-if="i !== 'valid'") {{ i }}:&nbsp;
+                            span(v-if="i !== 'valid'") {{ v }}
+                        v-divider
                     .buttons
                         v-btn(@click="back" depressed) Back
                         v-btn(@click="send" depressed) Send
@@ -42,6 +50,8 @@ export default class Form extends Vue {
         data: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}],
         web: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}]
     };
+    data:Array<any> = Array.from({length: this.stepCount}, v => {});
+    valid: boolean = false;
 
     @Prop(String) readonly topic!: string;
 
@@ -58,23 +68,35 @@ export default class Form extends Vue {
     }
     
     next(): void {
-        if (this.currentStep > this.completed)
-            this.completed = this.currentStep;
-        if (this.lastStep) {
-            this.currentStep = this.stepCount + 1;
-        } else {
-            this.currentStep++;
+        if (this.valid) {
+            if (this.currentStep > this.completed)
+                this.completed = this.currentStep;
+            this.valid = false;
+            if (this.lastStep) {
+                this.currentStep = this.stepCount + 1;
+            } else {
+                this.currentStep++;
+            }
         }
     }
 
     back(): void {
-        if (!this.firstStep)
+        if (!this.firstStep) {
+            this.valid = this.data[this.currentStep - 2]["valid"];
             this.currentStep--;
+        }
     }
 
     select($event:any, n:number): void {
-        if (!!n && !this.sent && (n <= this.completed + 1))
+        if (!!n && !this.sent && (n <= this.completed + 1)) {
+            this.valid = this.data[n - 1]["valid"];
             this.currentStep = n;
+        }
+    }
+
+    update(data: any) {
+        this.data[this.currentStep - 1] = data;
+        this.valid = data["valid"];
     }
 
     send(): void {
@@ -98,6 +120,6 @@ export default class Form extends Vue {
         flex-direction: column
     .verify, .confirmation
         text-align: center
-        .buttons 
-            text-align: right
+    .buttons 
+        text-align: right
 </style>

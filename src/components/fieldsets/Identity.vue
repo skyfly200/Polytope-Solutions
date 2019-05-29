@@ -1,8 +1,8 @@
 <template lang="pug">
-v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
-    v-text-field(name="name" label="Full Name" v-model="name" :rules="rules.required" placeholder="John Smith" autocomplete="name" required)
-    v-text-field(name="phone" label="Phone Number" v-model="name" mask="phone" :rules="rules.required" placeholder="720-555-5555" autocomplete="phone" required)
-    v-text-field(name="email" type="email" label="Email" v-model="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
+v-form(ref="form" v-model="valid")
+    v-text-field(name="name" @input="update" label="Full Name" v-model="name" :rules="rules.required" placeholder="John Smith" autocomplete="name" required)
+    v-text-field(name="phone" @input="update" label="Phone Number" v-model="phone" :rules="rules.required" placeholder="720-555-5555" autocomplete="tel" required)
+    v-text-field(name="email" @input="update" label="Email" v-model="email" type="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
 </template>
 
 <script lang="ts">
@@ -12,10 +12,8 @@ import axios, { AxiosResponse } from "axios";
 @Component({})
 export default class Identity extends Vue {
   name: string = "";
-  company: string = "";
-  industry: string = "";
+  phone: string = "";
   email: string = "";
-  needs: string = "";
   rules = {
     required: [ (v: string) => !!v || 'This field is required' ],
     email: [
@@ -24,6 +22,22 @@ export default class Identity extends Vue {
     ]
   };
   valid: boolean = false;
+
+  validate() {
+    let form: any = this.$refs.form;
+    this.valid = form.validate();
+  }
+
+  update() {
+    this.validate();
+    const data = {
+      valid: this.valid,
+      name: this.name,
+      phone: this.phone,
+      email: this.email
+    };
+    this.$emit('update', data);
+  }
 }
 </script>
 
