@@ -1,5 +1,5 @@
 <template lang="pug">
-Solution.data(:title="title" :img="img" :list="list" :blurbs="blurbs")
+Solution.data(:title="title" :img="img" :topic="topic" :list="list" :blurbs="blurbs")
 </template>
 
 <script lang="ts">
