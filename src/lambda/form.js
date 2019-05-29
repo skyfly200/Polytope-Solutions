@@ -22,6 +22,7 @@ exports.handler = function(event, context, callback) {
     console.log("Empty request body");
     return callback(null, generateResponse("Invalid Request", 204));
   }
+
   //-- Make sure we have all required data. Otherwise, complain.
   const data = JSON.parse(event.body);
   if (!data.data || !data.topic) {
@@ -29,18 +30,31 @@ exports.handler = function(event, context, callback) {
     console.log(data);
     return callback(null, generateResponse("Missing Information", 204));
   }
+
   // build the email object from the request body
+  var emailBody = `
+    <h1>New Application to Polytope Solutions</h1>
+    <h4>${new Date().toLocaleString()}</h4>
+    <h2><b>Application Data:</b></h2>
+  `;
+  for (s in data.sections) {
+    emailBody += `
+      <h3>${data.sections[s]}</h3>
+    `;
+    for ((k,d) in data.data[s])
+      emailBody += `
+        <h3>${k}:</h3>
+        <p>${d}</p>
+      `;
+  }
+  console.log(emailBody);
   const email = {
     from: data.email,
     to: contactEmail,
     subject: "Application Form - " + data.topic,
-    html: `
-      <h1>New Application to Polytope Solutions</h1>
-      <h4>${new Date().toLocaleString()}</h4>
-      <h2><b>Application Data:</b></h2>
-      <p>${data.data}</p>
-      `
+    html: emailBody
   };
+
   // attempt to send email
   try {
     mailgun.messages().send(email, (error, body) => {
@@ -53,4 +67,5 @@ exports.handler = function(event, context, callback) {
     console.error(error);
     return callback(error, resp);
   }
+
 };

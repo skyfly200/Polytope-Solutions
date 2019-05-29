@@ -108,17 +108,21 @@ export default class Form extends Vue {
     send(): void {
         if (this.verified) {
             let t = this;
+            let formData = {
+                data: this.data,
+                sections: this.topics[this.topic].map((x: any) => x.title),
+                topic: this.topic
+            };
+            console.log(formData)
             axios
-                .post("https://polytopesolutions.com/.netlify/functions/form", {
-                    data: this.data,
-                    topic: this.topic
-                })
+                .post("https://polytopesolutions.com/.netlify/functions/form", formData)
                 .then(function(response) {
                     console.log(response);
                     t.sent = true;
                 })
                 .catch(function(error) {
                     console.log(error);
+                    // show user an error alert
                 });
         }
     }
