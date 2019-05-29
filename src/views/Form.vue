@@ -1,6 +1,6 @@
 <template lang="pug">
 Base
-    v-stepper(v-model="currentStep" vertical non-linear)
+    v-stepper(v-model="currentStep" vertical)
             template(v-for="n in stepCount")
                 v-stepper-step.indigo--text.text--darken-2(:step="n" @click="select($event, n)" :complete="currentStep > n" color="secondary" :key="n + '-step'") {{ topics[topic][n-1].title }}
                 v-stepper-content(:step="n" :key="n + '-content'")
@@ -95,7 +95,7 @@ export default class Form extends Vue {
 
     select($event:any, n:number): void {
         if (!!n && !this.sent && (n <= this.completed + 1)) {
-            this.valid = this.data[n - 1]["valid"];
+            this.valid = this.data[n - 1] ? this.data[n - 1]["valid"] : false;
             this.currentStep = n;
         }
     }
