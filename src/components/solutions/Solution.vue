@@ -8,10 +8,10 @@ v-layout.ma-4.solution
             v-divider
             v-card-text
                 v-layout.pa3(wrap)
-                    v-flex.description(lg6 md12)
+                    v-flex.description(md6 sm12)
                         h2.pa-3 Description
                         p(v-for="b in blurbs" :key="b") {{ b }}
-                    v-flex.features(lg6 md12)
+                    v-flex.features(md6 sm12)
                         h2.pa-3 List
                         ul.list
                             li(v-for="i in list" :key="i") {{ i }}
