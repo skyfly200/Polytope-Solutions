@@ -20,14 +20,16 @@ Base
                             .verify(v-for="n in stepCount")
                                 .section.pa-3
                                     h2 {{ topics[topic][n-1].title }}
-                                    template(v-for="(v, i) in data[n-1]")
-                                        h4(v-if="i !== 'valid'") {{ i }}:&nbsp;
-                                        span(v-if="i !== 'valid'") {{ v }}
+                                    v-layout.fields(wrap)
+                                        .field(v-for="(v, i) in data[n-1]")
+                                            span.fieldTitle(v-if="i !== 'valid'") {{ i }}:&nbsp;
+                                            span(v-if="i !== 'valid'") {{ v }}
                                 v-divider
-                            v-checkbox(v-model="verified" input-value="true" value label="Everything looks good. Send Away!")
+                        v-card-actions
+                            v-checkbox(v-model="verified" input-value="true" value label="Everything looks good")
                     .buttons
                         v-btn(@click="back" depressed) Back
-                        v-btn(@click="send" depressed) Send
+                        v-btn(@click="send" :disabled="!verified" depressed) Send
                 .confirmation(v-else)
                     h1 Sent!
                     .buttons
@@ -88,14 +90,19 @@ export default class Form extends Vue {
 
     back(): void {
         if (!this.firstStep) {
-            this.valid = this.data[this.currentStep - 2]["valid"];
+            this.valid = this.loadValid(this.currentStep - 2);
             this.currentStep--;
         }
     }
 
+    loadValid(n: number) {
+        let section = this.data[n];
+        return section ? (section["valid"] ? section["valid"] : false) : false;
+    }
+
     select($event:any, n:number): void {
         if (!!n && !this.sent && (n <= this.completed + 1)) {
-            this.valid = this.data[n - 1] ? this.data[n - 1]["valid"] : false;
+            this.valid = this.loadValid(n-1);
             this.currentStep = n;
         }
     }
@@ -113,7 +120,6 @@ export default class Form extends Vue {
                 sections: this.topics[this.topic].map((x: any) => x.title),
                 topic: this.topic
             };
-            console.log(formData)
             axios
                 .post("https://polytopesolutions.com/.netlify/functions/form", formData)
                 .then(function(response) {
@@ -147,6 +153,11 @@ export default class Form extends Vue {
         flex-direction: column
     .verify, .confirmation
         text-align: center
+    .fields
+        display: flex
+        justify-content: space-between
+        .fieldTitle
+            font-weight: bold
     .buttons 
         text-align: right
 </style>
