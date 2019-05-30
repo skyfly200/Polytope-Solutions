@@ -3,7 +3,7 @@ v-flex#contact-form(sm10 offset-sm1)
   v-card.pa-3(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="top-center")
     v-card-text
       .call-to-action
-        i.fas.fa-rocket.fa-5x
+        v-icon(color="secondary" x-large).fas.fa-rocket
         .header Let us help you find solutions today!
       v-form(ref="form" v-model="valid" @submit.prevent="sendContact")
         v-text-field(name="name" label="Name" v-model="name" :rules="rules.name" placeholder="John Smith" autocomplete="name" required)
@@ -11,8 +11,8 @@ v-flex#contact-form(sm10 offset-sm1)
         v-text-field(name="industry" label="Industry" v-model="industry" placeholder="Aerospace")
         v-text-field(name="email" type="email" label="Email" v-model="email" :rules="rules.email" placeholder="name@example.com" autocomplete="email" required)
         v-textarea(name="needs" label="Tell us about your needs" v-model="needs" :rules="rules.needs" placeholder="Our company needs help with..." auto-grow required)
-        v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact") Send
-        v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs") Reset
+        v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact" color="primary") Send
+        v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs" color="primary") Reset
         v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
   v-card.pa-3.form-confirmation(v-else data-aos="zoom-in-up" data-aos-anchor-placement="top-center")
     v-card-title
