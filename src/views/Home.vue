@@ -10,7 +10,7 @@ v-container(fluid).home
     v-layout.solutions-header
       h1 Solutions
     v-layout.solutions(wrap)
-      v-flex.solution(lg4 md6 xs12 v-for="s in solutions" :key="s.title")
+      v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
         v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
           v-img(:src="s.img" height="10em")
           v-card-title
@@ -18,13 +18,8 @@ v-container(fluid).home
           v-divider
           v-card-text.content
             v-layout.pa3(wrap)
-              v-flex.description(xl6 lg12)
-                h2 Description
+              v-flex.description
                 p {{ s.description }}
-              v-flex.features(xl6 lg12)
-                h2 List
-                ul.list
-                  li(v-for="i in s.list" :key="i") {{ i }}
           v-divider
           v-card-actions
             v-btn(:to="s.path" color="primary") More
@@ -53,8 +48,7 @@ export default class Home extends Vue {
         Accounts, Chat, Profiles, Groups, Activities, Relationships
         Domains, Hosting, DNS, Email, SMS
         Continuous, Integration, Testing & Deployment
-        `,
-      list: ["Item 1", "Item 2", "Item 3", "Item 4"]
+        `
     },
     brand: {
       title: "Brand",
@@ -64,8 +58,7 @@ export default class Home extends Vue {
         Presence, Message, Aesthetic, Following, Communication
         Content Creation, Scheduling, Strategy, Targeting
         Audio / Video Production, Photography, Web / Print Ads
-        `,
-      list: ["Item 1", "Item 2", "Item 3", "Item 4"]
+        `
     },
     data: {
       title: "Data",
@@ -75,8 +68,7 @@ export default class Home extends Vue {
         Data Collection, Organization, Transformation, Visualization
         Insights, Analytics, Planning, Projection, Action
         Databases, Machine Learning, Data Science
-        `,
-      list: ["Item 1", "Item 2", "Item 3", "Item 4"]
+        `
     }
   };
   blurbs: object = [
