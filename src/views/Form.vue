@@ -8,6 +8,7 @@ Base
                         component.form(:is="topics[topic][n-1].component" @update="update($event)")
                         .buttons
                             v-btn(v-if="!firstStep" @click="back" depressed) Back
+                            v-spacer
                             v-btn(@click="next" :disabled="!valid" depressed) Next
             v-stepper-step(:step="stepCount + 1" @click="select($event, stepCount+1)" color="secondary" light :complete="sent") Verify and Send
             v-stepper-content(:step="stepCount+1")
@@ -18,17 +19,17 @@ Base
                     v-card
                         v-card-text
                             .verify(v-for="n in stepCount")
+                                v-divider(v-if="n>1")
                                 .section.pa-3
                                     h2 {{ topics[topic][n-1].title }}
                                     v-layout.fields(wrap)
                                         .field(v-for="(v, i) in data[n-1]")
                                             span.fieldTitle(v-if="i !== 'valid'") {{ i }}:&nbsp;
-                                            span(v-if="i !== 'valid'") {{ v }}
-                                v-divider
-                        v-card-actions
-                            v-checkbox(v-model="verified" input-value="true" value label="Everything looks good")
+                                            span(v-if="i !== 'valid'") {{ v }
                     .buttons
                         v-btn(@click="back" depressed) Back
+                        v-spacer
+                        v-checkbox(v-if="false" v-model="verified" label="Everything looks good")
                         v-btn(@click="send" :disabled="!verified" depressed) Send
                 .confirmation(v-else)
                     h1 Sent!
@@ -59,7 +60,7 @@ export default class Form extends Vue {
     };
     data:Array<any> = Array.from({length: this.stepCount}, v => {});
     valid: boolean = false;
-    verified: boolean = false;
+    verified: boolean = true;
 
     @Prop(String) readonly topic!: string;
 
@@ -159,5 +160,5 @@ export default class Form extends Vue {
         .fieldTitle
             font-weight: bold
     .buttons 
-        text-align: right
+        display: flex
 </style>
