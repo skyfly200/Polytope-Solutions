@@ -13,8 +13,7 @@ v-container(fluid).home
       v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
         v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
           v-img(:src="s.img" height="10em")
-          v-card-title
-            h1 {{ s.title }}
+            h1.card-title {{ s.title }}
           v-divider
           v-card-text.content
             v-layout.pa3(wrap)
@@ -100,10 +99,11 @@ export default class Home extends Vue {
         display: flex
         flex-direction: column
         height: 100%
-        .v-card__title
-          text-align: center
-          h1 
-            width: 100%
+        .v-responsive__content
+          display: flex
+        .card-title
+          margin: auto
+          text-shadow: 0px 2px 3px black
         .content
           flex-grow: 1
         .list
