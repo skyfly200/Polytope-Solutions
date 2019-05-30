@@ -10,7 +10,7 @@ import Solution from "./Solution.vue";
   components: { Solution }
 })
 export default class Brand extends Vue {
-  img:string = "http://lorempixel.com/640/480/abstract/3";
+  img:string = "/img/desk.jpg";
   title:string = "Brand";
   list:Array<string> = ["Strategy", "Video", "Social", "Market"];
   blurbs:Array<string> = [

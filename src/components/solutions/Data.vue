@@ -10,7 +10,7 @@ import Solution from "./Solution.vue";
   components: { Solution }
 })
 export default class Data extends Vue {
-  img:string = "http://lorempixel.com/640/480/abstract/1";
+  img:string = "/img/data-wave.jpg";
   title:string = "Data";
   list:Array<string> = ["Visualization", "Storage, Processing and Retrieval", "Data Science", "IOT & Sensors"];
   blurbs:Array<string> = [

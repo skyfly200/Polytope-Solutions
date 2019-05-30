@@ -38,19 +38,19 @@ export default class Home extends Vue {
     web: {
       title: "Web",
       path: "/solution/web",
-      img: "http://lorempixel.com/640/480/abstract/5",
+      img: "/img/spider-web.jpg",
       description: "With mobile dominating at 52% of traffic and new form factors emerging. A modern cross-platform presence will help your company make the most impact and reach on the web of the future "
     },
     brand: {
       title: "Brand",
       path: "/solution/brand",
-      img: "http://lorempixel.com/640/480/abstract/3",
+      img: "/img/desk.jpg",
       description: "With today's oversaturation of content, it is easy to be lost in the shuffle. Building a brand with a community will keep you connected and on clients minds. Video and social are your new best friends."
     },
     data: {
       title: "Data",
       path: "/solution/data",
-      img: "http://lorempixel.com/640/480/abstract/1",
+      img: "/img/data-wave.jpg",
       description: "Data is key and there is more of it than ever. So much, in fact, it can be hard to make sense of. Turn your data into actionable insights and stay a step ahead with advanced forecast and analysis. "
     }
   };

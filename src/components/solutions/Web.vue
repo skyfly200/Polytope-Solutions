@@ -10,7 +10,7 @@ import Solution from "./Solution.vue";
   components: { Solution }
 })
 export default class Web extends Vue {
-  img:string = "http://lorempixel.com/640/480/abstract/5";
+  img:string = "/img/spider-web.jpg";
   title:string = "Web";
   list:Array<string> = ["Websites", "Apps", "SEO", "Infrastructure"];
   blurbs:Array<string> = [
