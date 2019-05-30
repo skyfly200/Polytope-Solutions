@@ -13,14 +13,10 @@ v-container(fluid).home
       v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
         v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
           v-img(:src="s.img" height="10em")
-            h1.card-title {{ s.title }}
-          v-divider
-          v-card-text.content
-            v-layout.pa3(wrap)
-              v-flex.description
-                p {{ s.description }}
-          v-divider
-          v-card-actions
+            .img-overlay
+              h1.card-title {{ s.title }}
+          v-card-text.content.pa3
+            p {{ s.description }}
             v-btn(:to="s.path" color="primary") More
   v-layout.contact
     ContactForm
@@ -99,7 +95,8 @@ export default class Home extends Vue {
         display: flex
         flex-direction: column
         height: 100%
-        .v-responsive__content
+        .img-overlay
+          height: 100%
           display: flex
         .card-title
           margin: auto
