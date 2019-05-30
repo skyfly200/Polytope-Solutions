@@ -9,10 +9,9 @@ v-layout.ma-4.solution
             v-card-text
                 v-layout.pa3(wrap)
                     v-flex.description(md6 sm12)
-                        h2.pa-3 Description
                         p(v-for="b in blurbs" :key="b") {{ b }}
                     v-flex.features(md6 sm12)
-                        h2.pa-3 List
+                        h2.pa-3 Services
                         ul.list
                             li(v-for="i in list" :key="i") {{ i }}
                     v-flex.content(xs12)

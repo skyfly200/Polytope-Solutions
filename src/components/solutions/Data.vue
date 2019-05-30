@@ -12,7 +12,7 @@ import Solution from "./Solution.vue";
 export default class Data extends Vue {
   img:string = "http://lorempixel.com/640/480/abstract/1";
   title:string = "Data";
-  list:Array<string> = ["Item 1", "Item 2", "Item 3", "Item 4"];
+  list:Array<string> = ["Visualization", "Storage, Processing and Retrieval", "Data Science", "IOT & Sensors"];
   blurbs:Array<string> = [
     "IOT, Sensors, Networking, Logging, Display, Analysis",
     "Data Collection, Organization, Transformation, Visualization",
