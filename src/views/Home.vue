@@ -44,31 +44,19 @@ export default class Home extends Vue {
       title: "Web",
       path: "/solution/web",
       img: "http://lorempixel.com/640/480/abstract/5",
-      description: `Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms
-        Accounts, Chat, Profiles, Groups, Activities, Relationships
-        Domains, Hosting, DNS, Email, SMS
-        Continuous, Integration, Testing & Deployment
-        `
+      description: "With mobile dominating at 52% of traffic and new form factors emerging. A modern cross-platform presence will help your company make the most impact and reach on the web of the future "
     },
     brand: {
       title: "Brand",
       path: "/solution/brand",
       img: "http://lorempixel.com/640/480/abstract/3",
-      description: `Youtube, Instagram, Facebook, Twitter, Podcasts
-        Presence, Message, Aesthetic, Following, Communication
-        Content Creation, Scheduling, Strategy, Targeting
-        Audio / Video Production, Photography, Web / Print Ads
-        `
+      description: "With today's oversaturation of content, it is easy to be lost in the shuffle. Building a brand with a community will keep you connected and on clients minds. Video and social are your new best friends."
     },
     data: {
       title: "Data",
       path: "/solution/data",
       img: "http://lorempixel.com/640/480/abstract/1",
-      description: `IOT, Sensors, Networking, Logging, Display, Analysis
-        Data Collection, Organization, Transformation, Visualization
-        Insights, Analytics, Planning, Projection, Action
-        Databases, Machine Learning, Data Science
-        `
+      description: "Data is key and there is more of it than ever. So much, in fact, it can be hard to make sense of. Turn your data into actionable insights and stay a step ahead with advanced forecast and analysis. "
     }
   };
   blurbs: object = [
