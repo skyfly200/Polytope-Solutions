@@ -9,15 +9,17 @@ v-container(fluid).home
   #solutions
     v-layout.solutions-header
       h1 Solutions
-    v-layout.solutions(wrap)
-      v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
-        v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
-          v-img(:src="s.img" height="10em")
-            .img-overlay
-              h1.card-title {{ s.title }}
-          v-card-text.content.pa3
-            p {{ s.description }}
-            v-btn(:to="s.path" color="primary") More
+    v-layout
+      v-flex(md12 lg10 offset-lg1)
+        v-layout.solutions(wrap)
+          v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
+            v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
+              v-img(:src="s.img" height="10em")
+                .img-overlay
+                  h1.card-title {{ s.title }}
+              v-card-text.content.pa3
+                p {{ s.description }}
+                v-btn(:to="s.path" color="primary") Explore
   v-layout.contact
     ContactForm
   Footer
@@ -81,7 +83,7 @@ export default class Home extends Vue {
       i
         margin: 5%
   #solutions
-    margin: 55vh 0
+    margin: 35vh 0
     .solutions-header
       justify-content: center
       padding: 2em
@@ -98,18 +100,17 @@ export default class Home extends Vue {
         .img-overlay
           height: 100%
           display: flex
+          background-color: rgba(0,0,0,0.25)
         .card-title
           margin: auto
           text-shadow: 0px 2px 3px black
+          font-size: 2.5em
         .content
           flex-grow: 1
         .list
           text-align: left
         .features
           padding-left: 1em
-        .v-card__actions
-          padding: 1em 0
-          margin: 0 auto
   .contact
-    hin-height: 100vh
+    min-height: 100vh
 </style>
