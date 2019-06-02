@@ -9,6 +9,7 @@ v-layout.ma-4.solution
             v-card-text
                 v-layout.pa3(wrap)
                     v-flex.description(md6 sm12)
+                        h2.pa-3 Skills
                         p(v-for="b in blurbs" :key="b") {{ b }}
                     v-flex.features(md6 sm12)
                         h2.pa-3 Services
