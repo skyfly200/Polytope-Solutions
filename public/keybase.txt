@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/skylerfly
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://polytopesolutions.com
+  * I am skylerfly (https://keybase.io/skylerfly) on keybase.
+  * I have a public key ASBdNk4G3cDdDGxqki6Aq9qM034eOk_AzzpDsLlcyCXMxAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01205d364e06ddc0dd0c6c6a922e80abda8cd37e1e3a4fc0cf3a43b0b95cc825ccc40a",
+      "host": "keybase.io",
+      "kid": "01205d364e06ddc0dd0c6c6a922e80abda8cd37e1e3a4fc0cf3a43b0b95cc825ccc40a",
+      "uid": "2f2870f8c4998b5f47624136d2caab19",
+      "username": "skylerfly"
+    },
+    "merkle_root": {
+      "ctime": 1580945428,
+      "hash": "fa1cd86d50e6edab5d8fe445e6029741350f47609e90d383befc8f78afcabd9bb8ca43ca03cfda1884dd2d89956758ea0d690a2d83e29f121d14233449da540c",
+      "hash_meta": "0fa28891cff0fb3772541fdd4e9d5be4ede0af5b830388e8ef57148d92e741ed",
+      "seqno": 14503448
+    },
+    "service": {
+      "entropy": "HN1wUkFF/qAiBxMSLUpQRq3P",
+      "hostname": "polytopesolutions.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.2.0"
+  },
+  "ctime": 1580945454,
+  "expire_in": 504576000,
+  "prev": "84746a1382c1b3ec99c9671e08c825b0e1766ae00db14c02cf81f763e1a83023",
+  "seqno": 21,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgXTZOBt3A3QxsapIugKvajNN+HjpPwM86Q7C5XMglzMQKp3BheWxvYWTESpcCFcQghHRqE4LBs+yZyWceCMglsOF2auANsUwCz4H3Y+GoMCPEIMvyBNxlKOk6MObxMuPXCYyW3y+C5/BpLQuaF/+9oXiVAgHCo3NpZ8RAguFUF3OKAb10YAzgZmf2xusSlRR4lyXKwPGxoL938yPEYHruULVFq5KvkIFoHvq9rynnSMDytu1vGn5paslPAqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIBr3/bn/lDGWDWCPWs4xR41bdIUftQDYMVfjp85TzG0no3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/skylerfly
+
+==================================================================
