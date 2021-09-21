@@ -7,8 +7,6 @@ Base
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import Solution from "@/components/solutions/Solution.vue";
-import Brand from "@/components/solutions/Brand.vue";
-import Data from "@/components/solutions/Data.vue";
 import Web from "@/components/solutions/Web.vue";
 
 @Component({
@@ -16,8 +14,6 @@ import Web from "@/components/solutions/Web.vue";
 })
 export default class Footer extends Vue {
     topics: Object = {
-        brand: Brand,
-        data: Data,
         web: Web
     };
     @Prop(String) readonly topic!: string;
