@@ -38,23 +38,11 @@ import Footer from "@/components/Footer.vue";
 export default class Home extends Vue {
   solutions: object = {
     web: {
-      title: "Web",
+      title: "On-Chain RNG",
       path: "/solution/web",
       img: "/img/spider-web.jpg",
-      description: "With mobile dominating at 52% of traffic and new form factors emerging. A modern cross-platform presence will help your company make the most impact and reach on the web of the future "
+      description: "Need a secure and effiecient source of randomness on an ETH smart contract? We've got you covered! A low gas usage RNG provider entirely on chain."
     },
-    brand: {
-      title: "Brand",
-      path: "/solution/brand",
-      img: "/img/desk.jpg",
-      description: "With today's oversaturation of content, it is easy to be lost in the shuffle. Building a brand with a community will keep you connected and on clients minds. Video and social are your new best friends."
-    },
-    data: {
-      title: "Data",
-      path: "/solution/data",
-      img: "/img/data-wave.jpg",
-      description: "Data is key and there is more of it than ever. So much, in fact, it can be hard to make sense of. Turn your data into actionable insights and stay a step ahead with advanced forecast and analysis. "
-    }
   };
   blurbs: object = [
     {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles"},
