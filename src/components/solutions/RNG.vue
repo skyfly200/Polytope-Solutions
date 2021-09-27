@@ -9,9 +9,9 @@ import Solution from "./Solution.vue";
 @Component({
   components: { Solution }
 })
-export default class Web extends Vue {
+export default class RNG extends Vue {
   img:string = "/img/spider-web.jpg";
-  title:string = "Web";
+  title:string = "RNG";
   list:Array<string> = ["Websites", "Apps", "SEO", "Infrastructure"];
   blurbs:Array<string> = [
     "Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms",

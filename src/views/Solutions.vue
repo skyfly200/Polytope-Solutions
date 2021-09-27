@@ -7,14 +7,16 @@ Base
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import Solution from "@/components/solutions/Solution.vue";
-import Web from "@/components/solutions/Web.vue";
+import RNG from "@/components/solutions/RNG.vue";
+import Consulting from "@/components/solutions/Consulting.vue";
 
 @Component({
     components: { Base }
 })
 export default class Footer extends Vue {
     topics: Object = {
-        web: Web
+        rng: RNG,
+        consult: Consulting
     };
     @Prop(String) readonly topic!: string;
 }

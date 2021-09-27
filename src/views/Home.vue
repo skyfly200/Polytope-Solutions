@@ -12,7 +12,7 @@ v-container(fluid).home
     v-layout
       v-flex(md12 lg10 offset-lg1)
         v-layout.solutions(wrap)
-          v-flex.solution(md4 xs12 v-for="s in solutions" :key="s.title")
+          v-flex.solution(md6 xs12 v-for="s in solutions" :key="s.title")
             v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
               v-img(:src="s.img" height="10em")
                 .img-overlay
@@ -42,6 +42,12 @@ export default class Home extends Vue {
       path: "/solution/web",
       img: "/img/spider-web.jpg",
       description: "Need a secure and effiecient source of randomness on an ETH smart contract? We've got you covered! A low gas usage RNG provider entirely on chain."
+    },
+    consult: {
+      title: "NFT Consulting",
+      path: "/solution/consult",
+      img: "/img/spider-web.jpg",
+      description: "We can help guide you toward the right path to make your NFT project a success. We can save you time by answering all your questions on NFTs in a one stop shop."
     },
   };
   blurbs: object = [
