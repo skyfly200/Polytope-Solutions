@@ -12,12 +12,9 @@ import Solution from "./Solution.vue";
 export default class RNG extends Vue {
   img:string = "/img/spider-web.jpg";
   title:string = "RNG";
-  list:Array<string> = ["Websites", "Apps", "SEO", "Infrastructure"];
+  list:Array<string> = ["On-Chain RNG"];
   blurbs:Array<string> = [
-    "Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms",
-    "Accounts, Chat, Profiles, Groups, Activities, Relationships",
-    "Domains, Hosting, DNS, Email, SMS",
-    "Continuous, Integration, Testing & Deployment"
+    "",
   ];
   @Prop(String) readonly topic!: string;
 }

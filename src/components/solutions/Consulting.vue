@@ -12,12 +12,9 @@ import Solution from "./Solution.vue";
 export default class Consulting extends Vue {
   img:string = "/img/spider-web.jpg";
   title:string = "Consulting";
-  list:Array<string> = ["Websites", "Apps", "SEO", "Infrastructure"];
+  list:Array<string> = ["NFT Consulting"];
   blurbs:Array<string> = [
-    "Mobile First Sites, Landing Pages, PWAs, CMSs, Stores, Platforms",
-    "Accounts, Chat, Profiles, Groups, Activities, Relationships",
-    "Domains, Hosting, DNS, Email, SMS",
-    "Continuous, Integration, Testing & Deployment"
+    "",
   ];
   @Prop(String) readonly topic!: string;
 }
