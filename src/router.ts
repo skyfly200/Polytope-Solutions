@@ -20,11 +20,16 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
-      path: "/solution/:topic",
-      name: "solution",
+      path: "/rng",
+      name: "rng",
       component: () =>
-        import(/* webpackChunkName: "web" */ "./views/Solutions.vue"),
-      props: true 
+        import(/* webpackChunkName: "rng" */ "./views/RNG.vue")
+    },
+    {
+      path: "/consulting",
+      name: "consulting",
+      component: () =>
+        import(/* webpackChunkName: "consulting" */ "./views/Consulting.vue")
     },
     {
       path: "/form/:topic",

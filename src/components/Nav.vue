@@ -8,8 +8,8 @@ v-toolbar#nav(color="primary")
     v-toolbar-items.hidden-sm-and-down
         v-btn(to="/" flat) Home
         v-btn(to="/about" flat) About
-        v-btn(to="/solution/rng" flat) RNG
-        v-btn(to="/solution/consult" flat) Consulting
+        v-btn(to="/rng" flat) RNG
+        v-btn(to="/consult" flat) Consulting
 </template>
 
 <script lang="ts">
