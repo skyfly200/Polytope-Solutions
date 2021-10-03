@@ -5,7 +5,15 @@ Base.about
       v-card.pa3.about-card
         v-card-title
           h1 About Us
-        h3 More comming soon
+        v-card-text
+          p Maybe you’ve heard about one of my projects somewhere in the space, connected with me on Discord, or perused my NFT gallery...
+          p If you haven’t heard of me, I’m the dude who built the code ArtBlocks uses for their Random Number Generator engine -- the foundation of every Generative Art NFT drop on the platform.
+          p I’m a man of many interests -- but nowadays, trading in and supporting the growing NFT Art space is perhaps my greatest passion.
+          p On top of the many NFT projects I’ve supported and collected, I’ve also been involved in a number of successful drops and other projects built on The Blockchain.
+          p And if you’re an artist or developer planning one of your own, I would love to lend you my experience and help you maximize the impact of your project.
+          p So if you’d like me to consult on your NFT drop or platform to help you optimize your project for success…
+          p Go ahead and click the button below to book your consultation with me.
+          v-btn Book a Consultation
 </template>
 
 <script lang="ts">
