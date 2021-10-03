@@ -4,8 +4,8 @@ Base.about
     v-flex(sm10 offset-sm1)
       v-card.pa3.about-card
         v-card-title
-          h1 About us
-        h3 More info soon to come
+          h1 About Us
+        h3 More comming soon
 </template>
 
 <script lang="ts">

@@ -19,7 +19,7 @@ v-container(fluid).home
                   h1.card-title {{ s.title }}
               v-card-text.content.pa3
                 p {{ s.description }}
-                v-btn(:to="s.path" color="primary") Explore
+                v-btn(:to="s.path" color="primary") Learn More
   v-layout.contact
     ContactForm
   Footer
@@ -41,13 +41,13 @@ export default class Home extends Vue {
       title: "On-Chain RNG",
       path: "/solution/web",
       img: "/img/spider-web.jpg",
-      description: "Need a secure and effiecient source of randomness on an ETH smart contract? We've got you covered! A low gas usage RNG provider entirely on chain."
+      description: "Want to drop your own Generative Art NFT, without the Oracle fees, without depending on a centralized platform, and with the same level of security and dependability as ArtBlocks on your own platform?"
     },
     consult: {
       title: "NFT Consulting",
       path: "/solution/consult",
       img: "/img/spider-web.jpg",
-      description: "We can help guide you toward the right path to make your NFT project a success. We can save you time by answering all your questions on NFTs in a one stop shop."
+      description: "Want to bring in one of the leading innovators in the Generative Art NFT space to help optimize your upcoming NFT drop for security, efficiency, and success?"
     },
   };
   blurbs: object = [
