@@ -4,8 +4,9 @@ Base.about
     v-flex(sm10 offset-sm1)
       v-card.pa3.about-card
         v-card-title
-          h1 About Us
+          h1 Consulting
         v-card-text
+          h2 TODO: Add a picture of me here
           p Maybe you’ve heard about one of my projects somewhere in the space, connected with me on Discord, or perused my NFT gallery...
           p If you haven’t heard of me, I’m the dude who built the code ArtBlocks uses for their Random Number Generator engine -- the foundation of every Generative Art NFT drop on the platform.
           p I’m a man of many interests -- but nowadays, trading in and supporting the growing NFT Art space is perhaps my greatest passion.
