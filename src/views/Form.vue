@@ -54,9 +54,8 @@ export default class Form extends Vue {
     sent:boolean = false;
     completed:number = 0;
     topics:any = {
-        brand: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}],
-        data: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}],
-        web: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}]
+        rng: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}],
+        consulting: [{title: "Identity", component: Identity}, {title: "Background", component: Background}, {title: "Inquery", component: Inquery}]
     };
     data:Array<any> = Array.from({length: this.stepCount}, v => {});
     valid: boolean = false;
