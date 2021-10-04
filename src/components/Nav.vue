@@ -9,7 +9,7 @@ v-toolbar#nav(color="primary")
         v-btn(to="/" flat) Home
         v-btn(to="/about" flat) About
         v-btn(to="/rng" flat) RNG
-        v-btn(to="/consult" flat) Consulting
+        v-btn(to="/consulting" flat) Consulting
 </template>
 
 <script lang="ts">
