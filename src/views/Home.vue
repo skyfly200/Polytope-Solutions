@@ -39,13 +39,13 @@ export default class Home extends Vue {
   solutions: object = {
     web: {
       title: "On-Chain RNG",
-      path: "/solution/web",
+      path: "/rng",
       img: "/img/spider-web.jpg",
       description: "Want to drop your own Generative Art NFT, without the Oracle fees, without depending on a centralized platform, and with the same level of security and dependability as ArtBlocks on your own platform?"
     },
     consult: {
       title: "NFT Consulting",
-      path: "/solution/consult",
+      path: "/consulting",
       img: "/img/spider-web.jpg",
       description: "Want to bring in one of the leading innovators in the Generative Art NFT space to help optimize your upcoming NFT drop for security, efficiency, and success?"
     },
