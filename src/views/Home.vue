@@ -1,11 +1,11 @@
 <template lang="pug">
 v-container(fluid).home
   Landing
-  v-layout.blurbs
-    v-flex(xs10 offset-xs1)
-      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
-        i.fas.fa-5x(:class="b.icon")
-        span {{ b.text }}
+  //- v-layout.blurbs
+  //-   v-col(col=4)
+  //-     .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
+  //-       i.fas.fa-5x(:class="b.icon")
+  //-       span {{ b.text }}
   #solutions
     v-layout.solutions-header
       h1 Solutions
@@ -29,11 +29,12 @@ v-container(fluid).home
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import Landing from "@/components/Landing.vue";
+import Nav from "@/components/Nav.vue";
 import ContactForm from "@/components/ContactForm.vue";
 import Footer from "@/components/Footer.vue";
 
 @Component({
-  components: { Landing, ContactForm, Footer }
+  components: {Landing, ContactForm, Footer }
 })
 export default class Home extends Vue {
   solutions: object = {
@@ -63,13 +64,13 @@ export default class Home extends Vue {
 .home
   .blurbs
     display: flex
-    flex-direction: column
+    flex-direction: row
     justify-content: center
     p
       margin: 20px
     .blurb
       font-size: 2.2rem
-      height: 100vh
+      height: 25vh
       display: flex
       flex-direction: column
       align-items: center
