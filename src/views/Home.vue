@@ -51,6 +51,7 @@ export default class Home extends Vue {
       description: "Want to bring in one of the leading innovators in the Generative Art NFT space to help optimize your upcoming NFT drop for security, efficiency, and success?"
     },
   };
+  
   blurbs: object = [
     {"icon": {"fa-cube": "true"}, "aos": "flip-down", "text": "Look at your problems from new angles"},
     {"icon": {"fa-code": "true"}, "aos": "flip-down", "text": "Using the latest technology"},

@@ -2,7 +2,7 @@
 v-toolbar#nav(color="primary")
     router-link(to="/")
         v-avatar
-            v-img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
+            v-img(src="img/favcon.png")
     v-toolbar-title Polytope Solutions
     v-spacer
     v-toolbar-items.hidden-sm-and-down
@@ -21,7 +21,9 @@ export default class Nav extends Vue {
 </script>
 
 <style lang="sass" scoped>
-#nav
-    .v-image
-        filter: invert(100%)
+#nav       
+    embed
+        height: 90%
+        // filter: invert(100%)
+        border-radius: 90%
 </style>

@@ -11,7 +11,7 @@ body
   background-color: black
 
 #app
-  font-family: 'Rajdhani', Arial, sans-serif
+  font-family: 'nuntio', Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
