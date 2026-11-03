@@ -20,7 +20,9 @@ v-container(fluid).home
               v-card-text.content.pa3
                 p {{ s.description }}
                 v-btn(:to="s.path" color="primary") Learn More
-  v-layout.contact
+  ExampleProjects
+  Testimonials
+  v-layout.contact#contact
     ContactForm
   Footer
 </template>
@@ -31,9 +33,11 @@ import axios, { AxiosResponse } from "axios";
 import Landing from "@/components/Landing.vue";
 import ContactForm from "@/components/ContactForm.vue";
 import Footer from "@/components/Footer.vue";
+import Testimonials from "@/components/Testimonials.vue";
+import ExampleProjects from "@/components/ExampleProjects.vue";
 
 @Component({
-  components: { Landing, ContactForm, Footer }
+  components: { Landing, ContactForm, Footer, Testimonials, ExampleProjects }
 })
 export default class Home extends Vue {
   solutions: object = {
