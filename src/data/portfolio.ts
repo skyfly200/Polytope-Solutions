@@ -207,7 +207,8 @@ export const projects: Project[] = [
       "Oracle-free, with entropy drawn from the blockchain"
     ],
     tags: ["Solidity", "RNG", "Generative Art"],
-    img: "/img/data-wave.jpg"
+    img: "/img/data-wave.jpg",
+    placeholder: true
   },
   {
     title: "TinyBoxes",
@@ -220,7 +221,8 @@ export const projects: Project[] = [
       "Proving ground for the RNG engine"
     ],
     tags: ["Solidity", "On-Chain SVG", "Vue"],
-    img: "/img/spider-web.jpg"
+    img: "/img/spider-web.jpg",
+    placeholder: true
   },
   {
     title: "Sample: Marketplace dApp",

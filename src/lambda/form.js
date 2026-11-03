@@ -41,7 +41,7 @@ exports.handler = function(event, context, callback) {
     emailBody += `
       <h3>${data.sections[s]}</h3>
     `;
-    for ((k,d) in data.data[s])
+    for (const [k, d] of Object.entries(data.data[s]))
       emailBody += `
         <h3>${k}:</h3>
         <p>${d}</p>
