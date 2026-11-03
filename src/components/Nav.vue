@@ -2,7 +2,7 @@
 v-toolbar#nav(color="primary")
     router-link(to="/")
         v-avatar
-            v-img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
+            Polytope600(size="48px" :speed="0.25" :line-width="0.8")
     v-toolbar-title Polytope Solutions
     v-spacer
     v-toolbar-items.hidden-sm-and-down
@@ -14,14 +14,14 @@ v-toolbar#nav(color="primary")
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import Polytope600 from "@/components/Polytope600.vue";
 
-@Component({})
+@Component({
+    components: { Polytope600 }
+})
 export default class Nav extends Vue {
 }
 </script>
 
 <style lang="sass" scoped>
-#nav
-    .v-image
-        filter: invert(100%)
 </style>
