@@ -8,21 +8,7 @@ v-container(fluid).home
         .reveal(:class="{ 'is-on': activeBlurb === i }")
           span.blurb-text(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
   #solutions.snap-section(ref="solutions")
-    v-layout.solutions-header
-      .reveal(:class="{ 'is-on': solutionsActive }")
-        h1(v-tilt) Solutions
-    v-layout
-      v-flex(md12 lg10 offset-lg1)
-        v-layout.solutions(wrap)
-          v-flex.solution(md6 xs12 v-for="(s, key, idx) in solutions" :key="s.title")
-            .reveal(:class="{ 'is-on': solutionsActive }" :style="{ transitionDelay: (idx * 90) + 'ms' }")
-              v-card
-                .solution-img(:style="{ backgroundImage: 'url(' + s.img + ')' }")
-                  .img-overlay
-                    h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}
-                v-card-text.content.pa3
-                  p {{ s.description }}
-                  v-btn(:to="s.path" color="primary") Learn More
+    Solutions(:class="{ 'is-on': solutionsActive }")
   v-layout.contact.snap-section#contact
     ContactForm
   Footer
@@ -34,6 +20,7 @@ import axios, { AxiosResponse } from "axios";
 import Landing from "@/components/Landing.vue";
 import ContactForm from "@/components/ContactForm.vue";
 import Footer from "@/components/Footer.vue";
+import Solutions from "@/components/Solutions.vue";
 import Projection4D from "@/components/Projection4D.vue";
 import { ShapeName } from "@/lib/polytopes";
 
@@ -46,7 +33,7 @@ interface Blurb {
 }
 
 @Component({
-  components: { Landing, ContactForm, Footer, Projection4D }
+  components: { Landing, ContactForm, Footer, Projection4D, Solutions }
 })
 export default class Home extends Vue {
   // Index of the blurb panel currently snapped into view, or -1.
@@ -56,20 +43,6 @@ export default class Home extends Vue {
   private observer!: IntersectionObserver | null;
   private solutionsObserver!: IntersectionObserver | null;
 
-  solutions: object = {
-    web: {
-      title: "On-Chain RNG",
-      path: "/rng",
-      img: "/img/spider-web.jpg",
-      description: "Want to drop your own Generative Art NFT, without the Oracle fees, without depending on a centralized platform, and with the same level of security and dependability as ArtBlocks on your own platform?"
-    },
-    consult: {
-      title: "NFT Consulting",
-      path: "/consulting",
-      img: "/img/spider-web.jpg",
-      description: "Want to bring in one of the leading innovators in the Generative Art NFT space to help optimize your upcoming NFT drop for security, efficiency, and success?"
-    },
-  };
   blurbs: Blurb[] = [
     { shape: "tesseract", color: "255,160,0", weight: 1, text: "Look at your problems from new angles" },
     { shape: "cell24", color: "255,255,255", weight: 0.5, text: "Using the latest technology" },
@@ -163,46 +136,6 @@ export default class Home extends Vue {
       transform: none
   #solutions
     margin: 0
-    .solutions-header
-      justify-content: center
-      padding: 2em
-      h1
-        font-size: clamp(36px, 5vw, 56px)
-        line-height: 1.1
-    .solution .reveal
-      height: 100%
-  .solutions
-    justify-content: space-between
-    .solution
-      margin: 2em 0
-      .v-card
-        margin: 1em
-        display: flex
-        flex-direction: column
-        height: 100%
-        .solution-img
-          height: 10em
-          background-size: cover
-          background-position: center
-        .img-overlay
-          height: 100%
-          display: flex
-          background-color: rgba(0,0,0,0.25)
-        .card-title
-          margin: auto
-          text-shadow: 0px 2px 3px black
-          font-size: clamp(22px, 2.2vw, 32px)
-          line-height: 1.2
-        .content
-          flex-grow: 1
-          p
-            font-size: clamp(16px, 1.3vw, 20px)
-            line-height: 1.55
-            margin: 0 0 1em
-        .list
-          text-align: left
-        .features
-          padding-left: 1em
   .contact
     min-height: 100vh
 </style>
