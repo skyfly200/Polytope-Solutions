@@ -3,7 +3,7 @@ v-container(fluid).home
   Landing
   v-layout.blurbs.snap-section
     v-flex(xs10 offset-xs1)
-      .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
+      .blurb(v-for="b in blurbs")
         i.fas.fa-5x(:class="b.icon")
         span(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
   #solutions.snap-section
@@ -13,7 +13,7 @@ v-container(fluid).home
       v-flex(md12 lg10 offset-lg1)
         v-layout.solutions(wrap)
           v-flex.solution(md6 xs12 v-for="s in solutions" :key="s.title")
-            v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
+            v-card
               .solution-img(:style="{ backgroundImage: 'url(' + s.img + ')' }")
                 .img-overlay
                   h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}

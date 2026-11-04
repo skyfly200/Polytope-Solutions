@@ -1,6 +1,6 @@
 <template lang="pug">
 v-flex#contact-form(sm10 offset-sm1)
-  v-card.pa-3(v-if="!sent" data-aos="zoom-in-up" data-aos-anchor-placement="top-center")
+  v-card.pa-3(v-if="!sent")
     v-card-text
       .call-to-action
         v-icon(color="secondary" x-large).fas.fa-rocket
@@ -14,7 +14,7 @@ v-flex#contact-form(sm10 offset-sm1)
         v-btn(type="submit" :disabled="!valid" @click.prevent="sendContact" color="primary") Send
         v-btn(@click="clearForm"  :disabled="!name && !company && !industry && !email && !needs" color="primary") Reset
         v-alert(:value="alert" :type="alertType" dismissible) {{ alert }}
-  v-card.pa-3.form-confirmation(v-else data-aos="zoom-in-up" data-aos-anchor-placement="top-center")
+  v-card.pa-3.form-confirmation(v-else)
     v-card-title
       h1 Thanks for reaching out! We will be in touch very soon.
     v-card-actions

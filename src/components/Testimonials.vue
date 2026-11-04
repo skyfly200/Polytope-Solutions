@@ -5,7 +5,7 @@
       h2.section-title What clients say
       v-layout(wrap justify-center)
         v-flex.testimonial(xs12 md4 v-for="(t, i) in testimonials" :key="i")
-          v-card.testimonial-card(data-aos="fade-up" :data-aos-delay="i * 120")
+          v-card.testimonial-card
             v-card-text
               span.placeholder-badge(v-if="t.placeholder") Sample
               i.fas.fa-quote-left.quote-icon
