@@ -87,12 +87,12 @@ export default class ContactForm extends Vue {
 </script>
 
 <style lang="sass" scoped>
+// Sits inside the snap-section wrapper (Home.vue), which already centres it and
+// provides the full-height screen. Vuetify's offset-sm1 margin would push it
+// off-centre, so it is cleared here.
 #contact-form
-  display: flex
-  align-items: center
-  justify-content: center
-  padding: 10vh 0
-  min-height: 100vh
+  margin-left: 0 !important
+  width: 100%
   .v-card
     width: 100%
     min-height: 600px

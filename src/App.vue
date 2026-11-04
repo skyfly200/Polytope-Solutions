@@ -38,7 +38,7 @@ body
     max-width: 1100px
 
 #app
-  font-family: 'Rajdhani', Arial, sans-serif
+  font-family: 'Space Grotesk', Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
