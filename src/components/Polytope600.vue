@@ -28,7 +28,7 @@ const BUCKETS = 8;
 export default class Polytope600 extends Vue {
   @Prop({ default: "100%" }) readonly size!: string;
   // Radians per second for the primary 4D rotation.
-  @Prop({ default: 0.35 }) readonly speed!: number;
+  @Prop({ default: 0.15 }) readonly speed!: number;
   @Prop({ default: 1.2 }) readonly lineWidth!: number;
   @Prop({ default: "255,255,255" }) readonly color!: string;
   // The cursor drives two of the 4D rotation planes (XW and YW). The shape
@@ -165,8 +165,8 @@ export default class Polytope600 extends Vue {
     // While the pointer is active it sets the target; once it has been still
     // for a moment, the target drifts gently on its own so the logo keeps moving.
     const active = this.followMouse && this.lastMove && now - this.lastMove < 2500;
-    const tx = active ? this.mx : Math.sin(this.t * 0.21) * 0.45;
-    const ty = active ? this.my : Math.cos(this.t * 0.16) * 0.35;
+    const tx = active ? this.mx : Math.sin(this.t * 0.1) * 0.45;
+    const ty = active ? this.my : Math.cos(this.t * 0.08) * 0.35;
     // Ease toward the target so the rotation never snaps.
     const k = Math.min(1, dt * 2.2);
     this.vx += (tx - this.vx) * k;

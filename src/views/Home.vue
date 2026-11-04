@@ -14,7 +14,7 @@ v-container(fluid).home
         v-layout.solutions(wrap)
           v-flex.solution(md6 xs12 v-for="s in solutions" :key="s.title")
             v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
-              v-img(:src="s.img" height="10em")
+              .solution-img(:style="{ backgroundImage: 'url(' + s.img + ')' }")
                 .img-overlay
                   h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}
               v-card-text.content.pa3
@@ -74,6 +74,7 @@ export default class Home extends Vue {
     .blurb
       font-size: 2.2rem
       height: 100vh
+      scroll-snap-align: start
       display: flex
       flex-direction: column
       align-items: center
@@ -81,7 +82,7 @@ export default class Home extends Vue {
       i
         margin: 5%
   #solutions
-    margin: 35vh 0
+    margin: 0
     .solutions-header
       justify-content: center
       padding: 2em
@@ -95,6 +96,10 @@ export default class Home extends Vue {
         display: flex
         flex-direction: column
         height: 100%
+        .solution-img
+          height: 10em
+          background-size: cover
+          background-position: center
         .img-overlay
           height: 100%
           display: flex

@@ -2,7 +2,7 @@
 v-toolbar#nav(color="primary")
     router-link(to="/")
         v-avatar
-            Polytope600(size="48px" :speed="0.25" :line-width="0.8")
+            Polytope600(size="48px" :speed="0.15" :line-width="0.8")
     v-toolbar-title Polytope Solutions
     v-spacer
     v-toolbar-items.hidden-sm-and-down
