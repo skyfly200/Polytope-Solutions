@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "vite",
     "serve": "vite",
-    "build": "vite build",
+    "build": "npm run build:site && npm run build:lambda",
     "preview": "vite preview",
-    "lambda-serve": "netlify-lambda serve src/lambda"
+    "lambda-serve": "netlify-lambda serve src/lambda",
+    "build:site": "vite build",
+    "build:lambda": "netlify-lambda build src/lambda"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
