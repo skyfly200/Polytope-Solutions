@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import 'vuetify/src/stylus/app.styl'
+// Full Vuetify component CSS. app.styl only pulls in base/generic styles, so
+// components (text fields, buttons, cards) rendered unstyled after the Vite move.
+import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify, {
   iconfont: 'fa',
