@@ -1,5 +1,7 @@
 # Polytope-Solutions
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a7455cf9-205c-4ef9-a45f-312e3c0c2b92/deploy-status)](https://app.netlify.com/projects/polytope-solutions/deploys)
+
 ## Project setup
 ```
 npm install
