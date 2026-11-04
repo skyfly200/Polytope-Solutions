@@ -64,6 +64,7 @@ section#contact-form.contact-card
   .launch(v-if="overlay" ref="launch" :class="['st-' + stage, { reversing }]" aria-hidden="true")
     .backdrop
     .flash(ref="flash")
+    .caption(v-if="caption" :key="caption") {{ caption }}
     //- The sheet of paper: composed, snapshotted, then folded in half twice.
     .paperbox(v-if="paperVisible" key="paper" ref="box" :style="boxStyle")
       .sheet(v-if="stage === 'gather' || stage === 'snap'" key="sheet" ref="sheet" :class="{ holding }")
@@ -129,13 +130,15 @@ const CHIP_MS = 820;
 const CHIP_STAGGER_MS = 55;
 const CHIP_START_MS = 200;
 const SNAP_MS = 420;
-const FOLD_MS = 760;
-const MOVE_MS = 560;
-const SLIDE_MS = 560;
-const FLAP_MS = 640;
-const SEAL_MS = 360;
-const LOAD_MS = 1250;
-const LAUNCH_MS = 1100;
+const FOLD_MS = 1000;
+const FOLD_PAUSE_MS = 250;
+const MOVE_MS = 700;
+const SLIDE_MS = 700;
+const FLAP_MS = 850;
+const SEAL_MS = 550;
+const SEALED_HOLD_MS = 500;
+const LOAD_MS = 2700;
+const LAUNCH_MS = 1700;
 const EASE = "cubic-bezier(0.5, 0, 0.2, 1)";
 
 // The letter is laid out at a fixed size and scaled to fit the screen.
@@ -213,6 +216,7 @@ export default class StartForm extends Vue {
   chipsVisible: boolean = true;
   blocksReady: boolean = false;
   holding: boolean = false;
+  caption: string = "";
   boxScale: number = 1;
   pocket: { left: number; top: number; width: number; height: number } = { left: 0, top: 0, width: 0, height: 0 };
   private anims: Animation[] = [];
@@ -346,14 +350,25 @@ export default class StartForm extends Vue {
       return;
     }
 
-    await this.foldLetter();
-    await this.sealEnvelope();
-    if (!this.alive) return;
+    // The request has succeeded. Whatever happens in the animation from here,
+    // the visitor still gets the confirmation.
+    try {
+      this.caption = "Folding it up";
+      await this.foldLetter();
+      this.caption = "Sealing the envelope";
+      await this.sealEnvelope();
+      if (!this.alive) return;
+      await wait(SEALED_HOLD_MS);
 
-    this.stage = "loading";
-    await wait(LOAD_MS);
-    this.stage = "launching";
-    await wait(LAUNCH_MS);
+      this.caption = "Loading the rocket";
+      this.stage = "loading";
+      await this.loadRocket();
+      this.caption = "Blast off!";
+      this.stage = "launching";
+      await this.blastOff();
+    } catch (e) {
+      console.log(e);
+    }
     if (!this.alive) return;
 
     this.sent = true;
@@ -412,6 +427,7 @@ export default class StartForm extends Vue {
     this.chipsVisible = true;
     this.blocksReady = false;
     this.holding = false;
+    this.caption = "";
   }
 
   // Steps 1 and 2: the fields squash into text blocks that fly into place on a
@@ -424,6 +440,7 @@ export default class StartForm extends Vue {
     this.blocksReady = false;
     this.chipsVisible = true;
     this.cardHidden = true;
+    this.caption = "Writing it up";
     this.stage = "gather";
     await this.$nextTick();
 
@@ -500,6 +517,7 @@ export default class StartForm extends Vue {
 
     // Snapshot: viewfinder corners, a flash and a little pop.
     this.stage = "snap";
+    this.caption = "Saving a snapshot";
     const frame = this.$refs.frame as HTMLElement;
     const flash = this.$refs.flash as HTMLElement;
     const snap = [
@@ -560,6 +578,8 @@ export default class StartForm extends Vue {
     ];
     await Promise.all(first.map(a => this.done(a)));
     if (!this.alive) return;
+    this.caption = "Folding it again";
+    await wait(FOLD_PAUSE_MS);
 
     this.stage = "fold2";
     await this.$nextTick();
@@ -569,6 +589,7 @@ export default class StartForm extends Vue {
       this.animate(box, [{ translate: "0px " + (SHEET_H / 4) * k + "px" }, { translate: (SHEET_W / 4) * k + "px " + (SHEET_H / 4) * k + "px" }], timing)
     ];
     await Promise.all(second.map(a => this.done(a)));
+    await wait(FOLD_PAUSE_MS);
   }
 
   // Step 4: the folded letter slides into an envelope and the flap seals.
@@ -653,6 +674,50 @@ export default class StartForm extends Vue {
     );
     this.animate(envelope, [{ translate: "0px 0px" }, { translate: "0px 5px", offset: 0.4 }, { translate: "0px 0px" }], { duration: SEAL_MS });
     await this.done(stamp);
+  }
+
+  // The sealed envelope drops into the rocket's hatch. Driven from script (not
+  // a CSS transition) so it always plays, however the stage changes land.
+  private async loadRocket(): Promise<void> {
+    await this.$nextTick();
+    const launch = this.$refs.launch as HTMLElement;
+    const wrap = launch.querySelector(".env-wrap") as HTMLElement;
+    const rocket = launch.querySelector(".rocket-wrap") as HTMLElement;
+    const rumble = launch.querySelector(".rocket") as HTMLElement;
+    const H = launch.getBoundingClientRect().height;
+    // Hatch of the rocket: its window, a little above the bottom margin.
+    const dy = H * 0.49 - 112;
+    const move = this.animate(
+      wrap,
+      [
+        { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+        { transform: "translate(-50%, calc(-50% + " + dy + "px)) scale(0.14)", opacity: 1, offset: 0.9 },
+        { transform: "translate(-50%, calc(-50% + " + dy + "px)) scale(0.1)", opacity: 0 }
+      ],
+      { duration: 1100, delay: 700, easing: "cubic-bezier(0.6, 0, 0.4, 1)" }
+    );
+    this.animate(rocket, [{ opacity: 0, translate: "0px 40px" }, { opacity: 1, translate: "0px 0px" }], { duration: 600, easing: "ease-out" });
+    // Engines rumble once the cargo is on board.
+    this.animate(
+      rumble,
+      [{ translate: "0px 0px" }, { translate: "-2px 1px" }, { translate: "2px -1px" }, { translate: "0px 0px" }],
+      { duration: 120, delay: 1900, iterations: Infinity }
+    );
+    await this.done(move);
+    await wait(LOAD_MS - 1800);
+  }
+
+  // Ignition and lift off, up and out of the top of the screen.
+  private async blastOff(): Promise<void> {
+    const launch = this.$refs.launch as HTMLElement;
+    const rocket = launch.querySelector(".rocket-wrap") as HTMLElement;
+    const H = launch.getBoundingClientRect().height;
+    const lift = this.animate(
+      rocket,
+      [{ translate: "0px 0px" }, { translate: "0px " + -(H + 320) + "px" }],
+      { duration: LAUNCH_MS, easing: "cubic-bezier(0.55, 0, 0.9, 0.4)" }
+    );
+    await this.done(lift);
   }
 
   clearForm(): void {
@@ -867,7 +932,7 @@ export default class StartForm extends Vue {
   height: 440px
   margin: -220px 0 0 -170px
   transform: scale(var(--k, 1))
-  perspective: 1600px
+  perspective: 1100px
 
 $paper: #f7f2e7
 $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
@@ -1004,6 +1069,7 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
     position: absolute
     inset: 0
     overflow: hidden
+    -webkit-backface-visibility: hidden
     backface-visibility: hidden
   .back
     transform: rotateX(180deg)
@@ -1040,6 +1106,7 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   .back
     position: absolute
     inset: 0
+    -webkit-backface-visibility: hidden
     backface-visibility: hidden
     background: $paper-back
     box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
@@ -1146,6 +1213,7 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
     height: auto
     padding: 0
     overflow: visible
+    -webkit-backface-visibility: hidden
     backface-visibility: hidden
     clip-path: polygon(0 0, 100% 0, 50% 100%)
   .out
@@ -1159,8 +1227,8 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   left: 50%
   top: 53%
   z-index: 8
-  width: 30px
-  height: 30px
+  width: 44px
+  height: 44px
   border-radius: 50%
   background: radial-gradient(circle at 35% 30%, #ffc04d, #ffa000 55%, #b36f00)
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5)
@@ -1168,14 +1236,25 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   transform: translate(-50%, -50%) scale(0)
 
 // ---- Rocket ---------------------------------------------------------------
+.rocket-wrap::after
+  content: ""
+  position: absolute
+  left: 32%
+  top: 72%
+  width: 36%
+  height: 70vh
+  background: linear-gradient(to bottom, rgba(255, 183, 51, 0.9), rgba(255, 120, 0, 0.35) 40%, transparent)
+  filter: blur(6px)
+  opacity: 0
+  transition: opacity 0.4s ease 0.1s
+  z-index: -1
+
 .rocket-wrap
   position: absolute
   left: 50%
   bottom: 6vh
-  width: 64px
+  width: 96px
   transform: translateX(-50%)
-  transition: transform 1.1s cubic-bezier(0.55, 0, 0.85, 0.3)
-  animation: rocket-in 0.5s ease-out both
   .rocket
     display: block
     width: 100%
@@ -1202,21 +1281,36 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
 // Envelope drops into the rocket's hatch.
 .launch.st-loading,
 .launch.st-launching
-  .env-wrap
-    transition: transform 0.8s cubic-bezier(0.6, 0, 0.4, 1) 0.4s, opacity 0.5s ease-in 0.7s
-    transform: translate(-50%, calc(-50% + 49vh - 6vh - 80px)) scale(0.12)
-    opacity: 0
   .flame
     opacity: 1
 
-.launch.st-loading .rocket
-  animation: rocket-rumble 0.12s linear 1.2s infinite
-
 .launch.st-launching
-  .rocket-wrap
-    transform: translate(-50%, -130vh)
   .flame
     animation-duration: 0.07s
+  .rocket-wrap::after
+    opacity: 1
+
+.caption
+  position: absolute
+  left: 0
+  right: 0
+  top: 9%
+  text-align: center
+  font-size: 18px
+  font-weight: 500
+  letter-spacing: 0.04em
+  color: rgba(255, 255, 255, 0.85)
+  z-index: 9
+  pointer-events: none
+  animation: caption-in 0.4s ease-out both
+
+@keyframes caption-in
+  from
+    opacity: 0
+    transform: translateY(8px)
+  to
+    opacity: 1
+    transform: none
 
 @keyframes fade-in
   from
