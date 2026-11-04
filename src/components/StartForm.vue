@@ -165,7 +165,7 @@ export default class StartForm extends Vue {
   }
 
   showSendError(): void {
-    this.alert = "An error occurred while sending. Please try again or email us at webmaster@polytopesolutions.com";
+    this.alert = "An error occurred while sending. Please try again or email us at contact@polytopesolutions.com";
     this.alertType = "error";
   }
 

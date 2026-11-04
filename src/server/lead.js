@@ -1,12 +1,5 @@
 // Validation and email copy for the /start interest form.
 
-export const SOLUTION_AREAS = [
-  "AI Harnesses & Agentic Workflows",
-  "Business Systems & Automation",
-  "Web & Product Builds",
-  "Networks & Systems",
-  "Other",
-];
 export const LEAD_STATUSES = ["new", "discovery", "quoted", "won", "lost"];
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,6 +13,8 @@ function field(input, name, max, required) {
   return { value };
 }
 
+// The solution area is free text here on purpose: the /start dropdown is generated
+// from src/data/solutions.ts, so a server-side list would drift and reject real leads.
 // Returns { value } with null for empty optional fields, or { error }.
 export function validateLead(body) {
   const specs = [
@@ -39,7 +34,6 @@ export function validateLead(body) {
     value[key] = r.value;
   }
   if (!EMAIL.test(value.email)) return { error: "email is not a valid address" };
-  if (!SOLUTION_AREAS.includes(value.solution_area)) return { error: "solution area is not recognised" };
   return { value };
 }
 
