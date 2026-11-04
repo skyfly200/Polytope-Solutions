@@ -13,10 +13,8 @@ v-toolbar#nav(color="primary")
         v-menu(offset-y)
             v-btn(slot="activator" flat) Specialty
             v-list
-                v-list-tile(to="/rng")
-                    v-list-tile-title On-Chain RNG
-                v-list-tile(to="/consulting")
-                    v-list-tile-title NFT Consulting
+                v-list-tile(v-for="l in specialtyLinks" :key="l.path" :to="l.path")
+                    v-list-tile-title {{ l.label }}
         v-btn(to="/start" color="secondary" depressed) Start a project
     v-menu.hidden-md-and-up(offset-y left)
         v-btn(slot="activator" icon aria-label="Menu")
@@ -29,6 +27,7 @@ v-toolbar#nav(color="primary")
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Polytope600 from "@/components/Polytope600.vue";
+import { specialtyLinks } from "@/data/solutions";
 
 @Component({
     components: { Polytope600 }
@@ -39,10 +38,10 @@ export default class Nav extends Vue {
         { to: "/solutions", text: "Solutions" },
         { to: "/work", text: "Work" },
         { to: "/about", text: "About" },
-        { to: "/rng", text: "Specialty: On-Chain RNG" },
-        { to: "/consulting", text: "Specialty: NFT Consulting" },
+        ...specialtyLinks.map(l => ({ to: l.path, text: "Specialty: " + l.label })),
         { to: "/start", text: "Start a project" }
     ];
+    specialtyLinks = specialtyLinks;
 }
 </script>
 

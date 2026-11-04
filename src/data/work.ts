@@ -4,7 +4,7 @@
 // as a visible "Draft" note so unconfirmed numbers are never mistaken for
 // fact. Remove an entry (and finally the whole list) once verified.
 //
-// `solution` is a slug from src/data/solutionPages.ts, or "specialty".
+// `solution` is a slug from src/data/solutions.ts, or "specialty".
 
 export interface CaseStudy {
   slug: string;
@@ -72,7 +72,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "ward-water-mapping",
     title: "Ward water mapping",
     client: "Ward",
-    solution: "web-product",
+    solution: "data-geospatial",
     tags: ["Geospatial", "Mapping"],
     summary: "A mapping project for water infrastructure.",
     problem: "Water system data needed to be seen and used on a map.",

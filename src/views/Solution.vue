@@ -5,6 +5,8 @@ Base.solution
       .eyebrow Solution {{ s.letter }}
       h1 {{ s.title }}
       p.lead {{ s.tagline }}
+    PageSection(v-if="s.flags && s.flags.length")
+      v-alert(:value="true" type="warning" outline) Draft. Still to confirm: {{ s.flags.join("; ") }}.
     PageSection(title="Who it is for")
       ul
         li(v-for="x in s.forWho" :key="x") {{ x }}
@@ -48,7 +50,7 @@ Base.solution
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
-import { findSolution } from "@/data/solutionPages";
+import { findSolution } from "@/data/solutions";
 import { findCaseStudy } from "@/data/work";
 
 @Component({ components: { Base, PageSection } })
