@@ -4,22 +4,25 @@ v-container(fluid).home
   v-layout.blurbs.snap-section
     v-flex(xs10 offset-xs1)
       .blurb(v-for="(b, i) in blurbs" :key="b.text" ref="blurb" :data-index="i")
-        Projection4D(:shape="b.shape" :color="b.color" :active="activeBlurb === i")
-        span.blurb-text(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
-  #solutions.snap-section
+        Projection4D(:shape="b.shape" :color="b.color" :active="activeBlurb === i" :weight="b.weight")
+        .reveal(:class="{ 'is-on': activeBlurb === i }")
+          span.blurb-text(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
+  #solutions.snap-section(ref="solutions")
     v-layout.solutions-header
-      h1(v-tilt) Solutions
+      .reveal(:class="{ 'is-on': solutionsActive }")
+        h1(v-tilt) Solutions
     v-layout
       v-flex(md12 lg10 offset-lg1)
         v-layout.solutions(wrap)
-          v-flex.solution(md6 xs12 v-for="s in solutions" :key="s.title")
-            v-card
-              .solution-img(:style="{ backgroundImage: 'url(' + s.img + ')' }")
-                .img-overlay
-                  h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}
-              v-card-text.content.pa3
-                p {{ s.description }}
-                v-btn(:to="s.path" color="primary") Learn More
+          v-flex.solution(md6 xs12 v-for="(s, key, idx) in solutions" :key="s.title")
+            .reveal(:class="{ 'is-on': solutionsActive }" :style="{ transitionDelay: (idx * 90) + 'ms' }")
+              v-card
+                .solution-img(:style="{ backgroundImage: 'url(' + s.img + ')' }")
+                  .img-overlay
+                    h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}
+                v-card-text.content.pa3
+                  p {{ s.description }}
+                  v-btn(:to="s.path" color="primary") Learn More
   v-layout.contact.snap-section#contact
     ContactForm
   Footer
@@ -37,6 +40,8 @@ import { ShapeName } from "@/lib/polytopes";
 interface Blurb {
   shape: ShapeName;
   color: string;
+  // Stroke width multiplier for the 4D wireframe behind the panel.
+  weight: number;
   text: string;
 }
 
@@ -46,7 +51,10 @@ interface Blurb {
 export default class Home extends Vue {
   // Index of the blurb panel currently snapped into view, or -1.
   activeBlurb = -1;
+  // True while the Solutions section is snapped into view.
+  solutionsActive = false;
   private observer!: IntersectionObserver | null;
+  private solutionsObserver!: IntersectionObserver | null;
 
   solutions: object = {
     web: {
@@ -63,10 +71,10 @@ export default class Home extends Vue {
     },
   };
   blurbs: Blurb[] = [
-    { shape: "tesseract", color: "255,160,0", text: "Look at your problems from new angles" },
-    { shape: "cell24", color: "255,255,255", text: "Using the latest technology" },
-    { shape: "cell16", color: "120,200,255", text: "Specially drafted to your unique needs" },
-    { shape: "cell600", color: "255,255,255", text: "Helping you refine and achieve your visions" }
+    { shape: "tesseract", color: "255,160,0", weight: 1, text: "Look at your problems from new angles" },
+    { shape: "cell24", color: "255,255,255", weight: 0.5, text: "Using the latest technology" },
+    { shape: "cell16", color: "120,200,255", weight: 1, text: "Specially drafted to your unique needs" },
+    { shape: "cell600", color: "255,255,255", weight: 0.5, text: "Helping you refine and achieve your visions" }
   ];
 
   // Each blurb is a full-height snap panel. The 4D visual in it only turns
@@ -88,10 +96,29 @@ export default class Home extends Vue {
       { threshold: [0, 0.6, 1] }
     );
     panels.forEach(el => this.observer!.observe(el));
+
+    // The Solutions section can be taller than the viewport, so it counts as
+    // snapped once it fills 60% of the screen or the whole screen, whichever
+    // is smaller. That keeps its text from staying hidden on phones.
+    const solutions = this.$refs.solutions as HTMLElement | undefined;
+    if (solutions) {
+      this.solutionsObserver = new IntersectionObserver(
+        entries => {
+          for (const entry of entries) {
+            const h = Math.max(1, entry.boundingClientRect.height);
+            const needed = Math.min(0.6, (window.innerHeight * 0.8) / h);
+            this.solutionsActive = entry.intersectionRatio >= needed;
+          }
+        },
+        { threshold: [0, 0.25, 0.5, 0.6, 0.75, 1] }
+      );
+      this.solutionsObserver.observe(solutions);
+    }
   }
 
   beforeDestroy() {
     if (this.observer) this.observer.disconnect();
+    if (this.solutionsObserver) this.solutionsObserver.disconnect();
   }
 }
 </script>
@@ -121,12 +148,29 @@ export default class Home extends Vue {
         z-index: 1
         max-width: 22ch
         text-shadow: 0 2px 8px black
+  // Load-in and load-out: text fades and rises as its snap section locks in
+  // or leaves. Driven by the snap state above, never by scroll position.
+  // Content is only hidden when motion is allowed, so reduced-motion users
+  // always see it.
+  .reveal
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out
+  @media (prefers-reduced-motion: no-preference)
+    .reveal
+      opacity: 0
+      transform: translateY(14px)
+    .reveal.is-on
+      opacity: 1
+      transform: none
   #solutions
     margin: 0
     .solutions-header
       justify-content: center
       padding: 2em
-      font-size: 1.8em
+      h1
+        font-size: clamp(2rem, 4.5vw, 3rem)
+        line-height: 1.1
+    .solution .reveal
+      height: 100%
   .solutions
     justify-content: space-between
     .solution
@@ -147,7 +191,8 @@ export default class Home extends Vue {
         .card-title
           margin: auto
           text-shadow: 0px 2px 3px black
-          font-size: 2.5em
+          font-size: clamp(1.4rem, 2.4vw, 1.9rem)
+          line-height: 1.2
         .content
           flex-grow: 1
         .list

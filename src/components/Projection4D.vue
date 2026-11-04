@@ -51,6 +51,8 @@ export default class Projection4D extends Vue {
   @Prop({ default: "255,255,255" }) readonly color!: string;
   @Prop({ default: false }) readonly active!: boolean;
   @Prop({ default: 0.35 }) readonly speed!: number;
+  // Multiplies the stroke width. Below 1 gives a finer wireframe.
+  @Prop({ default: 1 }) readonly weight!: number;
 
   private ctx!: CanvasRenderingContext2D | null;
   private geo!: Geometry;
@@ -209,7 +211,7 @@ export default class Projection4D extends Vue {
 
     ctx.clearRect(0, 0, w, h);
     ctx.lineCap = "round";
-    const lw = 1.2 * Math.max(0.6, Math.min(w, h) / 320);
+    const lw = 1.2 * this.weight * Math.max(0.6, Math.min(w, h) / 320);
     for (let k = 0; k < BUCKETS; k++) {
       const list = buckets[k];
       if (!list.length) continue;
