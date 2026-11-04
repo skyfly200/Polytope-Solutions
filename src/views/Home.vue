@@ -167,7 +167,7 @@ export default class Home extends Vue {
       justify-content: center
       padding: 2em
       h1
-        font-size: clamp(2rem, 4.5vw, 3rem)
+        font-size: clamp(36px, 5vw, 56px)
         line-height: 1.1
     .solution .reveal
       height: 100%
@@ -191,10 +191,14 @@ export default class Home extends Vue {
         .card-title
           margin: auto
           text-shadow: 0px 2px 3px black
-          font-size: clamp(1.4rem, 2.4vw, 1.9rem)
+          font-size: clamp(22px, 2.2vw, 32px)
           line-height: 1.2
         .content
           flex-grow: 1
+          p
+            font-size: clamp(16px, 1.3vw, 20px)
+            line-height: 1.55
+            margin: 0 0 1em
         .list
           text-align: left
         .features
