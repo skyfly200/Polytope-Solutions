@@ -2,7 +2,7 @@
 Base.solutions
   PageSection
     h1 Solutions
-    p.lead Four areas where I help people turn scattered work into systems that run on their own.
+    p.lead {{ solutions.length }} areas where I help people turn scattered work into systems that run on their own.
     v-layout(wrap)
       v-flex(xs12 md6 v-for="s in solutions" :key="s.slug")
         v-card.sol-card
@@ -14,10 +14,9 @@ Base.solutions
             v-spacer
             v-btn(:to="'/solutions/' + s.slug" color="primary" depressed) Learn more
   PageSection(title="Specialty")
-    p.lead On-chain randomness and NFT consulting, where Polytope began.
+    p.lead(v-for="s in specialty" :key="s.slug") {{ s.title }}: {{ s.short }}
     v-layout(wrap justify-center)
-      v-btn(to="/rng" outline) On-Chain RNG
-      v-btn(to="/consulting" outline) NFT Consulting
+      v-btn(v-for="l in links" :key="l.path" :to="l.path" outline) {{ l.label }}
   PageSection
     v-btn(to="/start" color="secondary" large depressed) Start a project
 </template>
@@ -26,11 +25,13 @@ Base.solutions
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
-import { solutions } from "@/data/solutionPages";
+import { solutions, specialty, specialtyLinks } from "@/data/solutions";
 
 @Component({ components: { Base, PageSection } })
 export default class Solutions extends Vue {
   solutions = solutions;
+  specialty = specialty;
+  links = specialtyLinks;
 }
 </script>
 

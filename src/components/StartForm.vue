@@ -72,16 +72,10 @@ section#contact-form.contact-card
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
+import { startAreas } from "@/data/solutions";
 
 const EMAIL_PATTERN = /.+@.+\..+/;
 const START_URL = "/.netlify/functions/start";
-const AREAS = [
-  "AI Harnesses & Agentic Workflows",
-  "Business Systems & Automation",
-  "Web & Product Builds",
-  "Networks & Systems",
-  "Other"
-];
 
 // Timings (ms) for the send animation. The request runs alongside the fold.
 const FOLD_MS = 600;
@@ -114,7 +108,7 @@ export default class StartForm extends Vue {
   budget: string = "";
   referral: string = "";
   website: string = "";
-  areas: string[] = AREAS;
+  areas: string[] = startAreas;
   // Errors are only shown once the visitor has tried to send.
   submitted: boolean = false;
   sending: boolean = false;

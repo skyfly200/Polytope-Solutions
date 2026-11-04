@@ -12,24 +12,25 @@ section.solutions-section
       line(x1="5" y1="14" x2="14" y2="19")
     h1(v-tilt) Solutions
   ol.list
-    li.item(v-for="(s, i) in items" :key="s.title" :style="{ transitionDelay: (i * 70) + 'ms' }")
+    li.item(v-for="(s, i) in items" :key="s.key" :style="{ transitionDelay: (i * 60) + 'ms' }")
       span.num {{ pad(i + 1) }}
       .body
         h2
-          | {{ s.title }}
+          router-link.title(v-if="s.to" :to="s.to") {{ s.title }}
+          template(v-else) {{ s.title }}
           span.tag(v-if="s.tag") {{ s.tag }}
-        p {{ s.description }}
+        p {{ s.short }}
         .links(v-if="s.links")
-          router-link.more(v-for="l in s.links" :key="l.path" :to="l.path") {{ l.label }} →
+          router-link.more.spec(v-for="l in s.links" :key="l.path" :to="l.path") {{ l.label }} →
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { solutions } from "@/data/solutions";
+import { summaries } from "@/data/solutions";
 
 @Component
 export default class Solutions extends Vue {
-  items = solutions;
+  items = summaries;
   pad(n: number) {
     return n < 10 ? "0" + n : String(n);
   }
@@ -45,12 +46,12 @@ export default class Solutions extends Vue {
   justify-content: center
   max-width: 1100px
   margin: 0 auto
-  padding: 4rem 24px
+  padding: 2.5rem 24px
   .head
     display: flex
     align-items: center
     gap: 20px
-    margin-bottom: 2.5rem
+    margin-bottom: 1.5rem
     .mark
       width: 44px
       height: 44px
@@ -72,10 +73,20 @@ export default class Solutions extends Vue {
   .item
     display: flex
     gap: 20px
-    padding: 1.4rem 0
+    padding: 1rem 0
     border-top: 1px solid rgba(255,255,255,0.18)
     text-align: left
     transition: opacity 0.35s ease-out, transform 0.35s ease-out
+  .item:last-child
+    grid-column: 1 / -1
+  .title
+    color: inherit
+    text-decoration: none
+    &::after
+      content: " →"
+      opacity: 0.5
+    &:hover::after
+      opacity: 1
   .num
     font-size: 14px
     letter-spacing: 0.1em
@@ -108,7 +119,7 @@ export default class Solutions extends Vue {
     gap: 0 1.4em
   .more
     display: inline-block
-    margin-top: 0.7em
+    margin-top: 0.5em
     font-size: 16px
     color: inherit
     text-decoration: none
@@ -116,11 +127,22 @@ export default class Solutions extends Vue {
     &:hover
       border-bottom-color: #fff
   @media (max-width: 800px)
-    padding: 3rem 20px
+    padding: 2rem 20px
+    // Phones show titles only so all areas fit one screen; each title
+    // still opens its page.
+    .head
+      margin-bottom: 1rem
     .list
       grid-template-columns: 1fr
     .item
-      padding: 1rem 0
+      padding: 0.7rem 0
+      gap: 14px
+    .item p
+      display: none
+    .item .links
+      margin-top: 0.2em
+    h2
+      margin-bottom: 0
   // Snap-synced: items fade in once the section is snapped into view.
   // Motion-reduced users always see everything.
   @media (prefers-reduced-motion: no-preference)
