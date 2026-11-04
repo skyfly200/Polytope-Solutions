@@ -5,7 +5,7 @@
       h2.section-title Selected work
       v-layout(wrap justify-center)
         v-flex.project(xs12 md6 v-for="(p, i) in projects" :key="p.title")
-          v-card.project-card(data-aos="fade-up" :data-aos-delay="i * 120")
+          v-card.project-card
             v-img(:src="p.img" height="180px" gradient="to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)")
               span.placeholder-badge(v-if="p.placeholder") Sample
             v-card-text
