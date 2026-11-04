@@ -11,6 +11,7 @@ v-toolbar#nav(color="primary")
         v-btn(to="/services" flat) Services
         v-btn(to="/rng" flat) RNG
         v-btn(to="/consulting" flat) Consulting
+        v-btn(to="/start" color="secondary" depressed) Start a project
 </template>
 
 <script lang="ts">

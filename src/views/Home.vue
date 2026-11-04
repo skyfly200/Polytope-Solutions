@@ -10,7 +10,11 @@ v-container(fluid).home
   #solutions.snap-section(ref="solutions")
     Solutions(:class="{ 'is-on': solutionsActive }")
   v-layout.contact.snap-section#contact
-    ContactForm
+    .start-cta
+      i.fas.fa-rocket(aria-hidden="true")
+      h2 Let us help you find solutions today!
+      p Tell us what you are working on and we will reply within a day or two.
+      v-btn(to="/start" color="primary" large) Start a project
   Footer
 </template>
 
@@ -18,7 +22,6 @@ v-container(fluid).home
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
 import Landing from "@/components/Landing.vue";
-import ContactForm from "@/components/ContactForm.vue";
 import Footer from "@/components/Footer.vue";
 import Solutions from "@/components/Solutions.vue";
 import Projection4D from "@/components/Projection4D.vue";
@@ -33,7 +36,7 @@ interface Blurb {
 }
 
 @Component({
-  components: { Landing, ContactForm, Footer, Projection4D, Solutions }
+  components: { Landing, Footer, Projection4D, Solutions }
 })
 export default class Home extends Vue {
   // Index of the blurb panel currently snapped into view, or -1.
@@ -138,4 +141,20 @@ export default class Home extends Vue {
     margin: 0
   .contact
     min-height: 100vh
+    align-items: center
+    justify-content: center
+    .start-cta
+      text-align: center
+      padding: 0 1.5rem
+      .fa-rocket
+        color: #ffa000
+        font-size: 2.5rem
+        margin-bottom: 0.5rem
+      h2
+        font-size: clamp(24px, 3.6vw, 34px)
+        margin: 0 0 0.5rem
+      p
+        font-size: clamp(16px, 1.3vw, 18px)
+        color: rgba(255, 255, 255, 0.72)
+        margin: 0 0 1.5rem
 </style>
