@@ -2,7 +2,8 @@
 Base.about
   v-layout.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
     v-flex(sm10 offset-sm1)
-      .eyebrow Specialty
+      .eyebrow
+        router-link(to="/solutions/smart-contracts") Smart Contracts & On-Chain
       h1 On-Chain RNG
       h3 Create Your On-Chain Generative Art NFT Drop With The Same RNG Engine As ArtBlocks
       v-card.pa3.about-card

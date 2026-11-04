@@ -2,7 +2,8 @@
 Base.about
   v-layout.blurb(data-aos="zoom-out" data-aos-anchor-placement="top-center")
     v-flex(sm10 offset-sm1)
-      .eyebrow Specialty
+      .eyebrow
+        router-link(to="/solutions/smart-contracts") Smart Contracts & On-Chain
       h1 NFT Consulting
       v-card.pa3.about-card
         v-card-text

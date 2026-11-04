@@ -16,12 +16,9 @@ section.solutions-section
       span.num {{ pad(i + 1) }}
       .body
         h2
-          router-link.title(v-if="s.to" :to="s.to") {{ s.title }}
-          template(v-else) {{ s.title }}
+          router-link.title(:to="s.to") {{ s.title }}
           span.tag(v-if="s.tag") {{ s.tag }}
         p {{ s.short }}
-        .links(v-if="s.links")
-          router-link.more.spec(v-for="l in s.links" :key="l.path" :to="l.path") {{ l.label }} →
 </template>
 
 <script lang="ts">
@@ -77,8 +74,6 @@ export default class Solutions extends Vue {
     border-top: 1px solid rgba(255,255,255,0.18)
     text-align: left
     transition: opacity 0.35s ease-out, transform 0.35s ease-out
-  .item:last-child
-    grid-column: 1 / -1
   .title
     color: inherit
     text-decoration: none
@@ -113,19 +108,6 @@ export default class Solutions extends Vue {
     border: 1px solid rgba(255,255,255,0.35)
     border-radius: 999px
     opacity: 0.8
-  .links
-    display: flex
-    flex-wrap: wrap
-    gap: 0 1.4em
-  .more
-    display: inline-block
-    margin-top: 0.5em
-    font-size: 16px
-    color: inherit
-    text-decoration: none
-    border-bottom: 1px solid rgba(255,255,255,0.4)
-    &:hover
-      border-bottom-color: #fff
   @media (max-width: 800px)
     padding: 2rem 20px
     // Phones show titles only so all areas fit one screen; each title
@@ -139,8 +121,6 @@ export default class Solutions extends Vue {
       gap: 14px
     .item p
       display: none
-    .item .links
-      margin-top: 0.2em
     h2
       margin-bottom: 0
   // Snap-synced: items fade in once the section is snapped into view.
