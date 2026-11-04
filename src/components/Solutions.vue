@@ -15,9 +15,12 @@ section.solutions-section
     li.item(v-for="(s, i) in items" :key="s.title" :style="{ transitionDelay: (i * 70) + 'ms' }")
       span.num {{ pad(i + 1) }}
       .body
-        h2 {{ s.title }}
+        h2
+          | {{ s.title }}
+          span.tag(v-if="s.tag") {{ s.tag }}
         p {{ s.description }}
-        router-link.more(v-if="s.path" :to="s.path") Learn more →
+        .links(v-if="s.links")
+          router-link.more(v-for="l in s.links" :key="l.path" :to="l.path") {{ l.label }} →
 </template>
 
 <script lang="ts">
@@ -78,7 +81,7 @@ export default class Solutions extends Vue {
     letter-spacing: 0.1em
     opacity: 0.5
     padding-top: 0.45em
-    flex: 0 0 2ch
+    flex: 0 0 24px
   h2
     font-size: clamp(20px, 1.8vw, 26px)
     font-weight: 500
@@ -89,6 +92,20 @@ export default class Solutions extends Vue {
     line-height: 1.55
     opacity: 0.78
     margin: 0
+  .tag
+    margin-left: 0.7em
+    padding: 2px 8px
+    font-size: 12px
+    letter-spacing: 0.12em
+    text-transform: uppercase
+    vertical-align: middle
+    border: 1px solid rgba(255,255,255,0.35)
+    border-radius: 999px
+    opacity: 0.8
+  .links
+    display: flex
+    flex-wrap: wrap
+    gap: 0 1.4em
   .more
     display: inline-block
     margin-top: 0.7em

@@ -1,56 +1,52 @@
 // Offerings shown in the home page Solutions section. Edit this file to
 // change what the section lists; nothing else needs touching.
-//
-// `confirmed: false` marks an offering taken from the services page that the
-// owner has not yet signed off on. It still renders normally; the flag only
-// exists so unconfirmed items are easy to find and review.
+// Prices are intentionally not shown here.
+
+export interface SolutionLink {
+  label: string;
+  path: string;
+}
 
 export interface Solution {
   title: string;
+  // Small tag shown beside the title, e.g. "Flagship" or "Specialty".
+  tag?: string;
   // One or two sentences, shown under the title.
   description: string;
-  // Optional page with more detail.
-  path?: string;
-  confirmed: boolean;
+  // Optional pages with more detail.
+  links?: SolutionLink[];
 }
 
 export const solutions: Solution[] = [
   {
-    title: "On-Chain RNG",
+    title: "AI Harnesses & Agentic Workflows",
+    tag: "Flagship",
     description:
-      "Oracle-free randomness for generative art and on-chain games, with the same security and dependability as ArtBlocks, on your own platform.",
-    path: "/rng",
-    confirmed: true
+      "Custom Claude Code and agent setups wired to your repos and deploys, with model routing that sends easy requests to cheap models and hard ones to frontier models, for a smaller AI bill."
   },
   {
-    title: "NFT Consulting",
+    title: "Business Systems & Automation",
     description:
-      "Optimize your upcoming generative art drop for security, efficiency, and success with one of the space's leading innovators.",
-    path: "/consulting",
-    confirmed: true
+      "Contact, quote, and invoice in one flow, with client and project tracking and follow-up built in, for small operators running on scattered docs and memory."
   },
   {
-    title: "Generative Art Tooling",
+    title: "Web & Product Builds",
     description:
-      "Deterministic art scripts, on-chain SVG, and rendering pipelines that give the same output from the same seed, everywhere.",
-    confirmed: false
+      "Websites and web apps on Vue, React, Netlify, and Supabase, plus data and geospatial mapping and pipeline projects."
   },
   {
-    title: "Smart Contract Engineering",
+    title: "Networks & Systems",
     description:
-      "Lean, safe Solidity for collections, marketplaces, and token mechanics, with gas efficiency and security first.",
-    confirmed: false
+      "Business and venue network upgrades, isolated POS networks, lighting control, and radio network automation and systems design."
   },
   {
-    title: "Full-Stack Web Apps",
+    title: "On-Chain RNG & NFT Consulting",
+    tag: "Specialty",
     description:
-      "Fast front ends, wallet connection, and serverless back ends, built to be maintained after handoff.",
-    confirmed: false
-  },
-  {
-    title: "Technical Advisory",
-    description:
-      "Architecture and code reviews and roadmap guidance, a senior second opinion before a costly decision.",
-    confirmed: false
+      "Oracle-free randomness and drop consulting for generative art, from the engine behind ArtBlocks.",
+    links: [
+      { label: "On-Chain RNG", path: "/rng" },
+      { label: "NFT Consulting", path: "/consulting" }
+    ]
   }
 ];
