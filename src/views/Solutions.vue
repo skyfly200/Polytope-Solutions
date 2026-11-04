@@ -26,7 +26,7 @@ Base.solutions
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
-import { solutions } from "@/data/solutions";
+import { solutions } from "@/data/solutionPages";
 
 @Component({ components: { Base, PageSection } })
 export default class Solutions extends Vue {

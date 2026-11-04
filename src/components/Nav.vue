@@ -17,6 +17,7 @@ v-toolbar#nav(color="primary")
                     v-list-tile-title On-Chain RNG
                 v-list-tile(to="/consulting")
                     v-list-tile-title NFT Consulting
+        v-btn(to="/start" color="secondary" depressed) Start a project
     v-menu.hidden-md-and-up(offset-y left)
         v-btn(slot="activator" icon aria-label="Menu")
             i.fas.fa-bars
@@ -39,7 +40,8 @@ export default class Nav extends Vue {
         { to: "/work", text: "Work" },
         { to: "/about", text: "About" },
         { to: "/rng", text: "Specialty: On-Chain RNG" },
-        { to: "/consulting", text: "Specialty: NFT Consulting" }
+        { to: "/consulting", text: "Specialty: NFT Consulting" },
+        { to: "/start", text: "Start a project" }
     ];
 }
 </script>

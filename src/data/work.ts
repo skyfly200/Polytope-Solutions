@@ -4,7 +4,7 @@
 // as a visible "Draft" note so unconfirmed numbers are never mistaken for
 // fact. Remove an entry (and finally the whole list) once verified.
 //
-// `solution` is a slug from src/data/solutions.ts, or "specialty".
+// `solution` is a slug from src/data/solutionPages.ts, or "specialty".
 
 export interface CaseStudy {
   slug: string;

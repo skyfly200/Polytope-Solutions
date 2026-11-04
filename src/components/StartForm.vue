@@ -3,8 +3,8 @@ section#contact-form.contact-card
   .card(v-if="!sent" :class="{ 'is-folded': folded }" :aria-hidden="folded ? 'true' : null")
     .call-to-action
       i.fas.fa-rocket.rocket(aria-hidden="true")
-      h2.header Let us help you find solutions today!
-      p.intro Tell us a little about you and what you are working on. We reply within a day or two.
+      h2.header Start a project with us
+      p.intro Tell us a little about you and what you are working on, and we will reply within a day or two.
     form.form(novalidate @submit.prevent="sendContact")
       .field
         label(for="cf-name") Name
@@ -12,21 +12,38 @@ section#contact-form.contact-card
         input#cf-name(v-model="name" name="name" type="text" placeholder="John Smith" autocomplete="name" :aria-invalid="submitted && !!errors.name")
         .field-error(v-if="submitted && errors.name") {{ errors.name }}
       .field
-        label(for="cf-company") Company
-        input#cf-company(v-model="company" name="company" type="text" placeholder="Regolith Redistributors" autocomplete="organization")
-      .field
-        label(for="cf-industry") Industry
-        input#cf-industry(v-model="industry" name="industry" type="text" placeholder="Aerospace")
-      .field
         label(for="cf-email") Email
           span.required *
         input#cf-email(v-model="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" :aria-invalid="submitted && !!errors.email")
         .field-error(v-if="submitted && errors.email") {{ errors.email }}
       .field
-        label(for="cf-needs") Tell us about your needs
+        label(for="cf-company") Company or organization
+        input#cf-company(v-model="company" name="company" type="text" placeholder="Regolith Redistributors" autocomplete="organization")
+      .field
+        label(for="cf-area") What do you need help with?
           span.required *
-        textarea#cf-needs(v-model="needs" name="needs" rows="5" placeholder="Our company needs help with..." :aria-invalid="submitted && !!errors.needs")
+        select#cf-area(v-model="solutionArea" name="solution_area" :aria-invalid="submitted && !!errors.solutionArea")
+          option(value="" disabled) Choose a solution area
+          option(v-for="a in areas" :key="a" :value="a") {{ a }}
+        .field-error(v-if="submitted && errors.solutionArea") {{ errors.solutionArea }}
+      .field
+        label(for="cf-needs") Tell us about the project
+          span.required *
+        textarea#cf-needs(v-model="needs" name="project_description" rows="5" placeholder="What are you trying to get done, and what is in the way?" :aria-invalid="submitted && !!errors.needs")
         .field-error(v-if="submitted && errors.needs") {{ errors.needs }}
+      .field
+        label(for="cf-timeline") Timeline
+        input#cf-timeline(v-model="timeline" name="timeline" type="text" placeholder="e.g. start next month, launch by spring")
+      .field
+        label(for="cf-budget") Budget
+        input#cf-budget(v-model="budget" name="budget" type="text" placeholder="A rough range is fine, or leave blank")
+      .field
+        label(for="cf-referral") How did you hear about us?
+        input#cf-referral(v-model="referral" name="referral_source" type="text" placeholder="Referral, search, social...")
+      //- Honeypot: hidden from people, tempting to bots.
+      .field.hp(aria-hidden="true")
+        label(for="cf-website") Website
+        input#cf-website(v-model="website" name="website" type="text" tabindex="-1" autocomplete="off")
       .actions
         button.btn.btn-primary(type="submit" :disabled="sending") {{ sending ? "Sending..." : "Send" }}
         button.btn.btn-ghost(type="button" :disabled="sending || isEmpty" @click="clearForm") Reset
@@ -45,11 +62,11 @@ section#contact-form.contact-card
         path.body(d="M30 4 C44 24 46 60 44 100 L16 100 C14 60 16 24 30 4 Z")
         circle.window(cx="30" cy="56" r="8")
         rect.nozzle(x="20" y="100" width="20" height="6" rx="2")
-  .card.confirmation(v-else)
+  .card.confirmation(v-if="sent")
     h2.header Thanks for reaching out!
-    p.intro We will be in touch very soon.
+    p.intro We sent a confirmation to your inbox and will reply within a day or two.
     .actions
-      button.btn.btn-ghost(type="button" @click="sent = false") Send another message
+      button.btn.btn-ghost(type="button" @click="sent = false") Send another request
 </template>
 
 <script lang="ts">
@@ -57,7 +74,14 @@ import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
 
 const EMAIL_PATTERN = /.+@.+\..+/;
-const CONTACT_URL = "https://polytopesolutions.com/.netlify/functions/contact";
+const START_URL = "/.netlify/functions/start";
+const AREAS = [
+  "AI Harnesses & Agentic Workflows",
+  "Business Systems & Automation",
+  "Web & Product Builds",
+  "Networks & Systems",
+  "Other"
+];
 
 // Timings (ms) for the send animation. The request runs alongside the fold.
 const FOLD_MS = 600;
@@ -80,12 +104,17 @@ const prefersReducedMotion = (): boolean =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 @Component({})
-export default class ContactForm extends Vue {
+export default class StartForm extends Vue {
   name: string = "";
   company: string = "";
-  industry: string = "";
   email: string = "";
+  solutionArea: string = "";
   needs: string = "";
+  timeline: string = "";
+  budget: string = "";
+  referral: string = "";
+  website: string = "";
+  areas: string[] = AREAS;
   // Errors are only shown once the visitor has tried to send.
   submitted: boolean = false;
   sending: boolean = false;
@@ -104,30 +133,35 @@ export default class ContactForm extends Vue {
     return ["sealed", "loading", "launching"].indexOf(this.flight) !== -1;
   }
 
-  get errors(): { name?: string; email?: string; needs?: string } {
-    const errors: { name?: string; email?: string; needs?: string } = {};
+  get errors(): { name?: string; email?: string; needs?: string; solutionArea?: string } {
+    const errors: { name?: string; email?: string; needs?: string; solutionArea?: string } = {};
     if (!this.name.trim()) errors.name = "Name is required";
     if (!this.email.trim()) {
       errors.email = "Email is required";
     } else if (!EMAIL_PATTERN.test(this.email.trim())) {
       errors.email = "Email must be valid";
     }
-    if (!this.needs.trim()) errors.needs = "Please tell us about your needs";
+    if (!this.solutionArea) errors.solutionArea = "Please choose an area";
+    if (!this.needs.trim()) errors.needs = "Please tell us about the project";
     return errors;
   }
 
   get isEmpty(): boolean {
-    return !this.name && !this.company && !this.industry && !this.email && !this.needs;
+    return ![this.name, this.company, this.email, this.solutionArea, this.needs, this.timeline, this.budget, this.referral].some(Boolean);
   }
 
   postContact(): Promise<boolean> {
     return axios
-      .post(CONTACT_URL, {
+      .post(START_URL, {
         name: this.name,
-        company: this.company,
-        industry: this.industry,
         email: this.email,
-        needs: this.needs
+        company: this.company,
+        solution_area: this.solutionArea,
+        project_description: this.needs,
+        timeline: this.timeline,
+        budget: this.budget,
+        referral_source: this.referral,
+        website: this.website
       })
       .then(() => true)
       .catch(error => {
@@ -198,9 +232,13 @@ export default class ContactForm extends Vue {
   clearForm(): void {
     this.name = "";
     this.company = "";
-    this.industry = "";
     this.email = "";
+    this.solutionArea = "";
     this.needs = "";
+    this.timeline = "";
+    this.budget = "";
+    this.referral = "";
+    this.website = "";
     this.submitted = false;
     this.alert = "";
     this.alertType = "info";
@@ -264,6 +302,7 @@ export default class ContactForm extends Vue {
       color: #ffa000
       margin-left: 0.25rem
   input,
+  select,
   textarea
     font: inherit
     font-size: 16px
@@ -282,12 +321,24 @@ export default class ContactForm extends Vue {
       box-shadow: 0 0 0 3px rgba(255, 160, 0, 0.2)
     &[aria-invalid="true"]
       border-color: #ff6b6b
+  select
+    appearance: none
+    cursor: pointer
+    option
+      color: black
   textarea
     resize: vertical
     min-height: 8rem
   .field-error
     color: #ff8a8a
     font-size: 15px
+
+.field.hp
+  position: absolute
+  left: -10000px
+  width: 1px
+  height: 1px
+  overflow: hidden
 
 .actions
   display: flex

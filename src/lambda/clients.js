@@ -5,7 +5,9 @@ import { getSql, rowsOf } from "../server/db.js";
 import { json, parseBody, queryParam, requireAdmin } from "../server/http.js";
 import { isUuid, validateClient } from "../server/validate.js";
 
-const COLUMNS = "id, name, company, email, industry, notes, created_at, updated_at";
+const COLUMNS =
+  "id, name, company, email, industry, notes, status, source, solution_area, project_description, " +
+  "timeline, budget, referral_source, created_at, updated_at";
 const FK_VIOLATION = "23503";
 
 export const handler = async (event) => {
@@ -31,12 +33,12 @@ export const handler = async (event) => {
         if (body.error) return json(400, { error: body.error });
         const v = validateClient(body);
         if (v.error) return json(400, { error: v.error });
-        const { name, company, email, industry, notes } = v.value;
+        const { name, company, email, industry, notes, status } = v.value;
         const rows = rowsOf(
           await getSql().query(
-            `insert into clients (name, company, email, industry, notes)
-             values ($1, $2, $3, $4, $5) returning ${COLUMNS}`,
-            [name, company ?? null, email ?? null, industry ?? null, notes ?? null]
+            `insert into clients (name, company, email, industry, notes, status, source)
+             values ($1, $2, $3, $4, $5, $6, 'admin') returning ${COLUMNS}`,
+            [name, company ?? null, email ?? null, industry ?? null, notes ?? null, status ?? "won"]
           )
         );
         return json(201, rows[0]);
@@ -58,11 +60,11 @@ export const handler = async (event) => {
         const rows = rowsOf(
           await getSql().query(
             `update clients
-                set name = $2, company = $3, email = $4, industry = $5, notes = $6,
+                set name = $2, company = $3, email = $4, industry = $5, notes = $6, status = $7,
                     updated_at = now()
               where id = $1
             returning ${COLUMNS}`,
-            [id, next.name, next.company ?? null, next.email ?? null, next.industry ?? null, next.notes ?? null]
+            [id, next.name, next.company ?? null, next.email ?? null, next.industry ?? null, next.notes ?? null, next.status]
           )
         );
         return json(200, rows[0]);

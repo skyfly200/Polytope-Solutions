@@ -48,7 +48,7 @@ Base.solution
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
-import { findSolution } from "@/data/solutions";
+import { findSolution } from "@/data/solutionPages";
 import { findCaseStudy } from "@/data/work";
 
 @Component({ components: { Base, PageSection } })
