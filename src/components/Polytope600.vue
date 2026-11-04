@@ -31,8 +31,11 @@ export default class Polytope600 extends Vue {
   @Prop({ default: 0.35 }) readonly speed!: number;
   @Prop({ default: 1.2 }) readonly lineWidth!: number;
   @Prop({ default: "255,255,255" }) readonly color!: string;
-  // Lets the cursor nudge the 3D viewing angle.
+  // The cursor drives two of the 4D rotation planes (XW and YW). The shape
+  // stays centred: the projection origin never moves, only its rotation.
   @Prop({ default: false }) readonly followMouse!: boolean;
+  // How far (radians) the cursor can push the 4D rotation at the screen edge.
+  @Prop({ default: 1.1 }) readonly mouseReach!: number;
 
   // Non-reactive runtime state (left undefined so Vue does not observe it).
   private ctx!: CanvasRenderingContext2D | null;
@@ -50,6 +53,7 @@ export default class Polytope600 extends Vue {
   private my!: number;
   private vx!: number;
   private vy!: number;
+  private lastMove!: number;
   private cssW!: number;
   private cssH!: number;
 
@@ -65,6 +69,7 @@ export default class Polytope600 extends Vue {
     this.last = 0;
     this.raf = 0;
     this.mx = this.my = this.vx = this.vy = 0;
+    this.lastMove = 0;
     this.visible = true;
     this.io = null;
 
@@ -75,6 +80,7 @@ export default class Polytope600 extends Vue {
 
     this.onResize = this.onResize.bind(this);
     this.onMouse = this.onMouse.bind(this);
+    this.onTouch = this.onTouch.bind(this);
     this.onVisibility = this.onVisibility.bind(this);
     this.frame = this.frame.bind(this);
 
@@ -82,6 +88,8 @@ export default class Polytope600 extends Vue {
     document.addEventListener("visibilitychange", this.onVisibility);
     if (this.followMouse && !this.reduced) {
       window.addEventListener("mousemove", this.onMouse, { passive: true });
+      // Touch screens have no hover, so a drag steers the rotation instead.
+      window.addEventListener("touchmove", this.onTouch, { passive: true });
     }
     if ("IntersectionObserver" in window) {
       this.io = new IntersectionObserver(entries => {
@@ -102,6 +110,7 @@ export default class Polytope600 extends Vue {
     cancelAnimationFrame(this.raf);
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("mousemove", this.onMouse);
+    window.removeEventListener("touchmove", this.onTouch);
     document.removeEventListener("visibilitychange", this.onVisibility);
     if (this.io) this.io.disconnect();
   }
@@ -122,8 +131,19 @@ export default class Polytope600 extends Vue {
   }
 
   private onMouse(e: MouseEvent) {
-    this.mx = (e.clientX / window.innerWidth) * 2 - 1;
-    this.my = (e.clientY / window.innerHeight) * 2 - 1;
+    this.setPointer(e.clientX, e.clientY);
+  }
+
+  private onTouch(e: TouchEvent) {
+    const touch = e.touches[0];
+    if (touch) this.setPointer(touch.clientX, touch.clientY);
+  }
+
+  // Maps a viewport point to [-1, 1] on each axis, centre = 0.
+  private setPointer(x: number, y: number) {
+    this.mx = Math.max(-1, Math.min(1, (x / window.innerWidth) * 2 - 1));
+    this.my = Math.max(-1, Math.min(1, (y / window.innerHeight) * 2 - 1));
+    this.lastMove = performance.now();
   }
 
   private onResize() {
@@ -142,9 +162,15 @@ export default class Polytope600 extends Vue {
     const dt = this.last ? Math.min((now - this.last) / 1000, 0.05) : 0;
     this.last = now;
     this.t += dt * this.speed;
-    // Ease the view toward the cursor.
-    this.vx += (this.mx - this.vx) * Math.min(1, dt * 3);
-    this.vy += (this.my - this.vy) * Math.min(1, dt * 3);
+    // While the pointer is active it sets the target; once it has been still
+    // for a moment, the target drifts gently on its own so the logo keeps moving.
+    const active = this.followMouse && this.lastMove && now - this.lastMove < 2500;
+    const tx = active ? this.mx : Math.sin(this.t * 0.21) * 0.45;
+    const ty = active ? this.my : Math.cos(this.t * 0.16) * 0.35;
+    // Ease toward the target so the rotation never snaps.
+    const k = Math.min(1, dt * 2.2);
+    this.vx += (tx - this.vx) * k;
+    this.vy += (ty - this.vy) * k;
     this.draw();
     this.raf = requestAnimationFrame(this.frame);
   }
@@ -158,16 +184,17 @@ export default class Polytope600 extends Vue {
 
     // Double rotation in two orthogonal planes (XW and YZ) plus a slow
     // third (ZW) so the motion never settles into a simple loop.
-    const a = t;
+    // The cursor adds an offset to the XW plane (horizontal) and a rotation
+    // in the YW plane (vertical), so the shape turns in 4D as you move.
+    const reach = this.mouseReach;
+    const a = t + this.vx * reach;
     const b = t * 0.618;
     const c = t * 0.27;
+    const e = this.vy * reach;
     const ca = Math.cos(a), sa = Math.sin(a);
     const cb = Math.cos(b), sb = Math.sin(b);
     const cc = Math.cos(c), sc = Math.sin(c);
-    // 3D viewing angle from the cursor.
-    const ry = this.vx * 0.5, rx = this.vy * 0.5;
-    const cry = Math.cos(ry), sry = Math.sin(ry);
-    const crx = Math.cos(rx), srx = Math.sin(rx);
+    const ce = Math.cos(e), se = Math.sin(e);
 
     const D4 = 2.6; // 4D camera distance (w axis)
     const D3 = 3.2; // 3D camera distance (z axis)
@@ -190,18 +217,15 @@ export default class Polytope600 extends Vue {
       n = z * cc - q * sc;
       q = z * sc + q * cc;
       z = n;
+      // YW (cursor, vertical)
+      n = y * ce - q * se;
+      q = y * se + q * ce;
+      y = n;
       // 4D -> 3D perspective
       const k4 = D4 / (D4 - q);
       x *= k4;
       y *= k4;
       z *= k4;
-      // View rotation (cursor)
-      n = x * cry + z * sry;
-      z = -x * sry + z * cry;
-      x = n;
-      n = y * crx - z * srx;
-      z = y * srx + z * crx;
-      y = n;
       // 3D -> 2D perspective
       const k3 = D3 / (D3 - z);
       px[i] = cx + x * k3 * scale;
