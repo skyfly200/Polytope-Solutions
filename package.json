@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "lambda-serve": "netlify-lambda serve src/lambda",
     "build:site": "vite build",
-    "build:lambda": "netlify-lambda build src/lambda"
+    "build:lambda": "netlify-lambda build src/lambda -c lambda.webpack.config.js",
+    "db:migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.2.0",
+    "@neondatabase/serverless": "^1.2.0",
     "@types/aos": "^3.0.0",
     "aos": "^2.3.4",
     "axios": "^0.21.4",
