@@ -20,6 +20,26 @@ export default new Router({
         import(/* webpackChunkName: "about" */ "./views/About.vue")
     },
     {
+      path: "/solutions",
+      name: "solutions",
+      component: () => import("./views/Solutions.vue")
+    },
+    {
+      path: "/solutions/:slug",
+      name: "solution",
+      component: () => import("./views/Solution.vue")
+    },
+    {
+      path: "/work",
+      name: "work",
+      component: () => import("./views/Work.vue")
+    },
+    {
+      path: "/work/:slug",
+      name: "case-study",
+      component: () => import("./views/CaseStudy.vue")
+    },
+    {
       path: "/services",
       name: "services",
       component: () =>
