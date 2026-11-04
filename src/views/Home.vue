@@ -1,14 +1,14 @@
 <template lang="pug">
 v-container(fluid).home
   Landing
-  v-layout.blurbs
+  v-layout.blurbs.snap-section
     v-flex(xs10 offset-xs1)
       .blurb(v-for="b in blurbs" :data-aos="b.aos" data-aos-anchor-placement="top-center")
         i.fas.fa-5x(:class="b.icon")
-        span {{ b.text }}
-  #solutions
+        span(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
+  #solutions.snap-section
     v-layout.solutions-header
-      h1 Solutions
+      h1(v-tilt) Solutions
     v-layout
       v-flex(md12 lg10 offset-lg1)
         v-layout.solutions(wrap)
@@ -16,13 +16,13 @@ v-container(fluid).home
             v-card(data-aos="flip-up" data-aos-anchor-placement="top-center" data-aos-easing="ease-in-cubic")
               v-img(:src="s.img" height="10em")
                 .img-overlay
-                  h1.card-title {{ s.title }}
+                  h1.card-title(v-tilt="{ max: 10, depth: 3 }") {{ s.title }}
               v-card-text.content.pa3
                 p {{ s.description }}
                 v-btn(:to="s.path" color="primary") Learn More
-  ExampleProjects
-  Testimonials
-  v-layout.contact#contact
+  ExampleProjects.snap-section
+  Testimonials.snap-section
+  v-layout.contact.snap-section#contact
     ContactForm
   Footer
 </template>

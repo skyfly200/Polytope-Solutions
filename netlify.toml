@@ -2,6 +2,10 @@
   Command = "npm run build"
   Functions = "lambda"
   Publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
 [[redirects]]
   from = "/*"
   to = "/"
@@ -9,4 +13,3 @@
   force = false
   [redirects.headers]
     X-From = "Netlify"
-    

@@ -1,15 +1,20 @@
 <template lang="pug">
-v-layout#landing
+v-layout#landing.snap-section
   .logo(data-aos="fade-up" data-aos-delay="500")
-    img(src="https://upload.wikimedia.org/wikipedia/commons/9/95/600-cell_orthographic-vertex-first-square-sym-2D.svg")
-  .brand-name(data-aos="fade" data-aos-delay="250") Polytope Solutions
-  .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100") Gain Higher Perspectives
+    Polytope600(size="min(40vw, 46vh)" follow-mouse)
+  .brand-name(data-aos="fade" data-aos-delay="250")
+    span.tilt(v-tilt="{ max: 16, depth: 8 }") Polytope Solutions
+  .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100")
+    span.tilt(v-tilt="{ max: 12, depth: 4 }") Gain Higher Perspectives
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import Polytope600 from "@/components/Polytope600.vue";
 
-@Component({})
+@Component({
+  components: { Polytope600 }
+})
 export default class Landing extends Vue {
 }
 </script>
@@ -22,13 +27,19 @@ export default class Landing extends Vue {
   align-items: center
   justify-content: center
   scroll-snap-align: center
-  .logo img
-      filter: invert(100%)
-      width: 40%
+  perspective: 900px
+  .tilt
+    display: inline-block
   .brand-name
     font-family: "Sirin Stencil", cursive
     font-size: 7rem
+    line-height: 1.1
   .slogan
     font-size: 2.5rem
     margin: 2rem
+  @media (max-width: 600px)
+    .brand-name
+      font-size: 3.5rem
+    .slogan
+      font-size: 1.6rem
 </style>
