@@ -2,7 +2,7 @@
 //   MAILGUN_API_KEY  private API key (never commit)
 //   DOMAIN           verified sending domain, e.g. mg.polytopesolutions.com
 //   CONTACT_EMAIL    where Skyler's notifications go
-//   MAILGUN_FROM     optional default From, e.g. "Polytope Solutions <hello@mg.polytopesolutions.com>"
+//   MAILGUN_FROM     optional default From, e.g. "Polytope Solutions <contact@mail.polytopesolutions.com>"
 //   MAILGUN_API_BASE optional, https://api.eu.mailgun.net for EU domains
 // When not configured, sends are skipped with a clear log line instead of failing.
 
@@ -14,7 +14,7 @@ export function mailgunConfig(env = process.env) {
     apiKey: env.MAILGUN_API_KEY,
     domain: env.DOMAIN,
     contactEmail: env.CONTACT_EMAIL || null,
-    from: env.MAILGUN_FROM || (env.DOMAIN ? `Polytope Solutions <hello@${env.DOMAIN}>` : null),
+    from: env.MAILGUN_FROM || (env.DOMAIN ? `Polytope Solutions <contact@${env.DOMAIN}>` : null),
     base: (env.MAILGUN_API_BASE || "https://api.mailgun.net").replace(/\/+$/, ""),
   };
 }
