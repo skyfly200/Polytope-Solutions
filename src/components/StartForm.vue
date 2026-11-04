@@ -1,6 +1,19 @@
 <template lang="pug">
+//- The letter as printed on the paper: shared by the flat sheet and both folds.
+mixin letter()
+  .face
+    .lh
+      .lh-mark
+      .lh-text
+        .lh-co Polytope Solutions
+        .lh-title New project request
+    .grid
+      .blk(v-for="b in blocks" :key="b.key" :data-key="b.key" :class="{ wide: b.wide, pending: !blocksReady }")
+        .bl {{ b.label }}
+        .bv {{ b.value }}
+    .lf polytopesolutions.com · sent securely
 section#contact-form.contact-card
-  .card(v-if="!sent" :class="{ 'is-folded': folded }" :aria-hidden="folded ? 'true' : null")
+  .card(v-if="!sent" :class="{ 'is-sending': cardHidden }" :aria-hidden="cardHidden ? 'true' : null")
     .call-to-action
       i.fas.fa-rocket.rocket(aria-hidden="true")
       h2.header Start a project with us
@@ -48,13 +61,46 @@ section#contact-form.contact-card
         button.btn.btn-primary(type="submit" :disabled="sending") {{ sending ? "Sending..." : "Send" }}
         button.btn.btn-ghost(type="button" :disabled="sending || isEmpty" @click="clearForm") Reset
       p.alert(v-if="alert" :class="alertType" role="status") {{ alert }}
-  .launch(v-if="launchVisible" :class="flight" aria-hidden="true")
-    .env-wrap
-      svg.envelope(viewBox="0 0 120 80")
-        rect.env-body(x="2" y="2" width="116" height="76" rx="6")
-        path.env-flap(d="M4 6 L60 46 L116 6")
-        circle.env-seal(cx="60" cy="46" r="9")
-    .rocket-wrap
+  .launch(v-if="overlay" ref="launch" :class="['st-' + stage, { reversing }]" aria-hidden="true")
+    .backdrop
+    .flash(ref="flash")
+    //- The sheet of paper: composed, snapshotted, then folded in half twice.
+    .paperbox(v-if="paperVisible" key="paper" ref="box" :style="boxStyle")
+      .sheet(v-if="stage === 'gather' || stage === 'snap'" key="sheet" ref="sheet" :class="{ holding }")
+        +letter()
+      .snap-frame(v-if="stage === 'gather' || stage === 'snap'" key="frame" ref="frame")
+      .fold1(v-if="stage === 'fold1'" key="fold1")
+        .half.top
+          .face-wrap
+            +letter()
+        .hinge(ref="hinge")
+          .front
+            .face-wrap.low
+              +letter()
+            .shade(ref="shadeFront")
+          .back
+            .shade(ref="shadeBack")
+      .fold2(v-if="stage === 'fold2'" key="fold2")
+        .h2.left
+        .h2.hinge2(ref="hinge2")
+          .front
+          .back
+            .shade(ref="shadeBack2")
+    //- Each form field becomes a chip that flies to its place on the letter.
+    .chip(v-for="c in chips" :key="c.key" v-show="chipsVisible" :style="chipStyle(c)")
+      .cl {{ c.label }}
+      .cv {{ c.value }}
+    .env-wrap(v-if="envVisible" key="env")
+      .envelope(ref="envelope")
+        .env-back
+        .pocket(ref="pocket" :style="pocketStyle")
+        .env-front-wrap
+          .env-front
+        .env-flap(ref="flap")
+          .face.out
+          .face.in
+        .env-seal(ref="seal")
+    .rocket-wrap(v-if="rocketVisible" key="rocket")
       svg.rocket(viewBox="0 0 60 140")
         path.flame(d="M20 100 Q30 140 40 100 Z")
         path.fin(d="M17 82 L4 112 L20 104 Z")
@@ -77,18 +123,61 @@ import { startAreas } from "@/data/solutions";
 const EMAIL_PATTERN = /.+@.+\..+/;
 const START_URL = "/.netlify/functions/start";
 
-// Timings (ms) for the send animation. The request runs alongside the fold.
-const FOLD_MS = 600;
-const SEAL_MS = 900;
-const LOAD_MS = 800;
+// Timings (ms) for the send animation. The request runs alongside the first
+// two steps and the fold waits for it.
+const CHIP_MS = 820;
+const CHIP_STAGGER_MS = 55;
+const CHIP_START_MS = 200;
+const SNAP_MS = 420;
+const FOLD_MS = 760;
+const MOVE_MS = 560;
+const SLIDE_MS = 560;
+const FLAP_MS = 640;
+const SEAL_MS = 360;
+const LOAD_MS = 1250;
 const LAUNCH_MS = 1100;
-const UNFOLD_MS = 600;
+const EASE = "cubic-bezier(0.5, 0, 0.2, 1)";
 
-// idle: nothing playing. folding: card folds up while the request is sent.
-// sealed: envelope shown, waiting on the request. loading: envelope drops into
-// the rocket. launching: rocket leaves the top of the screen. reversing: the
-// request failed, so the card unfolds again.
-type Flight = "idle" | "folding" | "sealed" | "loading" | "launching" | "reversing";
+// The letter is laid out at a fixed size and scaled to fit the screen.
+const SHEET_W = 340;
+const SHEET_H = 440;
+const ENV_W = 220;
+const ENV_H = 140;
+
+// idle: nothing playing. gather: fields turn into text blocks on a letter.
+// snap: the letter is captured (and held until the request succeeds).
+// fold1/fold2: folded in half, then in half again. insert: the quarter slides
+// into an envelope and the flap seals. loading/launching: the envelope goes
+// into the rocket and it leaves. A failed request reverses gather/snap.
+type Stage = "idle" | "gather" | "snap" | "fold1" | "fold2" | "insert" | "loading" | "launching";
+
+interface Block {
+  key: string;
+  label: string;
+  value: string;
+  wide?: boolean;
+}
+
+interface Chip {
+  key: string;
+  label: string;
+  value: string;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+const FIELD_IDS: { [key: string]: string } = {
+  name: "cf-name",
+  email: "cf-email",
+  company: "cf-company",
+  area: "cf-area",
+  needs: "cf-needs",
+  timeline: "cf-timeline",
+  budget: "cf-budget",
+  referral: "cf-referral"
+};
 
 const wait = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -115,16 +204,64 @@ export default class StartForm extends Vue {
   sent: boolean = false;
   alert: string = "";
   alertType: string = "info";
-  flight: Flight = "idle";
 
-  // The card stays folded from the moment it starts to fold until it unfolds.
-  get folded(): boolean {
-    return ["folding", "sealed", "loading", "launching"].indexOf(this.flight) !== -1;
+  // Send animation state.
+  stage: Stage = "idle";
+  reversing: boolean = false;
+  cardHidden: boolean = false;
+  chips: Chip[] = [];
+  chipsVisible: boolean = true;
+  blocksReady: boolean = false;
+  holding: boolean = false;
+  boxScale: number = 1;
+  pocket: { left: number; top: number; width: number; height: number } = { left: 0, top: 0, width: 0, height: 0 };
+  private anims: Animation[] = [];
+  private chipAnims: Animation[] = [];
+  private alive: boolean = true;
+
+  beforeDestroy(): void {
+    this.alive = false;
+    this.cancelAnims();
   }
 
-  // The envelope and rocket overlay is only on screen during these phases.
-  get launchVisible(): boolean {
-    return ["sealed", "loading", "launching"].indexOf(this.flight) !== -1;
+  get overlay(): boolean {
+    return this.stage !== "idle";
+  }
+
+  get paperVisible(): boolean {
+    return ["gather", "snap", "fold1", "fold2"].indexOf(this.stage) !== -1;
+  }
+
+  get envVisible(): boolean {
+    return ["insert", "loading", "launching"].indexOf(this.stage) !== -1;
+  }
+
+  get rocketVisible(): boolean {
+    return this.stage === "loading" || this.stage === "launching";
+  }
+
+  get boxStyle(): { [key: string]: string } {
+    return { "--k": String(this.boxScale) };
+  }
+
+  get pocketStyle(): { [key: string]: string } {
+    const p = this.pocket;
+    return { left: p.left + "px", top: p.top + "px", width: p.width + "px", height: p.height + "px" };
+  }
+
+  // The filled-in fields, in the order they appear on the letter.
+  get blocks(): Block[] {
+    const list: Block[] = [
+      { key: "name", label: "Name", value: this.name.trim() },
+      { key: "email", label: "Email", value: this.email.trim() },
+      { key: "company", label: "Company", value: this.company.trim() },
+      { key: "area", label: "Needs help with", value: this.solutionArea },
+      { key: "needs", label: "Project", value: this.needs.trim(), wide: true },
+      { key: "timeline", label: "Timeline", value: this.timeline.trim() },
+      { key: "budget", label: "Budget", value: this.budget.trim() },
+      { key: "referral", label: "Heard about us via", value: this.referral.trim() }
+    ];
+    return list.filter(b => !!b.value);
   }
 
   get errors(): { name?: string; email?: string; needs?: string; solutionArea?: string } {
@@ -193,34 +330,329 @@ export default class StartForm extends Vue {
       return;
     }
 
-    // Fold the card while the request is in flight.
-    this.flight = "folding";
+    // Capture where every filled-in field sits, then start the request. The
+    // animation plays while it is in flight.
+    this.captureChips();
     const request = this.postContact();
-    await wait(FOLD_MS);
-
-    // Hold the sealed envelope until both the request and the seal are done.
-    this.flight = "sealed";
-    const [ok] = await Promise.all([request, wait(SEAL_MS)]);
+    const ok = await this.composeLetter(request);
+    if (!this.alive) return;
 
     if (!ok) {
-      // Reverse: unfold the card and show the error.
-      this.flight = "reversing";
-      await wait(UNFOLD_MS);
-      this.flight = "idle";
+      // Reverse: the text blocks fly back into their fields and the error shows.
+      await this.reverseLetter();
+      if (!this.alive) return;
       this.showSendError();
       this.sending = false;
       return;
     }
 
-    this.flight = "loading";
+    await this.foldLetter();
+    await this.sealEnvelope();
+    if (!this.alive) return;
+
+    this.stage = "loading";
     await wait(LOAD_MS);
-    this.flight = "launching";
+    this.stage = "launching";
     await wait(LAUNCH_MS);
+    if (!this.alive) return;
 
     this.sent = true;
     this.clearForm();
-    this.flight = "idle";
+    this.resetAnimation();
     this.sending = false;
+  }
+
+  // ---- Send animation steps ------------------------------------------------
+
+  chipStyle(c: Chip): { [key: string]: string } {
+    return { left: c.left + "px", top: c.top + "px", width: c.width + "px", height: c.height + "px" };
+  }
+
+  private captureChips(): void {
+    const chips: Chip[] = [];
+    this.blocks.forEach(b => {
+      const input = this.$el.querySelector("#" + FIELD_IDS[b.key]);
+      const field = input && input.closest(".field");
+      if (!field) return;
+      const r = field.getBoundingClientRect();
+      chips.push({ key: b.key, label: b.label, value: b.value, left: r.left, top: r.top, width: r.width, height: r.height });
+    });
+    this.chips = chips;
+  }
+
+  private animate(el: Element | null, keyframes: Keyframe[], options: KeyframeAnimationOptions): Animation | null {
+    if (!el || !(el as HTMLElement).animate) return null;
+    const anim = (el as HTMLElement).animate(keyframes, { fill: "both", ...options });
+    this.anims.push(anim);
+    return anim;
+  }
+
+  private done(anim: Animation | null): Promise<void> {
+    return anim ? anim.finished.then(() => undefined, () => undefined) : Promise.resolve();
+  }
+
+  private cancelAnims(): void {
+    this.anims.concat(this.chipAnims).forEach(a => {
+      try {
+        a.cancel();
+      } catch (e) {
+        // already gone
+      }
+    });
+    this.anims = [];
+    this.chipAnims = [];
+  }
+
+  private resetAnimation(): void {
+    this.cancelAnims();
+    this.stage = "idle";
+    this.reversing = false;
+    this.cardHidden = false;
+    this.chips = [];
+    this.chipsVisible = true;
+    this.blocksReady = false;
+    this.holding = false;
+  }
+
+  // Steps 1 and 2: the fields squash into text blocks that fly into place on a
+  // sheet of paper, then the sheet is captured as a snapshot.
+  private async composeLetter(request: Promise<boolean>): Promise<boolean> {
+    let settled = false;
+    request.then(() => (settled = true));
+
+    this.boxScale = Math.max(0.45, Math.min(1, (window.innerHeight * 0.8) / SHEET_H, (window.innerWidth - 32) / SHEET_W));
+    this.blocksReady = false;
+    this.chipsVisible = true;
+    this.cardHidden = true;
+    this.stage = "gather";
+    await this.$nextTick();
+
+    const launch = this.$refs.launch as HTMLElement;
+    const sheet = this.$refs.sheet as HTMLElement;
+    const k = this.boxScale;
+
+    // Measure where each block will sit before anything moves.
+    const chipEls = Array.prototype.slice.call(launch.querySelectorAll(".chip")) as HTMLElement[];
+    const plans = this.chips.map((c, i) => {
+      const block = sheet.querySelector('.blk[data-key="' + c.key + '"]') as HTMLElement;
+      const r = block.getBoundingClientRect();
+      const fs = (sel: string): number => parseFloat(getComputedStyle(block.querySelector(sel) as Element).fontSize) * k;
+      return { el: chipEls[i], c, r, labelSize: fs(".bl"), valueSize: fs(".bv") };
+    });
+
+    this.animate(
+      sheet,
+      [
+        { opacity: 0, transform: "perspective(1200px) rotateX(30deg) translateY(60px) scale(0.94)" },
+        { opacity: 1, transform: "perspective(1200px) rotateX(0deg) translateY(0) scale(1)" }
+      ],
+      { duration: 560, delay: 380, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+    );
+
+    const ps: Promise<void>[] = [];
+    plans.forEach((p, i) => {
+      if (!p.el) return;
+      const c = p.c;
+      const t = { left: p.r.left + "px", top: p.r.top + "px", width: p.r.width + "px", height: p.r.height + "px" };
+      const s = { left: c.left + "px", top: c.top + "px", width: c.width + "px", height: c.height + "px" };
+      const timing = { duration: CHIP_MS, delay: CHIP_START_MS + i * CHIP_STAGGER_MS, easing: EASE };
+      // Squash flat first, then lift, tilt and glide to the letter.
+      const chipAnim = this.animate(
+        p.el,
+        [
+          { ...s, backgroundColor: "rgba(247, 242, 231, 0)", transform: "perspective(900px) rotateX(0deg) scale(1, 1)", offset: 0 },
+          { ...s, backgroundColor: "rgba(247, 242, 231, 0)", transform: "perspective(900px) rotateX(0deg) scale(1.03, 0.42)", offset: 0.28 },
+          { transform: "perspective(900px) rotateX(32deg) scale(1, 1)", offset: 0.68 },
+          { ...t, backgroundColor: "rgba(247, 242, 231, 1)", transform: "perspective(900px) rotateX(0deg) scale(1, 1)", offset: 1 }
+        ],
+        timing
+      );
+      const label = this.animate(
+        p.el.querySelector(".cl"),
+        [
+          { fontSize: "16px", color: "rgba(255, 255, 255, 0.9)" },
+          { fontSize: p.labelSize + "px", color: "#a35f00" }
+        ],
+        timing
+      );
+      const value = this.animate(
+        p.el.querySelector(".cv"),
+        [
+          { fontSize: "16px", color: "#ffffff", backgroundColor: "rgba(0,0,0,0.45)", borderColor: "rgba(255,255,255,0.22)", borderRadius: "8px", padding: "12px 14px" },
+          { fontSize: p.valueSize + "px", color: "#1d1b16", backgroundColor: "rgba(0,0,0,0)", borderColor: "rgba(255,255,255,0)", borderRadius: "0px", padding: "0px 0px" }
+        ],
+        timing
+      );
+      const gap = this.animate(p.el, [{ gap: "5.6px" }, { gap: 3 * k + "px" }], timing);
+      [chipAnim, label, value, gap].forEach(a => {
+        if (a) {
+          this.chipAnims.push(a);
+          ps.push(this.done(a));
+        }
+      });
+    });
+    await Promise.all(ps);
+    if (!this.alive) return false;
+
+    // Swap the flying chips for the real printed blocks.
+    this.blocksReady = true;
+    this.chipsVisible = false;
+
+    // Snapshot: viewfinder corners, a flash and a little pop.
+    this.stage = "snap";
+    const frame = this.$refs.frame as HTMLElement;
+    const flash = this.$refs.flash as HTMLElement;
+    const snap = [
+      this.animate(
+        frame,
+        [
+          { opacity: 0, transform: "scale(1.14)" },
+          { opacity: 1, transform: "scale(1)", offset: 0.35 },
+          { opacity: 1, transform: "scale(1)", offset: 0.7 },
+          { opacity: 0, transform: "scale(1)" }
+        ],
+        { duration: SNAP_MS + 200 }
+      ),
+      this.animate(flash, [{ opacity: 0 }, { opacity: 0.85, offset: 0.2 }, { opacity: 0 }], { duration: SNAP_MS, delay: 120 }),
+      this.animate(sheet, [{ transform: "scale(1)" }, { transform: "scale(1.04)", offset: 0.25 }, { transform: "scale(1)" }], { duration: SNAP_MS, delay: 120 })
+    ];
+    await Promise.all(snap.map(a => this.done(a)));
+    if (!this.alive) return false;
+
+    // Hold the snapshot until the request comes back.
+    if (!settled) this.holding = true;
+    const ok = await request;
+    this.holding = false;
+    return ok;
+  }
+
+  // The request failed: send the text blocks back to their fields.
+  private async reverseLetter(): Promise<void> {
+    this.reversing = true;
+    this.cardHidden = false;
+    this.blocksReady = false;
+    this.chipsVisible = true;
+    await this.$nextTick();
+    const sheet = this.$refs.sheet as HTMLElement;
+    const fade = this.animate(
+      sheet,
+      [{ opacity: 1, transform: "perspective(1200px) rotateX(0deg) translateY(0)" }, { opacity: 0, transform: "perspective(1200px) rotateX(30deg) translateY(60px)" }],
+      { duration: 560, delay: 150, easing: "ease-in" }
+    );
+    this.chipAnims.forEach(a => a.reverse());
+    await Promise.all(this.chipAnims.map(a => this.done(a)).concat(this.done(fade)));
+    this.resetAnimation();
+  }
+
+  // Step 3: fold the snapshot in half, then in half again.
+  private async foldLetter(): Promise<void> {
+    const k = this.boxScale;
+    this.stage = "fold1";
+    await this.$nextTick();
+    const box = this.$refs.box as HTMLElement;
+    const timing = { duration: FOLD_MS, easing: "cubic-bezier(0.45, 0, 0.25, 1)" };
+    const first = [
+      this.animate(this.$refs.hinge as HTMLElement, [{ transform: "rotateX(0deg)" }, { transform: "rotateX(180deg)" }], timing),
+      this.animate(this.$refs.shadeFront as HTMLElement, [{ opacity: 0 }, { opacity: 0.6, offset: 0.5 }, { opacity: 0.6 }], timing),
+      this.animate(this.$refs.shadeBack as HTMLElement, [{ opacity: 0.65 }, { opacity: 0 }], timing),
+      // Recentre the folded stack as it shortens.
+      this.animate(box, [{ translate: "0px 0px" }, { translate: "0px " + (SHEET_H / 4) * k + "px" }], timing)
+    ];
+    await Promise.all(first.map(a => this.done(a)));
+    if (!this.alive) return;
+
+    this.stage = "fold2";
+    await this.$nextTick();
+    const second = [
+      this.animate(this.$refs.hinge2 as HTMLElement, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(-180deg)" }], timing),
+      this.animate(this.$refs.shadeBack2 as HTMLElement, [{ opacity: 0.65 }, { opacity: 0 }], timing),
+      this.animate(box, [{ translate: "0px " + (SHEET_H / 4) * k + "px" }, { translate: (SHEET_W / 4) * k + "px " + (SHEET_H / 4) * k + "px" }], timing)
+    ];
+    await Promise.all(second.map(a => this.done(a)));
+  }
+
+  // Step 4: the folded letter slides into an envelope and the flap seals.
+  private async sealEnvelope(): Promise<void> {
+    if (!this.alive) return;
+    const launch = this.$refs.launch as HTMLElement;
+    const L = launch.getBoundingClientRect();
+    const quarter = (launch.querySelector(".h2.left") as HTMLElement).getBoundingClientRect();
+    // The envelope is centred where the sheet was (45% down the screen).
+    const envLeft = L.left + L.width / 2 - ENV_W / 2;
+    const envTop = L.top + L.height * 0.45 - ENV_H / 2;
+    this.pocket = { left: quarter.left - envLeft, top: quarter.top - envTop, width: quarter.width, height: quarter.height };
+    this.stage = "insert";
+    await this.$nextTick();
+
+    const envelope = this.$refs.envelope as HTMLElement;
+    const pocket = this.$refs.pocket as HTMLElement;
+    const flap = this.$refs.flap as HTMLElement;
+    const seal = this.$refs.seal as HTMLElement;
+    const p = this.pocket;
+    const cx = p.left + p.width / 2;
+    const cy = p.top + p.height / 2;
+    // The letter turns sideways and shrinks to fit the envelope.
+    const scale = Math.min(0.62, 150 / p.height);
+    const hover = ENV_H / 2 - 135;
+
+    this.animate(
+      envelope,
+      [
+        { opacity: 0, transform: "perspective(900px) translateY(60px) rotateX(40deg)" },
+        { opacity: 1, transform: "perspective(900px) translateY(0) rotateX(0deg)" }
+      ],
+      { duration: MOVE_MS, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+    );
+    const up = this.animate(
+      pocket,
+      [
+        { translate: "0px 0px", rotate: "0deg", scale: 1 },
+        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", rotate: "-90deg", scale }
+      ],
+      { duration: MOVE_MS, easing: EASE }
+    );
+    await this.done(up);
+    if (!this.alive) return;
+
+    // Now it is above the envelope: tuck it behind the front pocket and lower it in.
+    pocket.style.zIndex = "2";
+    const slideY = ENV_H / 2 + 12 - cy;
+    const down = this.animate(
+      pocket,
+      [
+        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", rotate: "-90deg", scale },
+        { translate: ENV_W / 2 - cx + "px " + slideY + "px", rotate: "-90deg", scale }
+      ],
+      { duration: SLIDE_MS, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    );
+    await this.done(down);
+    if (!this.alive) return;
+
+    // The top flap swings shut over the letter (and in front of it halfway).
+    const close = this.animate(
+      flap,
+      [
+        { transform: "rotateX(180deg)", zIndex: 0, easing: "cubic-bezier(0.4, 0, 0.6, 1)" },
+        { transform: "rotateX(90deg)", zIndex: 0, offset: 0.5 },
+        { transform: "rotateX(90deg)", zIndex: 7, offset: 0.5, easing: "cubic-bezier(0.4, 0, 0.6, 1)" },
+        { transform: "rotateX(0deg)", zIndex: 7 }
+      ],
+      { duration: FLAP_MS }
+    );
+    await this.done(close);
+    if (!this.alive) return;
+
+    const stamp = this.animate(
+      seal,
+      [
+        { opacity: 0, transform: "translate(-50%, -50%) scale(0)" },
+        { opacity: 1, transform: "translate(-50%, -50%) scale(1.3)", offset: 0.6 },
+        { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }
+      ],
+      { duration: SEAL_MS, easing: "ease-out" }
+    );
+    this.animate(envelope, [{ translate: "0px 0px" }, { translate: "0px 5px", offset: 0.4 }, { translate: "0px 0px" }], { duration: SEAL_MS });
+    await this.done(stamp);
   }
 
   clearForm(): void {
@@ -390,53 +822,352 @@ export default class StartForm extends Vue {
     flex: 1 1 100%
 
 // ---- Send animation -------------------------------------------------------
-// The card folds up toward its top edge, like a letter being folded.
+// While the send plays, the card fades out and the overlay takes over.
 .card
-  transform-origin: 50% 0
-  transition: transform 0.6s cubic-bezier(0.5, 0, 0.3, 1), opacity 0.45s ease 0.1s
-  &.is-folded
-    transform: perspective(900px) rotateX(88deg) scale(0.7)
+  transition: opacity 0.35s ease
+  &.is-sending
     opacity: 0
     pointer-events: none
 
-// Fixed overlay so the rocket can fly off the top of the viewport.
+// Fixed overlay so the rocket can fly off the top of the viewport. It also
+// swallows touches so the page cannot scroll out from under the animation.
 .launch
   position: fixed
   inset: 0
   z-index: 60
+  overflow: hidden
+  touch-action: none
+
+.backdrop
+  position: absolute
+  inset: 0
+  background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.8))
+  animation: fade-in 0.4s ease both
+  transition: opacity 0.5s ease 0.1s
+
+.launch.reversing .backdrop
+  opacity: 0
+  animation: none
+
+.flash
+  position: absolute
+  inset: 0
+  background: white
+  opacity: 0
+  z-index: 8
   pointer-events: none
+
+// ---- The paper ------------------------------------------------------------
+// The letter is laid out at 340 x 440 and scaled to fit by --k.
+.paperbox
+  position: absolute
+  left: 50%
+  top: 45%
+  width: 340px
+  height: 440px
+  margin: -220px 0 0 -170px
+  transform: scale(var(--k, 1))
+  perspective: 1600px
+
+$paper: #f7f2e7
+$paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
+
+.face
+  position: relative
+  width: 340px
+  height: 440px
+  box-sizing: border-box
+  padding: 26px 28px
+  background: $paper
+  color: #1d1b16
   overflow: hidden
 
+.lh
+  display: flex
+  align-items: center
+  gap: 10px
+  padding-bottom: 12px
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14)
+  .lh-mark
+    width: 24px
+    height: 24px
+    flex: none
+    background: #ffa000
+    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%)
+  .lh-co
+    font-size: 10px
+    letter-spacing: 0.14em
+    text-transform: uppercase
+    color: #6b6454
+  .lh-title
+    font-size: 17px
+    font-weight: 600
+    line-height: 1.2
+
+.grid
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 14px 16px
+  margin-top: 16px
+
+.blk
+  min-width: 0
+  &.wide
+    grid-column: 1 / -1
+  &.pending
+    visibility: hidden
+  .bl
+    font-size: 10px
+    font-weight: 600
+    letter-spacing: 0.04em
+    line-height: 1.2
+    color: #a35f00
+    margin-bottom: 3px
+  .bv
+    font-size: 13px
+    line-height: 1.35
+    overflow-wrap: anywhere
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: 2
+    overflow: hidden
+  &.wide .bv
+    -webkit-line-clamp: 5
+
+.lf
+  position: absolute
+  left: 28px
+  right: 28px
+  bottom: 16px
+  font-size: 9px
+  letter-spacing: 0.06em
+  color: #8a826f
+
+.sheet
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: 4px
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6)
+  &.holding::after
+    content: ""
+    position: absolute
+    left: 0
+    right: 0
+    top: -80px
+    height: 80px
+    background: linear-gradient(transparent, rgba(255, 160, 0, 0.3), transparent)
+    animation: scan 1.3s linear infinite
+
+// Viewfinder corners that frame the snapshot.
+.snap-frame
+  --c: #ffa000
+  position: absolute
+  inset: -14px
+  opacity: 0
+  pointer-events: none
+  background: linear-gradient(var(--c), var(--c)) top left / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) top left / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) top right / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) top right / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 3px 26px no-repeat
+
+// First fold: the bottom half swings up and over the top half.
+.fold1,
+.fold2
+  position: absolute
+  inset: 0
+  transform-style: preserve-3d
+
+.fold1
+  .half.top
+    position: absolute
+    left: 0
+    top: 0
+    width: 340px
+    height: 220px
+    overflow: hidden
+    transform: translateZ(-1px)
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5)
+  .face-wrap
+    position: absolute
+    left: 0
+    top: 0
+    &.low
+      top: -220px
+  .hinge
+    position: absolute
+    left: 0
+    top: 220px
+    width: 340px
+    height: 220px
+    transform-origin: 50% 0
+    transform-style: preserve-3d
+  .front,
+  .back
+    position: absolute
+    inset: 0
+    overflow: hidden
+    backface-visibility: hidden
+  .back
+    transform: rotateX(180deg)
+    background: $paper-back
+    box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
+
+.shade
+  position: absolute
+  inset: 0
+  opacity: 0
+  pointer-events: none
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.55))
+
+// Second fold: the right half swings over the left half.
+.fold2
+  .h2.left
+    position: absolute
+    left: 0
+    top: 0
+    width: 170px
+    height: 220px
+    background: $paper-back
+    box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3), 0 24px 50px rgba(0, 0, 0, 0.5)
+    transform: translateZ(-1px)
+  .hinge2
+    position: absolute
+    left: 170px
+    top: 0
+    width: 170px
+    height: 220px
+    transform-origin: 0 50%
+    transform-style: preserve-3d
+  .front,
+  .back
+    position: absolute
+    inset: 0
+    backface-visibility: hidden
+    background: $paper-back
+    box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
+  .back
+    transform: rotateY(180deg)
+    box-shadow: inset -3px 0 5px -2px rgba(0, 0, 0, 0.3), inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
+  .shade
+    background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.55))
+
+// ---- Field chips ----------------------------------------------------------
+// Each starts as a copy of its form field and ends as a block of printed text.
+.chip
+  position: fixed
+  z-index: 4
+  box-sizing: border-box
+  display: flex
+  flex-direction: column
+  gap: 5.6px
+  overflow: hidden
+  pointer-events: none
+  transform-origin: 50% 50%
+  will-change: transform
+  .cl
+    flex: none
+    font-size: 16px
+    font-weight: 500
+    line-height: 1.2
+    white-space: nowrap
+    color: rgba(255, 255, 255, 0.9)
+  .cv
+    flex: 1
+    min-height: 0
+    box-sizing: border-box
+    font-size: 16px
+    line-height: 1.35
+    padding: 12px 14px
+    border: 1px solid rgba(255, 255, 255, 0.22)
+    border-radius: 8px
+    background: rgba(0, 0, 0, 0.45)
+    color: white
+    overflow: hidden
+    overflow-wrap: anywhere
+    white-space: pre-wrap
+
+// ---- Envelope -------------------------------------------------------------
 .env-wrap
   position: absolute
   left: 50%
   top: 45%
-  width: clamp(110px, 28vw, 150px)
+  width: 220px
+  height: 140px
   transform: translate(-50%, -50%)
-  transition: transform 0.8s cubic-bezier(0.6, 0, 0.4, 1), opacity 0.5s ease-in 0.3s
-  .envelope
-    display: block
-    width: 100%
-    overflow: visible
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.6))
-    animation: env-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25) both, env-bob 1.4s ease-in-out 0.5s infinite
-  .env-body
-    fill: #f5efe3
-    stroke: #ffa000
-    stroke-width: 2
-  .env-flap
-    fill: none
-    stroke: rgba(0, 0, 0, 0.35)
-    stroke-width: 2
-    stroke-linejoin: round
-  .env-seal
-    fill: #ffa000
-    stroke: #b36f00
-    stroke-width: 2
-    transform-box: fill-box
-    transform-origin: center
-    animation: seal-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.5) 0.35s both
+  z-index: 3
 
+.envelope
+  position: relative
+  width: 220px
+  height: 140px
+  perspective: 800px
+
+.env-back
+  position: absolute
+  inset: 0
+  z-index: 1
+  border-radius: 8px
+  background: #c4b288
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6)
+
+// The letter being tucked in: starts in front of everything, then drops behind
+// the front pocket (z-index 2) once it hovers above the envelope.
+.pocket
+  position: absolute
+  z-index: 5
+  background: $paper-back
+  border-radius: 2px
+  box-shadow: 0 1px 0 #cdc3aa, 0 2px 0 #c8bea4, 0 3px 0 #c2b89e, 0 12px 26px rgba(0, 0, 0, 0.45)
+
+.env-front-wrap
+  position: absolute
+  inset: 0
+  z-index: 3
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.25))
+  .env-front
+    position: absolute
+    inset: 0
+    border-radius: 8px
+    background: linear-gradient(160deg, #f3ead6, #e2d6ba)
+    clip-path: polygon(0 0, 50% 53%, 100% 0, 100% 100%, 0 100%)
+
+.env-flap
+  position: absolute
+  left: 0
+  top: 0
+  width: 100%
+  height: 53%
+  z-index: 0
+  transform-origin: 50% 0
+  transform-style: preserve-3d
+  transform: rotateX(180deg)
+  .face
+    position: absolute
+    inset: 0
+    width: auto
+    height: auto
+    padding: 0
+    overflow: visible
+    backface-visibility: hidden
+    clip-path: polygon(0 0, 100% 0, 50% 100%)
+  .out
+    background: linear-gradient(180deg, #f6eedc, #e0d3b4)
+  .in
+    transform: rotateX(180deg)
+    background: linear-gradient(0deg, #a8956a, #c4b288)
+
+.env-seal
+  position: absolute
+  left: 50%
+  top: 53%
+  z-index: 8
+  width: 30px
+  height: 30px
+  border-radius: 50%
+  background: radial-gradient(circle at 35% 30%, #ffc04d, #ffa000 55%, #b36f00)
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5)
+  opacity: 0
+  transform: translate(-50%, -50%) scale(0)
+
+// ---- Rocket ---------------------------------------------------------------
 .rocket-wrap
   position: absolute
   left: 50%
@@ -469,42 +1200,35 @@ export default class StartForm extends Vue {
     opacity: 0.35
 
 // Envelope drops into the rocket's hatch.
-.launch.loading,
-.launch.launching
+.launch.st-loading,
+.launch.st-launching
   .env-wrap
+    transition: transform 0.8s cubic-bezier(0.6, 0, 0.4, 1) 0.4s, opacity 0.5s ease-in 0.7s
     transform: translate(-50%, calc(-50% + 49vh - 6vh - 80px)) scale(0.12)
     opacity: 0
   .flame
     opacity: 1
 
-.launch.loading .rocket
-  animation: rocket-rumble 0.12s linear 0.6s infinite
+.launch.st-loading .rocket
+  animation: rocket-rumble 0.12s linear 1.2s infinite
 
-.launch.launching
+.launch.st-launching
   .rocket-wrap
     transform: translate(-50%, -130vh)
   .flame
     animation-duration: 0.07s
 
-@keyframes env-in
+@keyframes fade-in
   from
-    transform: scale(0.4) rotate(-8deg)
     opacity: 0
   to
-    transform: none
     opacity: 1
 
-@keyframes env-bob
-  0%, 100%
-    translate: 0 0
-  50%
-    translate: 0 -6px
-
-@keyframes seal-in
+@keyframes scan
   from
-    transform: scale(0)
+    transform: translateY(0)
   to
-    transform: scale(1)
+    transform: translateY(560px)
 
 @keyframes rocket-in
   from
