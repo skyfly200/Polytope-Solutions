@@ -95,14 +95,17 @@ function apply(s: TiltState) {
   el.style.transform =
     "perspective(" + opts.perspective + "px) rotateX(" + rx.toFixed(2) +
     "deg) rotateY(" + ry.toFixed(2) + "deg)";
-  // Extrude the text away from the viewer with stacked shadows.
+  // Extrude the text away from the viewer with stacked shadows. Each layer
+  // sits a little further back along the tilt direction, so the sides of the
+  // letters read as solid and the depth grows with the tilt.
   const sx = (-ry / opts.max) * opts.depth;
   const sy = (rx / opts.max) * opts.depth;
   const layers: string[] = [];
-  const steps = 4;
+  const steps = 12;
   for (let i = 1; i <= steps; i++) {
     const f = i / steps;
-    const a = (0.35 * (1 - f) + 0.1).toFixed(2);
+    // Back layers are darker and more transparent than the face.
+    const a = (0.6 * (1 - f) + 0.08).toFixed(2);
     layers.push(
       (sx * f).toFixed(1) + "px " + (sy * f).toFixed(1) + "px 0 rgba(124,77,255," + a + ")"
     );
