@@ -3,6 +3,7 @@
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const CLIENT_STATUSES = ["new", "discovery", "quoted", "won", "lost"];
 export const PROJECT_STATUSES = ["lead", "quoted", "active", "on_hold", "completed", "cancelled"];
 
 function text(input, field, { max = 2000, required = false } = {}) {
@@ -30,6 +31,12 @@ export function validateClient(body, { partial = false } = {}) {
     if (res.error) return { error: res.error };
     if (res.skip) continue;
     out[key] = res.value;
+  }
+  if (body.status !== undefined) {
+    if (!CLIENT_STATUSES.includes(body.status)) {
+      return { error: `status must be one of: ${CLIENT_STATUSES.join(", ")}` };
+    }
+    out.status = body.status;
   }
   if (out.email && !EMAIL.test(out.email)) return { error: "email is not a valid address" };
   return { value: out };

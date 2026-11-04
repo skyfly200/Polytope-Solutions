@@ -38,6 +38,12 @@ export default new Router({
         import(/* webpackChunkName: "consulting" */ "./views/Consulting.vue")
     },
     {
+      path: "/start",
+      name: "start",
+      component: () =>
+        import(/* webpackChunkName: "start" */ "./views/Start.vue")
+    },
+    {
       path: "/form/:topic",
       name: "form",
       component: () =>

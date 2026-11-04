@@ -44,7 +44,7 @@ Base.services
                 li(v-for="pt in m.points" :key="pt") {{ pt }}
             v-card-actions
               v-spacer
-              v-btn(to="/#contact" color="secondary" depressed) {{ m.cta }}
+              v-btn(to="/start" color="secondary" depressed) {{ m.cta }}
 
     section.faq
       h2.section-title Common questions
@@ -59,7 +59,7 @@ Base.services
     section.cta(data-aos="fade-up")
       h2 Have a project in mind?
       p Tell us what you are building and we will suggest the right engagement.
-      v-btn(to="/#contact" color="secondary" large depressed) Start a conversation
+      v-btn(to="/start" color="secondary" large depressed) Start a conversation
 </template>
 
 <script lang="ts">
