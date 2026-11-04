@@ -4,7 +4,7 @@
 // as a visible "Draft" note so unconfirmed numbers are never mistaken for
 // fact. Remove an entry (and finally the whole list) once verified.
 //
-// `solution` is a slug from src/data/solutions.ts, or "specialty".
+// `solution` is a slug from src/data/solutions.ts.
 
 export interface CaseStudy {
   slug: string;
@@ -120,7 +120,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "tinyboxes",
     title: "TinyBoxes",
     client: "TinyBoxes",
-    solution: "specialty",
+    solution: "smart-contracts",
     tags: ["On-chain", "Generative art"],
     summary: "A fully on-chain generative art project built on the Polytope Paradox RNG.",
     problem: "Generative NFT drops were exposed to minting exploits that threatened their integrity.",
@@ -133,7 +133,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "artblocks",
     title: "ArtBlocks randomness engine",
     client: "ArtBlocks",
-    solution: "specialty",
+    solution: "smart-contracts",
     tags: ["On-chain", "RNG"],
     summary: "RNG code that became the foundation of ArtBlocks' generative engine.",
     problem: "Exploits like the Chainfaces token showed that on-chain randomness could be gamed.",
@@ -146,7 +146,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "face-golf",
     title: "Face Golf",
     client: "Face Golf",
-    solution: "specialty",
+    solution: "smart-contracts",
     tags: ["NFT", "Game"],
     summary: "An NFT project.",
     problem: "To be written.",
@@ -158,7 +158,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "fine-nft",
     title: "The Fine NFT project",
     client: "Fine NFT",
-    solution: "specialty",
+    solution: "smart-contracts",
     tags: ["NFT"],
     summary: "An NFT project.",
     problem: "To be written.",

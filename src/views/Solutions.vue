@@ -13,10 +13,6 @@ Base.solutions
           v-card-actions
             v-spacer
             v-btn(:to="'/solutions/' + s.slug" color="primary" depressed) Learn more
-  PageSection(title="Specialty")
-    p.lead(v-for="s in specialty" :key="s.slug") {{ s.title }}: {{ s.short }}
-    v-layout(wrap justify-center)
-      v-btn(v-for="l in links" :key="l.path" :to="l.path" outline) {{ l.label }}
   PageSection
     v-btn(to="/start" color="secondary" large depressed) Start a project
 </template>
@@ -25,13 +21,11 @@ Base.solutions
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
-import { solutions, specialty, specialtyLinks } from "@/data/solutions";
+import { solutions } from "@/data/solutions";
 
 @Component({ components: { Base, PageSection } })
 export default class Solutions extends Vue {
   solutions = solutions;
-  specialty = specialty;
-  links = specialtyLinks;
 }
 </script>
 

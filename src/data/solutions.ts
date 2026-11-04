@@ -1,12 +1,13 @@
 // Single source of truth for every Solutions surface: the home page section,
-// the nav Specialty menu, /solutions, /solutions/:slug, the /start dropdown,
+// /solutions, /solutions/:slug, the /start dropdown,
 // and case-study cross-links all derive from this file. Edit text here only.
 //
 // No prices or "starting at" bands: engagement models describe shape and
 // duration only until pricing is decided.
 //
 // `short` is the one-line summary shown on the home page and /solutions.
-// `caseStudy` is a slug from src/data/work.ts.
+// `caseStudy` is an optional slug from src/data/work.ts.
+// `links` are extra pages shown on the solution's page (e.g. long-form /rng).
 // `flags` lists claims that still need Skyler's confirmation; they render as a
 // visible "Draft" note on the page. Remove entries once confirmed.
 
@@ -32,24 +33,15 @@ export interface Solution {
   youGet: string[];
   deliverables: string[];
   engagement: EngagementOption[];
-  caseStudy: string;
+  caseStudy?: string;
+  links?: SolutionLink[];
   faqs: SolutionFaq[];
   flags?: string[];
 }
 
-export interface SpecialtyLink {
+export interface SolutionLink {
   label: string;
   path: string;
-}
-
-// Specialty work keeps its own long-form pages (/rng, /consulting) instead of
-// a /solutions/:slug page.
-export interface Specialty {
-  slug: string;
-  title: string;
-  short: string;
-  links: SpecialtyLink[];
-  flags?: string[];
 }
 
 export const solutions: Solution[] = [
@@ -228,7 +220,7 @@ export const solutions: Solution[] = [
     letter: "D",
     icon: "fa-code",
     title: "Web & Product Builds",
-    short: "Websites and web apps on Vue, React, Netlify, and Supabase, built then handed over.",
+    short: "Websites and web apps on Vue, React, Netlify, and Supabase, built and managed.",
     tagline:
       "Websites and web apps on a modern Vue, React, Netlify, and Supabase stack, designed, built, and handed over.",
     forWho: [
@@ -368,20 +360,100 @@ export const solutions: Solution[] = [
         a: "Remote design and automation work can be done anywhere. On-site work is scoped by location."
       }
     ]
-  }
-];
-
-export const specialty: Specialty[] = [
+  },
   {
-    slug: "smart-contracts-nft",
-    title: "Smart Contracts, On-Chain RNG & NFT",
-    short: "Oracle-free randomness, on-chain systems, and drop consulting, from the engine behind ArtBlocks.",
+    slug: "smart-contracts",
+    letter: "G",
+    icon: "fa-cube",
+    title: "Smart Contracts & On-Chain",
+    short: "Smart contracts, on-chain randomness, and NFT drop consulting.",
+    tagline:
+      "Smart contract work and on-chain randomness, from the developer behind the RNG engine ArtBlocks uses.",
+    forWho: [
+      "Artists and developers planning an NFT drop",
+      "Teams that need randomness or minting logic that cannot be gamed",
+      "Projects that need a contract built or reviewed"
+    ],
+    youGet: [
+      "Oracle-free on-chain randomness",
+      "Smart contract development and review",
+      "Consulting on drops and platforms"
+    ],
+    deliverables: [
+      "Contracts with tests and documentation",
+      "A written review of risks before launch",
+      "A handoff session for your team"
+    ],
+    engagement: [
+      {
+        title: "Consulting",
+        duration: "A call or a short review",
+        text: "We look at your drop or contract and I tell you what I would change."
+      },
+      {
+        title: "Build",
+        duration: "Fixed scope, weeks",
+        text: "Contracts built, tested, and documented."
+      }
+    ],
+    caseStudy: "tinyboxes",
     links: [
       { label: "On-Chain RNG", path: "/rng" },
       { label: "NFT Consulting", path: "/consulting" }
     ],
     flags: [
-      "Smart contract work is broadened here beyond RNG and NFT consulting; confirm you want to offer general smart contract development"
+      "Short placeholder copy; smart contract work is broadened beyond RNG and NFT consulting, so confirm you want to offer general contract development"
+    ],
+    faqs: [
+      {
+        q: "What is the Polytope Paradox?",
+        a: "It is the random number generator I wrote that closes the minting exploits seen in early NFT drops. The RNG page has the full story."
+      }
+    ]
+  },
+  {
+    slug: "hardware-iot",
+    letter: "H",
+    icon: "fa-microchip",
+    title: "Hardware, Firmware & IoT",
+    short: "Embedded devices, firmware, and connected hardware, from prototype to production.",
+    tagline:
+      "Embedded devices, firmware, sensors, and connected hardware, taken from prototype to production.",
+    forWho: [
+      "Founders with a hardware idea that needs a working prototype",
+      "Teams that need firmware written, fixed, or cleaned up",
+      "Anyone connecting sensors or devices to a cloud or app"
+    ],
+    youGet: [
+      "Firmware for microcontrollers and embedded boards",
+      "Sensor and device integration with cloud dashboards",
+      "Prototyping and a path to production"
+    ],
+    deliverables: [
+      "Working prototype or firmware with source",
+      "Wiring and setup documentation",
+      "A handoff guide for whoever maintains it next"
+    ],
+    engagement: [
+      {
+        title: "Feasibility review",
+        duration: "A short call and a written plan",
+        text: "We agree on what to build first and what it needs."
+      },
+      {
+        title: "Prototype build",
+        duration: "Weeks, scoped after the review",
+        text: "A working device, tested and documented."
+      }
+    ],
+    flags: [
+      "Placeholder copy for this new area; rewrite the details, engagement shapes, and FAQ, and add a case study when one exists"
+    ],
+    faqs: [
+      {
+        q: "Do you design circuit boards?",
+        a: "To be confirmed. This placeholder answer needs your real scope."
+      }
     ]
   }
 ];
@@ -395,38 +467,17 @@ export interface SolutionSummary {
   key: string;
   title: string;
   short: string;
-  // Page for the whole item. Specialty items have links instead.
-  to?: string;
+  to: string;
   tag?: string;
-  links?: SpecialtyLink[];
 }
 
-export const summaries: SolutionSummary[] = [
-  ...solutions.map((s, i) => ({
-    key: s.slug,
-    title: s.title,
-    short: s.short,
-    to: "/solutions/" + s.slug,
-    tag: i === 0 ? "Flagship" : undefined
-  })),
-  ...specialty.map(s => ({
-    key: s.slug,
-    title: s.title,
-    short: s.short,
-    tag: "Specialty",
-    links: s.links
-  }))
-];
+export const summaries: SolutionSummary[] = solutions.map((s, i) => ({
+  key: s.slug,
+  title: s.title,
+  short: s.short,
+  to: "/solutions/" + s.slug,
+  tag: i === 0 ? "Flagship" : undefined
+}));
 
 // Options for the /start solution-area dropdown.
-export const startAreas: string[] = [
-  ...solutions.map(s => s.title),
-  ...specialty.map(s => s.title),
-  "Other"
-];
-
-// Links for the nav Specialty menu.
-export const specialtyLinks: SpecialtyLink[] = specialty.reduce(
-  (all, s) => all.concat(s.links),
-  [] as SpecialtyLink[]
-);
+export const startAreas: string[] = [...solutions.map(s => s.title), "Other"];

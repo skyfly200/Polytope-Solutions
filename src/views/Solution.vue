@@ -25,6 +25,8 @@ Base.solution
               .duration {{ e.duration }}
               p {{ e.text }}
       p.note Pricing is scoped per project. Tell me what you need and I will propose a fixed scope.
+    PageSection(v-if="s.links" title="Go deeper")
+      v-btn(v-for="l in s.links" :key="l.path" :to="l.path" outline) {{ l.label }}
     PageSection(v-if="cs" title="Related case study")
       v-card
         v-card-text
@@ -59,7 +61,7 @@ export default class Solution extends Vue {
     return findSolution(this.$route.params.slug);
   }
   get cs() {
-    return this.s ? findCaseStudy(this.s.caseStudy) : undefined;
+    return this.s ? this.s.caseStudy ? findCaseStudy(this.s.caseStudy) : undefined : undefined;
   }
 }
 </script>
