@@ -123,13 +123,24 @@ body
         pointer-events: none
     &:hover:not(:disabled):not(.v-btn--disabled)
       filter: brightness(1.2)
+  // Second tone: the lighter facet across the top-left corner.
+  .facet-bg .facet-lite
+    fill: rgba(255,255,255,0.26)
+    stroke: none
   // Nav links: outline only, with the current page filled.
   #nav .v-toolbar__items .v-btn.v-btn--flat .facet-bg polygon
     fill: transparent
     stroke: rgba(255,255,255,0.22)
+  #nav .v-toolbar__items .v-btn.v-btn--flat .facet-bg .facet-lite
+    fill: rgba(255,255,255,0.1)
+    stroke: none
   #nav .v-toolbar__items .v-btn.v-btn--flat.v-btn--active .facet-bg polygon
     fill: rgba(255,255,255,0.14)
     stroke: #fff
+  #nav .v-toolbar__items .v-btn.v-btn--flat.v-btn--active .facet-bg .facet-lite
+    fill: rgba(255,255,255,0.22)
+    stroke: none
+  .v-btn, .btn, .cta-btn
     // Keyboard focus: bright outline drawn around the whole button.
     &:focus-visible
       outline: 2px solid #fff

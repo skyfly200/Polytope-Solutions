@@ -18,6 +18,7 @@ interface State {
   el: HTMLElement;
   svg: SVGSVGElement;
   poly: SVGPolygonElement;
+  lite: SVGPolygonElement;
   t: number;
   energy: number;
   hot: boolean;
@@ -62,7 +63,7 @@ function depth(v: number[], t: number): number {
 }
 
 function draw(s: State) {
-  const { el, svg, poly } = s;
+  const { el, svg, poly, lite } = s;
   const w = el.offsetWidth;
   const h = el.offsetHeight;
   if (!w || !h) return;
@@ -90,7 +91,23 @@ function draw(s: State) {
     [0, h],
     [0, c1]
   ];
-  poly.setAttribute("points", pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" "));
+  const fmt = (a: [number, number][]) => a.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+  poly.setAttribute("points", fmt(pts));
+  // Second tone: a lighter facet across the cut top-left corner, bounded by
+  // the line x + y = k (the original gem-button look). Clip the outline to
+  // that half-plane.
+  const k = 0.22 * (w + h);
+  const out: [number, number][] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const da = a[0] + a[1] - k, db = b[0] + b[1] - k;
+    if (da <= 0) out.push(a);
+    if (da * db < 0) {
+      const f = da / (da - db);
+      out.push([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]);
+    }
+  }
+  lite.setAttribute("points", fmt(out));
 }
 
 function frame(now: number) {
@@ -132,9 +149,12 @@ function attach(el: HTMLElement) {
   }
   poly.setAttribute("vector-effect", "non-scaling-stroke");
   svg.appendChild(poly);
+  const lite = document.createElementNS(NS, "polygon") as SVGPolygonElement;
+  lite.setAttribute("class", "facet-lite");
+  svg.appendChild(lite);
   el.classList.add("facet");
   el.appendChild(svg);
-  const s: State = { el, svg, poly, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost };
+  const s: State = { el, svg, poly, lite, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost };
   states.set(el, s);
   const on = () => {
     s.hot = true;
