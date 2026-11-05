@@ -81,12 +81,6 @@ section#contact-form.contact-card
             .shade(ref="shadeFront")
           .back
             .shade(ref="shadeBack")
-      .fold2(v-if="stage === 'fold2'" key="fold2")
-        .h2.left
-        .h2.hinge2(ref="hinge2")
-          .front
-          .back
-            .shade(ref="shadeBack2")
     //- Each form field becomes a chip that flies to its place on the letter.
     .chip(v-for="c in chips" :key="c.key" v-show="chipsVisible" :style="chipStyle(c)")
       .cl {{ c.label }}
@@ -100,7 +94,15 @@ section#contact-form.contact-card
         .env-flap(ref="flap")
           .face.out
           .face.in
+        .env-ring(ref="ring")
         .env-seal(ref="seal")
+          svg(viewBox="-20 -20 40 40" aria-hidden="true")
+            g.emboss-hi(transform="translate(0.6 0.7)")
+              path(:d="sealPath")
+              circle(v-for="(v, i) in sealPoints" :key="'h' + i" :cx="v.x" :cy="v.y" r="1.8")
+            g.emboss
+              path(:d="sealPath")
+              circle(v-for="(v, i) in sealPoints" :key="'d' + i" :cx="v.x" :cy="v.y" r="1.8")
     .rocket-wrap(v-if="rocketVisible" key="rocket")
       svg.rocket(viewBox="0 0 60 140")
         path.flame(d="M20 100 Q30 140 40 100 Z")
@@ -131,11 +133,11 @@ const CHIP_STAGGER_MS = 55;
 const CHIP_START_MS = 200;
 const SNAP_MS = 420;
 const FOLD_MS = 1000;
-const FOLD_PAUSE_MS = 250;
+const FOLD_PAUSE_MS = 400;
 const MOVE_MS = 700;
 const SLIDE_MS = 700;
 const FLAP_MS = 850;
-const SEAL_MS = 550;
+const SEAL_MS = 750;
 const SEALED_HOLD_MS = 500;
 const LOAD_MS = 2700;
 const LAUNCH_MS = 1700;
@@ -149,10 +151,10 @@ const ENV_H = 140;
 
 // idle: nothing playing. gather: fields turn into text blocks on a letter.
 // snap: the letter is captured (and held until the request succeeds).
-// fold1/fold2: folded in half, then in half again. insert: the quarter slides
+// fold1: the letter folds in half. insert: the folded letter slides
 // into an envelope and the flap seals. loading/launching: the envelope goes
 // into the rocket and it leaves. A failed request reverses gather/snap.
-type Stage = "idle" | "gather" | "snap" | "fold1" | "fold2" | "insert" | "loading" | "launching";
+type Stage = "idle" | "gather" | "snap" | "fold1" | "insert" | "loading" | "launching";
 
 interface Block {
   key: string;
@@ -233,7 +235,7 @@ export default class StartForm extends Vue {
   }
 
   get paperVisible(): boolean {
-    return ["gather", "snap", "fold1", "fold2"].indexOf(this.stage) !== -1;
+    return ["gather", "snap", "fold1"].indexOf(this.stage) !== -1;
   }
 
   get envVisible(): boolean {
@@ -251,6 +253,26 @@ export default class StartForm extends Vue {
   get pocketStyle(): { [key: string]: string } {
     const p = this.pocket;
     return { left: p.left + "px", top: p.top + "px", width: p.width + "px", height: p.height + "px" };
+  }
+
+  // The seal emblem: a 4-simplex (5-cell) drawn as a pentagon with all ten
+  // edges between its five vertices.
+  get sealPoints(): { x: number; y: number }[] {
+    const pts: { x: number; y: number }[] = [];
+    for (let i = 0; i < 5; i++) {
+      const a = ((-90 + i * 72) * Math.PI) / 180;
+      pts.push({ x: +(14 * Math.cos(a)).toFixed(2), y: +(14 * Math.sin(a)).toFixed(2) });
+    }
+    return pts;
+  }
+
+  get sealPath(): string {
+    const p = this.sealPoints;
+    const edges: string[] = [];
+    for (let i = 0; i < 5; i++) {
+      for (let j = i + 1; j < 5; j++) edges.push("M" + p[i].x + " " + p[i].y + "L" + p[j].x + " " + p[j].y);
+    }
+    return edges.join("");
   }
 
   // The filled-in fields, in the order they appear on the letter.
@@ -562,7 +584,7 @@ export default class StartForm extends Vue {
     this.resetAnimation();
   }
 
-  // Step 3: fold the snapshot in half, then in half again.
+  // Step 3: fold the snapshot in half.
   private async foldLetter(): Promise<void> {
     const k = this.boxScale;
     this.stage = "fold1";
@@ -578,17 +600,7 @@ export default class StartForm extends Vue {
     ];
     await Promise.all(first.map(a => this.done(a)));
     if (!this.alive) return;
-    this.caption = "Folding it again";
-    await wait(FOLD_PAUSE_MS);
 
-    this.stage = "fold2";
-    await this.$nextTick();
-    const second = [
-      this.animate(this.$refs.hinge2 as HTMLElement, [{ transform: "rotateY(0deg)" }, { transform: "rotateY(-180deg)" }], timing),
-      this.animate(this.$refs.shadeBack2 as HTMLElement, [{ opacity: 0.65 }, { opacity: 0 }], timing),
-      this.animate(box, [{ translate: "0px " + (SHEET_H / 4) * k + "px" }, { translate: (SHEET_W / 4) * k + "px " + (SHEET_H / 4) * k + "px" }], timing)
-    ];
-    await Promise.all(second.map(a => this.done(a)));
     await wait(FOLD_PAUSE_MS);
   }
 
@@ -597,7 +609,7 @@ export default class StartForm extends Vue {
     if (!this.alive) return;
     const launch = this.$refs.launch as HTMLElement;
     const L = launch.getBoundingClientRect();
-    const quarter = (launch.querySelector(".h2.left") as HTMLElement).getBoundingClientRect();
+    const quarter = (launch.querySelector(".half.top") as HTMLElement).getBoundingClientRect();
     // The envelope is centred where the sheet was (45% down the screen).
     const envLeft = L.left + L.width / 2 - ENV_W / 2;
     const envTop = L.top + L.height * 0.45 - ENV_H / 2;
@@ -612,9 +624,9 @@ export default class StartForm extends Vue {
     const p = this.pocket;
     const cx = p.left + p.width / 2;
     const cy = p.top + p.height / 2;
-    // The letter turns sideways and shrinks to fit the envelope.
-    const scale = Math.min(0.62, 150 / p.height);
-    const hover = ENV_H / 2 - 135;
+    // The folded letter is already landscape; it shrinks to fit the envelope.
+    const scale = Math.min(0.6, 190 / p.width);
+    const hover = ENV_H / 2 - 150;
 
     this.animate(
       envelope,
@@ -627,8 +639,8 @@ export default class StartForm extends Vue {
     const up = this.animate(
       pocket,
       [
-        { translate: "0px 0px", rotate: "0deg", scale: 1 },
-        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", rotate: "-90deg", scale }
+        { translate: "0px 0px", scale: 1 },
+        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", scale }
       ],
       { duration: MOVE_MS, easing: EASE }
     );
@@ -637,12 +649,12 @@ export default class StartForm extends Vue {
 
     // Now it is above the envelope: tuck it behind the front pocket and lower it in.
     pocket.style.zIndex = "2";
-    const slideY = ENV_H / 2 + 12 - cy;
+    const slideY = ENV_H / 2 + 6 - cy;
     const down = this.animate(
       pocket,
       [
-        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", rotate: "-90deg", scale },
-        { translate: ENV_W / 2 - cx + "px " + slideY + "px", rotate: "-90deg", scale }
+        { translate: ENV_W / 2 - cx + "px " + (hover - cy) + "px", scale },
+        { translate: ENV_W / 2 - cx + "px " + slideY + "px", scale }
       ],
       { duration: SLIDE_MS, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
     );
@@ -663,16 +675,27 @@ export default class StartForm extends Vue {
     await this.done(close);
     if (!this.alive) return;
 
+    // One stamp moment: the seal drops from above, presses into the wax, then
+    // settles with a ripple. The envelope gives a little thump on impact.
     const stamp = this.animate(
       seal,
       [
-        { opacity: 0, transform: "translate(-50%, -50%) scale(0)" },
-        { opacity: 1, transform: "translate(-50%, -50%) scale(1.3)", offset: 0.6 },
-        { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }
+        { opacity: 0, transform: "translate(-50%, -50%) scale(2.4) rotate(-14deg)", easing: "cubic-bezier(0.5, 0, 1, 0.6)" },
+        { opacity: 1, transform: "translate(-50%, -50%) scale(1) rotate(0deg)", offset: 0.45 },
+        { opacity: 1, transform: "translate(-50%, -50%) scale(0.86) rotate(0deg)", offset: 0.6, easing: "ease-out" },
+        { opacity: 1, transform: "translate(-50%, -50%) scale(1) rotate(0deg)" }
       ],
-      { duration: SEAL_MS, easing: "ease-out" }
+      { duration: SEAL_MS }
     );
-    this.animate(envelope, [{ translate: "0px 0px" }, { translate: "0px 5px", offset: 0.4 }, { translate: "0px 0px" }], { duration: SEAL_MS });
+    this.animate(
+      this.$refs.ring as HTMLElement,
+      [
+        { opacity: 0.9, transform: "translate(-50%, -50%) scale(1)" },
+        { opacity: 0, transform: "translate(-50%, -50%) scale(2.1)" }
+      ],
+      { duration: SEAL_MS * 0.7, delay: SEAL_MS * 0.45, easing: "ease-out" }
+    );
+    this.animate(envelope, [{ translate: "0px 0px" }, { translate: "0px 6px", offset: 0.5 }, { translate: "0px 0px" }], { duration: SEAL_MS * 0.6, delay: SEAL_MS * 0.4 });
     await this.done(stamp);
   }
 
@@ -1034,8 +1057,7 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   background: linear-gradient(var(--c), var(--c)) top left / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) top left / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) top right / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) top right / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 3px 26px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 26px 3px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 3px 26px no-repeat
 
 // First fold: the bottom half swings up and over the top half.
-.fold1,
-.fold2
+.fold1
   position: absolute
   inset: 0
   transform-style: preserve-3d
@@ -1082,39 +1104,6 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   opacity: 0
   pointer-events: none
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.55))
-
-// Second fold: the right half swings over the left half.
-.fold2
-  .h2.left
-    position: absolute
-    left: 0
-    top: 0
-    width: 170px
-    height: 220px
-    background: $paper-back
-    box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3), 0 24px 50px rgba(0, 0, 0, 0.5)
-    transform: translateZ(-1px)
-  .hinge2
-    position: absolute
-    left: 170px
-    top: 0
-    width: 170px
-    height: 220px
-    transform-origin: 0 50%
-    transform-style: preserve-3d
-  .front,
-  .back
-    position: absolute
-    inset: 0
-    -webkit-backface-visibility: hidden
-    backface-visibility: hidden
-    background: $paper-back
-    box-shadow: inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
-  .back
-    transform: rotateY(180deg)
-    box-shadow: inset -3px 0 5px -2px rgba(0, 0, 0, 0.3), inset 0 -3px 5px -2px rgba(0, 0, 0, 0.3)
-  .shade
-    background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.55))
 
 // ---- Field chips ----------------------------------------------------------
 // Each starts as a copy of its form field and ends as a block of printed text.
@@ -1231,13 +1220,45 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
   left: 50%
   top: 53%
   z-index: 8
-  width: 44px
-  height: 44px
+  width: 56px
+  height: 56px
   border-radius: 50%
   background: radial-gradient(circle at 35% 30%, #ffc04d, #ffa000 55%, #b36f00)
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5)
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5), inset 0 0 0 3px rgba(179, 111, 0, 0.55)
   opacity: 0
   transform: translate(-50%, -50%) scale(0)
+  svg
+    display: block
+    width: 100%
+    height: 100%
+    overflow: visible
+    fill: none
+    stroke-linecap: round
+    circle
+      stroke: none
+  // Raised edge catches the light, the cut line is darker: a pressed emblem.
+  .emboss-hi
+    stroke: rgba(255, 226, 160, 0.75)
+    stroke-width: 1.5
+    fill: rgba(255, 226, 160, 0.75)
+  .emboss
+    stroke: #8a5200
+    stroke-width: 1.5
+    fill: #8a5200
+
+// Ripple of wax pushed out from under the stamp.
+.env-ring
+  position: absolute
+  left: 50%
+  top: 53%
+  z-index: 7
+  width: 56px
+  height: 56px
+  border-radius: 50%
+  border: 4px solid rgba(255, 160, 0, 0.8)
+  opacity: 0
+  transform: translate(-50%, -50%) scale(1)
+  pointer-events: none
 
 // ---- Rocket ---------------------------------------------------------------
 .rocket-wrap::after
