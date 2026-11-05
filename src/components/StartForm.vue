@@ -868,7 +868,6 @@ export default class StartForm extends Vue {
   font-size: 16px
   font-weight: 600
   letter-spacing: 0.02em
-  border-radius: 8px
   padding: 0.7rem 1.6rem
   cursor: pointer
   transition: background-color 0.2s, opacity 0.2s

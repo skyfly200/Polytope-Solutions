@@ -1,8 +1,7 @@
 <template lang="pug">
 Base.solutions
+  PageHero(title="Solutions" :lead="solutions.length + ' areas where I help people turn scattered work into systems that run on their own.'" shape="cell24")
   PageSection
-    h1 Solutions
-    p.lead {{ solutions.length }} areas where I help people turn scattered work into systems that run on their own.
     v-layout(wrap)
       v-flex(xs12 md6 v-for="s in solutions" :key="s.slug")
         v-card.sol-card
@@ -21,9 +20,10 @@ Base.solutions
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
+import PageHero from "@/components/PageHero.vue";
 import { solutions } from "@/data/solutions";
 
-@Component({ components: { Base, PageSection } })
+@Component({ components: { Base, PageSection, PageHero } })
 export default class Solutions extends Vue {
   solutions = solutions;
 }
