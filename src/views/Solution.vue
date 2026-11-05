@@ -1,7 +1,7 @@
 <template lang="pug">
 Base.solution
   template(v-if="s")
-    PageHero(:eyebrow="'Solution ' + s.letter" :title="s.title" :lead="s.tagline" shape="tesseract" color="255,160,0")
+    PageHero(:eyebrow="'Solution ' + s.letter" :title="s.title" :lead="s.tagline" :seed="s.letter.charCodeAt(0)")
     PageSection(v-if="s.flags && s.flags.length")
       v-alert(:value="true" type="warning" outline) Draft. Still to confirm: {{ s.flags.join("; ") }}.
     PageSection(title="Who it is for")
@@ -55,6 +55,7 @@ import { findCaseStudy } from "@/data/work";
 
 @Component({ components: { Base, PageSection, PageHero } })
 export default class Solution extends Vue {
+  // Each solution gets its own Shadow Projection figure, seeded by its letter.
   get s() {
     return findSolution(this.$route.params.slug);
   }
