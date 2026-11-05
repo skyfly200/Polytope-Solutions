@@ -66,4 +66,6 @@ For local development, `npm run lambda-serve` serves the functions from `src/lam
 
 The primary logo is the 600-cell in its symmetric 10-fold rest pose (the hero's pose when the cursor is centred): `public/img/polytopes/logo-600cell.svg` (white strokes, for dark backgrounds) and `logo-600cell-dark.svg` (dark strokes, for light backgrounds). Use it for any large placement: header lockup, og/social image, email header.
 
-The tesseract seal (`seal-tesseract.svg`) and 5-cell seal (`seal-5cell.svg`) are simplified secondary marks for small sizes only: favicon, nav mini logo and the /start form header.
+The tesseract seal (`seal-tesseract.svg`) and 5-cell seal (`seal-5cell.svg`) are simplified secondary marks for small sizes only: nav mini logo and the /start form header.
+
+The favicon is a separate lines-and-nodes variant of the tesseract (`favicon-tesseract.svg`, amber on transparent, no disc), with a simplified nested-square version at 16px. It is not used by the nav or form seals.
