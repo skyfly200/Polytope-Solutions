@@ -7,6 +7,16 @@ Vue.use(Router);
 export default new Router({
   mode: "history",
   base: import.meta.env.BASE_URL,
+  // The window (html) is the scroll container, including with scroll-snap.
+  // Back/forward restores the saved offset, hash links scroll to their
+  // anchor, and every other navigation starts at the top. Instant (not
+  // smooth) so snap points can't intercept an animated scroll.
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    if (to.hash) return { selector: to.hash };
+    if (to.path === from.path) return false;
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: "/",
