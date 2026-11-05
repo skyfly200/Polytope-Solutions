@@ -1,5 +1,5 @@
 <template lang="pug">
-v-toolbar#nav(color="primary")
+v-toolbar#nav(color="black" flat)
     router-link(to="/")
         v-avatar
             Polytope600(size="48px" :speed="0.15" :line-width="0.8")
@@ -38,4 +38,9 @@ export default class Nav extends Vue {
 </script>
 
 <style lang="sass" scoped>
+#nav
+  border-bottom: 1px solid rgba(255,255,255,0.12)
+  .v-toolbar__title
+    font-weight: 500
+    letter-spacing: 0.02em
 </style>

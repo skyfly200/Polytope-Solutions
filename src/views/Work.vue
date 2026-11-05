@@ -1,8 +1,7 @@
 <template lang="pug">
 Base.work
+  PageHero(title="Work" lead="Selected projects across networks, software, and on-chain systems." shape="cell16" color="120,200,255")
   PageSection
-    h1 Work
-    p.lead Selected projects across networks, software, and on-chain systems.
     v-layout(wrap)
       v-flex(xs12 sm6 md4 v-for="c in caseStudies" :key="c.slug")
         v-card.case-card
@@ -21,9 +20,10 @@ Base.work
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
+import PageHero from "@/components/PageHero.vue";
 import { caseStudies } from "@/data/work";
 
-@Component({ components: { Base, PageSection } })
+@Component({ components: { Base, PageSection, PageHero } })
 export default class Work extends Vue {
   caseStudies = caseStudies;
 }

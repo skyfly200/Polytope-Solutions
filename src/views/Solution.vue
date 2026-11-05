@@ -1,10 +1,7 @@
 <template lang="pug">
 Base.solution
   template(v-if="s")
-    PageSection
-      .eyebrow Solution {{ s.letter }}
-      h1 {{ s.title }}
-      p.lead {{ s.tagline }}
+    PageHero(:eyebrow="'Solution ' + s.letter" :title="s.title" :lead="s.tagline" shape="tesseract" color="255,160,0")
     PageSection(v-if="s.flags && s.flags.length")
       v-alert(:value="true" type="warning" outline) Draft. Still to confirm: {{ s.flags.join("; ") }}.
     PageSection(title="Who it is for")
@@ -52,10 +49,11 @@ Base.solution
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
+import PageHero from "@/components/PageHero.vue";
 import { findSolution } from "@/data/solutions";
 import { findCaseStudy } from "@/data/work";
 
-@Component({ components: { Base, PageSection } })
+@Component({ components: { Base, PageSection, PageHero } })
 export default class Solution extends Vue {
   get s() {
     return findSolution(this.$route.params.slug);

@@ -1,10 +1,7 @@
 <template lang="pug">
 Base.case-study
   template(v-if="c")
-    PageSection
-      .eyebrow {{ c.client }}
-      h1 {{ c.title }}
-      p.lead {{ c.summary }}
+    PageHero(:eyebrow="c.client" :title="c.title" :lead="c.summary" shape="cell16" color="120,200,255")
       v-chip(small v-for="t in c.tags" :key="t") {{ t }}
     PageSection(v-if="c.confirm && c.confirm.length")
       v-alert(:value="true" type="warning" outline) Draft. Still to confirm: {{ c.confirm.join("; ") }}.
@@ -29,9 +26,10 @@ Base.case-study
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
+import PageHero from "@/components/PageHero.vue";
 import { findCaseStudy } from "@/data/work";
 
-@Component({ components: { Base, PageSection } })
+@Component({ components: { Base, PageSection, PageHero } })
 export default class CaseStudy extends Vue {
   get c() {
     return findCaseStudy(this.$route.params.slug);

@@ -48,18 +48,10 @@ export default class Landing extends Vue {
     letter-spacing: 0.04em
     color: #fff
     text-decoration: none
-    border: 2px solid #7c4dff
-    border-radius: 999px
-    background: rgba(124, 77, 255, 0.18)
-    box-shadow: 0 0 18px rgba(124, 77, 255, 0.35)
+    background-color: #7c4dff
     transition: background 0.2s, box-shadow 0.2s, transform 0.2s
     &:hover
-      background: #7c4dff
-      box-shadow: 0 0 28px rgba(124, 77, 255, 0.7)
-      transform: translateY(-2px)
-    &:focus-visible
-      outline: 3px solid #fff
-      outline-offset: 3px
+      background-color: #7c4dff
   @media (max-width: 600px)
     .brand-name
       font-size: 3.5rem

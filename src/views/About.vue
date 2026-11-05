@@ -1,10 +1,8 @@
 <template lang="pug">
 Base.about
+  PageHero(:title="a.name" :eyebrow="a.role" :lead="a.intro" shape="cell600")
   PageSection
     Placeholder(round icon="fa-user" :label="a.placeholders.photo")
-    h1 {{ a.name }}
-    .role {{ a.role }}
-    p.lead {{ a.intro }}
   PageSection(title="Story")
     p(v-for="p in a.story" :key="p") {{ p }}
     Placeholder(icon="fa-pen" :label="a.placeholders.bio")
@@ -19,10 +17,11 @@ Base.about
 import { Component, Vue } from "vue-property-decorator";
 import Base from "@/components/Base.vue";
 import PageSection from "@/components/PageSection.vue";
+import PageHero from "@/components/PageHero.vue";
 import Placeholder from "@/components/Placeholder.vue";
 import { about } from "@/data/about";
 
-@Component({ components: { Base, PageSection, Placeholder } })
+@Component({ components: { Base, PageSection, PageHero, Placeholder } })
 export default class About extends Vue {
   a = about;
 }
