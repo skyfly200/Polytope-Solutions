@@ -8,6 +8,7 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "@fortawesome/fontawesome-free/js/all.js";
 import AOS from "aos";
 import tilt from "./directives/tilt";
+import { startFacets } from "./directives/facets";
 
 // initialize animate on scroll library
 AOS.init();
@@ -22,3 +23,6 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app");
+
+// Faceted 4D-slice backgrounds for every button
+startFacets();

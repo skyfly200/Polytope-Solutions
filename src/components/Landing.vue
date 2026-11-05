@@ -49,9 +49,6 @@ export default class Landing extends Vue {
     color: #fff
     text-decoration: none
     background-color: #7c4dff
-    transition: background 0.2s, box-shadow 0.2s, transform 0.2s
-    &:hover
-      background-color: #7c4dff
   @media (max-width: 600px)
     .brand-name
       font-size: 3.5rem

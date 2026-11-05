@@ -88,32 +88,47 @@ body
     letter-spacing: 0.04em
     font-weight: 600
 
-  // Gem-cut buttons. An irregular octagon (two big facets, two small) via
-  // clip-path, with a light facet across the top-left corner. Ghost/outline
-  // variants use a faint fill because a border would be cut at the corners.
-  // Keyboard focus swaps to a solid white fill so it is clear without an
-  // outline (which clip-path would hide).
+  // Faceted buttons. facets.ts draws the polygon (a slice of a turning 4D
+  // shape) as an SVG behind the label, so the button itself is transparent,
+  // keeps its size and padding, and the text never moves. Until the script
+  // runs, buttons fall back to a plain chamfered shape.
   .v-btn, .btn, .cta-btn
-    --facet: polygon(14px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 6px 100%, 0 calc(100% - 6px), 0 14px)
-    clip-path: var(--facet)
     border: 0 !important
     border-radius: 0 !important
     box-shadow: none !important
-    background-image: linear-gradient(135deg, rgba(255,255,255,0.28) 0, rgba(255,255,255,0.28) 22%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 100%)
-    transition: filter 0.2s, background-color 0.2s
+    isolation: isolate
+    position: relative
+    transition: filter 0.2s
+    &:not(.facet)
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)
+    &.facet
+      background: transparent !important
+      background-image: none !important
+      // Vuetify's rectangular hover and active overlay would show the old box.
+      &::before, &::after
+        display: none !important
+      .facet-bg
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        z-index: -1
+        overflow: visible
+        pointer-events: none
     &:hover:not(:disabled):not(.v-btn--disabled)
       filter: brightness(1.2)
+  // Nav links: outline only, with the current page filled.
+  #nav .v-toolbar__items .v-btn.v-btn--flat .facet-bg polygon
+    fill: transparent
+    stroke: rgba(255,255,255,0.22)
+  #nav .v-toolbar__items .v-btn.v-btn--flat.v-btn--active .facet-bg polygon
+    fill: rgba(255,255,255,0.14)
+    stroke: #fff
+    // Keyboard focus: bright outline drawn around the whole button.
     &:focus-visible
-      background-color: #fff !important
-      background-image: none
-      color: #000 !important
-      text-decoration: underline
-      outline: none
-  .v-btn.v-btn--flat:not(.primary):not(.secondary), .v-btn.v-btn--outline, .btn-ghost
-    background-color: rgba(255,255,255,0.1) !important
-    color: #fff !important
-  .v-btn.v-btn--outline, .v-btn.v-btn--flat
-    background-color: rgba(255,255,255,0.1) !important
+      outline: 2px solid #fff
+      outline-offset: 3px
   .v-expansion-panel__container
     background: transparent !important
     border-top: 1px solid rgba(255,255,255,0.18) !important
