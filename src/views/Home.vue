@@ -3,10 +3,11 @@ v-container(fluid).home
   Landing
   v-layout.blurbs.snap-section
     v-flex(xs10 offset-xs1)
-      .blurb(v-for="(b, i) in blurbs" :key="b.text" ref="blurb" :data-index="i")
+      .blurb(v-for="(b, i) in blurbs" :key="b.title" ref="blurb" :data-index="i")
         Projection4D(:shape="b.shape" :color="b.color" :active="activeBlurb === i" :weight="b.weight")
         .reveal(:class="{ 'is-on': activeBlurb === i }")
-          span.blurb-text(v-tilt="{ max: 10, depth: 4 }") {{ b.text }}
+          h2.blurb-title(v-tilt="{ max: 10, depth: 4 }") {{ b.title }}
+          p.blurb-text {{ b.text }}
   #solutions.snap-section(ref="solutions")
     Solutions(:class="{ 'is-on': solutionsActive }")
   v-layout.contact.snap-section#contact
@@ -32,6 +33,7 @@ interface Blurb {
   color: string;
   // Stroke width multiplier for the 4D wireframe behind the panel.
   weight: number;
+  title: string;
   text: string;
 }
 
@@ -47,10 +49,27 @@ export default class Home extends Vue {
   private solutionsObserver!: IntersectionObserver | null;
 
   blurbs: Blurb[] = [
-    { shape: "tesseract", color: "255,160,0", weight: 1, text: "Look at your problems from new angles" },
-    { shape: "cell24", color: "255,255,255", weight: 0.5, text: "Using the latest technology" },
-    { shape: "cell16", color: "120,200,255", weight: 1, text: "Specially drafted to your unique needs" },
-    { shape: "cell600", color: "255,255,255", weight: 0.5, text: "Helping you refine and achieve your visions" }
+    {
+      shape: "tesseract",
+      color: "255,160,0",
+      weight: 1,
+      title: "AI that does real work",
+      text: "We build AI harnesses and agentic workflows that take on tasks in your business, with clear limits on what they can touch."
+    },
+    {
+      shape: "cell24",
+      color: "255,255,255",
+      weight: 0.5,
+      title: "Systems that run themselves",
+      text: "Business automation, web products, data and networks, built around how you already work and managed after launch."
+    },
+    {
+      shape: "cell600",
+      color: "120,200,255",
+      weight: 0.5,
+      title: "One partner, the whole stack",
+      text: "From smart contracts and hardware to the site in front of them, we design it, build it, and keep it running."
+    }
   ];
 
   // Each blurb is a full-height snap panel. The 4D visual in it only turns
@@ -119,10 +138,22 @@ export default class Home extends Vue {
       justify-content: center
       .projection4d
         opacity: 0.6
-      .blurb-text
+      .reveal
         position: relative
         z-index: 1
-        max-width: 22ch
+        text-align: center
+        padding: 0 1rem
+      .blurb-title
+        font-size: clamp(2rem, 5vw, 3.2rem)
+        line-height: 1.15
+        max-width: 18ch
+        margin: 0 auto 1rem
+        text-shadow: 0 2px 8px black
+      .blurb-text
+        font-size: clamp(1rem, 1.8vw, 1.25rem)
+        max-width: 40ch
+        margin: 0 auto
+        color: rgba(255, 255, 255, 0.8)
         text-shadow: 0 2px 8px black
   // Load-in and load-out: text fades and rises as its snap section locks in
   // or leaves. Driven by the snap state above, never by scroll position.
