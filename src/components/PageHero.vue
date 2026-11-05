@@ -1,6 +1,7 @@
 <template lang="pug">
 header.page-hero(ref="hero")
-  Projection4D.art(:shape="shape" :color="color" :active="active" :weight="0.6")
+  ShadowProjection.art(v-if="seed !== undefined" :seed="seed" :active="active" follow-mouse)
+  Projection4D.art(v-else :shape="shape" :color="color" :active="active" :weight="0.6")
   .copy
     .eyebrow(v-if="eyebrow") {{ eyebrow }}
     h1 {{ title }}
@@ -11,17 +12,21 @@ header.page-hero(ref="hero")
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Projection4D from "@/components/Projection4D.vue";
+import ShadowProjection from "@/components/ShadowProjection.vue";
 import { ShapeName } from "@/lib/polytopes";
 
 // Opening block for inner pages. Mirrors the homepage panels: big type over a
 // thin 4D wireframe that only turns while the hero is snapped into view.
-@Component({ components: { Projection4D } })
+// Pass `seed` to show a Shadow Projection figure (a different one per seed)
+// in place of the regular polytope.
+@Component({ components: { Projection4D, ShadowProjection } })
 export default class PageHero extends Vue {
   @Prop() eyebrow?: string;
   @Prop({ required: true }) title!: string;
   @Prop() lead?: string;
   @Prop({ default: "tesseract" }) shape!: ShapeName;
   @Prop({ default: "255,255,255" }) color!: string;
+  @Prop() seed?: number;
 
   active = false;
   private observer: IntersectionObserver | null = null;
