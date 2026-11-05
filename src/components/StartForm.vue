@@ -15,7 +15,9 @@ mixin letter()
 section#contact-form.contact-card
   .card(v-if="!sent" :class="{ 'is-sending': cardHidden }" :aria-hidden="cardHidden ? 'true' : null")
     .call-to-action
-      i.fas.fa-rocket.rocket(aria-hidden="true")
+      .seals(aria-hidden="true")
+        img(src="/img/polytopes/seal-5cell.svg" alt="" width="56" height="56")
+        img(src="/img/polytopes/seal-tesseract.svg" alt="" width="56" height="56")
       h2.header Start a project with us
       p.intro Tell us a little about you and what you are working on, and we will reply within a day or two.
     form.form(novalidate @submit.prevent="sendContact")
@@ -784,10 +786,16 @@ export default class StartForm extends Vue {
 .call-to-action
   text-align: center
   margin-bottom: 1.5rem
-  .rocket
-    color: #ffa000
-    font-size: 2.5rem
-    margin-bottom: 0.5rem
+  .seals
+    display: flex
+    justify-content: center
+    gap: 14px
+    margin-bottom: 0.75rem
+    img
+      display: block
+      width: 56px
+      height: 56px
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45))
 
 // The root font is 14px (Vuetify sets it), so sizes here are in px.
 .header

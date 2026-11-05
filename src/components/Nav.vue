@@ -2,7 +2,7 @@
 v-toolbar#nav(color="black" flat)
     router-link(to="/")
         v-avatar
-            Polytope600(size="48px" :speed="0.15" :line-width="0.8")
+            img(src="/img/polytopes/seal-tesseract.svg" alt="Polytope Solutions" width="48" height="48")
     v-toolbar-title Polytope Solutions
     v-spacer
     v-toolbar-items.hidden-sm-and-down
@@ -21,10 +21,9 @@ v-toolbar#nav(color="black" flat)
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Polytope600 from "@/components/Polytope600.vue";
 
 @Component({
-    components: { Polytope600 }
+    components: {}
 })
 export default class Nav extends Vue {
     links = [
