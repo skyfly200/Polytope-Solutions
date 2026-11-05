@@ -19,6 +19,10 @@ section.solutions-section
           router-link.title(:to="s.to") {{ s.title }}
           span.tag(v-if="s.tag") {{ s.tag }}
         p {{ s.short }}
+  p.more(:style="{ transitionDelay: (items.length * 60) + 'ms' }")
+    | ...and more. Have something else in mind?
+    |
+    router-link(to="/start") Let's talk
 </template>
 
 <script lang="ts">
@@ -82,6 +86,20 @@ export default class Solutions extends Vue {
       opacity: 0.5
     &:hover::after
       opacity: 1
+  .more
+    margin: 0
+    padding: 1rem 0 0
+    border-top: 1px solid rgba(255,255,255,0.18)
+    text-align: left
+    font-size: clamp(15px, 1.2vw, 17px)
+    opacity: 0.6
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out
+    a
+      color: inherit
+      text-decoration: none
+      border-bottom: 1px solid rgba(255,255,255,0.4)
+      &:hover
+        opacity: 1
   .num
     font-size: 14px
     letter-spacing: 0.1em
@@ -126,10 +144,13 @@ export default class Solutions extends Vue {
   // Snap-synced: items fade in once the section is snapped into view.
   // Motion-reduced users always see everything.
   @media (prefers-reduced-motion: no-preference)
-    .item
+    .item, .more
       opacity: 0
       transform: translateY(14px)
     &.is-on .item
       opacity: 1
+      transform: none
+    &.is-on .more
+      opacity: 0.6
       transform: none
 </style>
