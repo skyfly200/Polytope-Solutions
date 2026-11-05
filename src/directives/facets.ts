@@ -1,6 +1,6 @@
 // Faceted buttons. Every button-like element (.v-btn, .btn, .cta-btn) gets an
-// SVG polygon behind its text: a six-sided gem outline whose two opposite
-// corner cuts are sized by the depth of two vertices of a rotating 24-cell.
+// SVG polygon behind its text: an eight-sided gem outline whose four
+// corner cuts are each sized by the depth of a vertex of a rotating 24-cell.
 // At rest each button holds its own pose; while hovered or focused the cuts
 // drift slowly. The cuts are small and capped, so the button's size and the
 // room around its text never change.
@@ -12,7 +12,7 @@ import { getPolytope } from "@/lib/polytopes";
 
 const SELECTOR = ".v-btn, .btn, .cta-btn";
 const NS = "http://www.w3.org/2000/svg";
-const POINTS = 2;
+const POINTS = 4;
 
 interface State {
   el: HTMLElement;
@@ -76,20 +76,23 @@ function draw(s: State) {
   const padH = parseFloat(cs.paddingLeft) || 12;
   const fs = parseFloat(cs.fontSize) || 14;
   const padV = Math.max(0, (h - fs * 1.3) / 2);
-  // Corner cuts, kept small so the label never loses room.
-  const maxCut = Math.max(3, Math.min(9, padV * 0.9, padH * 0.5));
-  const minCut = maxCut * 0.35;
+  // Corner cuts, each sized by its own 4D vertex depth. Capped so the label
+  // never loses room.
+  const maxCut = Math.max(4, Math.min(14, padV * 1.3, padH * 0.7));
+  const minCut = maxCut * 0.3;
   const v = shape();
-  const c1 = minCut + (maxCut - minCut) * depth(v[0], s.t);
-  const c2 = minCut + (maxCut - minCut) * depth(v[1], s.t);
-  // Six points: the top-left and bottom-right corners are cut.
+  const c: number[] = [];
+  for (let i = 0; i < POINTS; i++) c.push(minCut + (maxCut - minCut) * depth(v[i], s.t));
+  // Eight points: all four corners are cut, each by a different amount.
   const pts: [number, number][] = [
-    [c1, 0],
-    [w, 0],
-    [w, h - c2],
-    [w - c2, h],
-    [0, h],
-    [0, c1]
+    [c[0], 0],
+    [w - c[1], 0],
+    [w, c[1]],
+    [w, h - c[2]],
+    [w - c[2], h],
+    [c[3], h],
+    [0, h - c[3]],
+    [0, c[0]]
   ];
   const fmt = (a: [number, number][]) => a.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
   poly.setAttribute("points", fmt(pts));
@@ -119,7 +122,7 @@ function frame(now: number) {
     const target = s.hot ? 1 : 0;
     s.energy += (target - s.energy) * Math.min(1, dt * 4);
     if (s.hot || s.energy > 0.01) {
-      s.t += dt * 0.5 * s.energy;
+      s.t += dt * 0.7 * s.energy;
       draw(s);
       busy = true;
     }
