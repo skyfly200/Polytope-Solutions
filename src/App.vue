@@ -18,6 +18,10 @@ body
 @media (prefers-reduced-motion: no-preference)
   html
     scroll-snap-type: y mandatory
+    // Pages with no snap sections (form pages, 404) would otherwise have only
+    // the footer as a snap point and get pulled to the bottom, so they opt out.
+    &.no-snap
+      scroll-snap-type: none
   .snap-section
     scroll-snap-align: start
     scroll-snap-stop: normal
@@ -26,6 +30,7 @@ body
 // a stack of screens at any width.
 .snap-section
   min-height: 100vh
+  min-height: 100svh
   width: 100%
   display: flex
   flex-direction: column
