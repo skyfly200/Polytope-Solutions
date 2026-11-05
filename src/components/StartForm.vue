@@ -1218,8 +1218,12 @@ $paper-back: linear-gradient(160deg, #ece4d0, #ddd3bb)
     clip-path: polygon(0 0, 100% 0, 50% 100%)
   .out
     background: linear-gradient(180deg, #f6eedc, #e0d3b4)
+  // The inside face is flipped by its own rotateX(180deg), so its triangle is
+  // drawn mirrored. Once the flap is open (also rotated 180deg) the two flips
+  // cancel and the apex points up, away from the hinge on the top edge.
   .in
     transform: rotateX(180deg)
+    clip-path: polygon(0 100%, 100% 100%, 50% 0)
     background: linear-gradient(0deg, #a8956a, #c4b288)
 
 .env-seal
