@@ -56,7 +56,8 @@ export default class PageHero extends Vue {
   align-items: center
   justify-content: center
   padding: 12vh 24px 8vh
-  scroll-snap-align: start
+  // No snap point of its own: the nav above it is the page's first snap
+  // point, so the nav is never scrolled out of view on arrival.
   .art
     position: absolute
     inset: 0

@@ -6,7 +6,7 @@ v-toolbar#nav(color="black" flat)
     v-toolbar-title Polytope Solutions
     v-spacer
     v-toolbar-items.hidden-sm-and-down
-        v-btn(to="/" flat) Home
+        v-btn(to="/" flat exact) Home
         v-btn(to="/solutions" flat) Solutions
         v-btn(to="/work" flat) Work
         v-btn(to="/about" flat) About
@@ -38,7 +38,18 @@ export default class Nav extends Vue {
 
 <style lang="sass" scoped>
 #nav
+  scroll-snap-align: start
   border-bottom: 1px solid rgba(255,255,255,0.12)
+  // Compact, centred buttons instead of full-height slabs; the facet shape
+  // behind each one is drawn by directives/facets.ts.
+  .v-toolbar__items
+    align-items: center
+    gap: 6px
+    .v-btn
+      height: 36px
+      margin: 0
+      padding: 0 18px
+      font-size: 14px
   .v-toolbar__title
     font-weight: 500
     letter-spacing: 0.02em
