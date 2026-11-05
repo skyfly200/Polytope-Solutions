@@ -61,3 +61,9 @@ curl -H "Authorization: Bearer $ADMIN_API_TOKEN" -H "Content-Type: application/j
 ```
 
 For local development, `npm run lambda-serve` serves the functions from `src/lambda`.
+
+## Logo
+
+The primary logo is the 600-cell in its symmetric 10-fold rest pose (the hero's pose when the cursor is centred): `public/img/polytopes/logo-600cell.svg` (white strokes, for dark backgrounds) and `logo-600cell-dark.svg` (dark strokes, for light backgrounds). Use it for any large placement: header lockup, og/social image, email header.
+
+The tesseract seal (`seal-tesseract.svg`) and 5-cell seal (`seal-5cell.svg`) are simplified secondary marks for small sizes only: favicon, nav mini logo and the /start form header.
