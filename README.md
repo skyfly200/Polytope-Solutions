@@ -68,4 +68,4 @@ The primary logo is the 600-cell in its symmetric 10-fold rest pose (the hero's 
 
 The tesseract seal (`seal-tesseract.svg`) and 5-cell seal (`seal-5cell.svg`) are simplified secondary marks for small sizes only: nav mini logo and the /start form header.
 
-The favicon is a separate lines-and-nodes variant of the tesseract (`favicon-tesseract.svg`, amber on transparent, no disc), with a simplified nested-square version at 16px. It is not used by the nav or form seals.
+The favicon is lines only, white strokes on transparent, no node dots or disc. The 16/32 px and SVG favicon is the 5-cell (`favicon-5cell.svg`); the 180 px apple-touch icon is the tesseract (`favicon-tesseract.svg`). Neither is used by the nav or form seals.
