@@ -63,6 +63,13 @@ export default class Form extends Vue {
 
     @Prop(String) readonly topic!: string;
 
+    mounted() {
+        document.documentElement.classList.add("no-snap");
+    }
+    beforeDestroy() {
+        document.documentElement.classList.remove("no-snap");
+    }
+
     get stepCount() {
         return this.topics[this.topic].length;
     }
