@@ -6,7 +6,8 @@
 import { createHash } from "crypto";
 import { getSql, rowsOf } from "../server/db.js";
 import { json, parseBody } from "../server/http.js";
-import { validateLead, notificationEmail, autoReplyEmail } from "../server/lead.js";
+import { validateLead } from "../server/lead.js";
+import { leadNotificationEmail, leadAutoReplyEmail } from "../server/emailTemplates.js";
 import { mailgunConfig, sendMail } from "../server/mailgun.js";
 
 const MAX_BODY_BYTES = 20000;
@@ -91,8 +92,8 @@ export const handler = async event => {
   }
 
   const cfg = mailgunConfig();
-  const note = notificationEmail(lead, { stored });
-  const reply = autoReplyEmail(lead);
+  const note = leadNotificationEmail(lead, { stored });
+  const reply = leadAutoReplyEmail(lead);
   const [notified, replied] = await Promise.all([
     sendMail({ to: cfg.contactEmail, replyTo: lead.email, ...note }),
     sendMail({ to: lead.email, replyTo: cfg.contactEmail, ...reply }),
