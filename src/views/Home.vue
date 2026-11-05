@@ -54,7 +54,7 @@ export default class Home extends Vue {
       color: "255,160,0",
       weight: 1,
       title: "AI that does real work",
-      text: "We build AI harnesses and agentic workflows that take on tasks in your business, with clear limits on what they can touch."
+      text: "We build AI harnesses and agentic workflows that take on tasks in your business. Risky steps keep a human in the loop for approval; routine work runs on its own, out of the loop, within clear limits."
     },
     {
       shape: "cell24",
