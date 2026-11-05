@@ -184,10 +184,16 @@ export default class Polytope600 extends Vue {
     if (touch) this.setPointer(touch.clientX, touch.clientY);
   }
 
-  // Maps a viewport point to [-1, 1] on each axis, centre = 0.
+  // Maps a viewport point to [-1, 1] on each axis, with 0 at the centre of the
+  // rendered polytope itself (not the window), so hovering the logo = rest pose.
   private setPointer(x: number, y: number) {
-    this.mx = Math.max(-1, Math.min(1, (x / window.innerWidth) * 2 - 1));
-    this.my = Math.max(-1, Math.min(1, (y / window.innerHeight) * 2 - 1));
+    const r = (this.$el as HTMLElement).getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const hw = Math.max(cx, window.innerWidth - cx, 1);
+    const hh = Math.max(cy, window.innerHeight - cy, 1);
+    this.mx = Math.max(-1, Math.min(1, (x - cx) / hw));
+    this.my = Math.max(-1, Math.min(1, (y - cy) / hh));
     this.lastMove = performance.now();
     this.wake();
   }
