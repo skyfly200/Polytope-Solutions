@@ -6,6 +6,8 @@ v-layout#landing.snap-section
     span.tilt(v-tilt="{ max: 16, depth: 8 }") Polytope Solutions
   .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100")
     span.tilt(v-tilt="{ max: 12, depth: 4 }") Gain Higher Perspectives
+  .cta(data-aos="fade" data-aos-delay="1000" data-aos-offset="-100")
+    router-link.cta-btn(to="/start") Start a project
 </template>
 
 <script lang="ts">
@@ -36,10 +38,35 @@ export default class Landing extends Vue {
     line-height: 1.1
   .slogan
     font-size: 2.5rem
-    margin: 2rem
+    margin: 1.5rem 2rem 1rem
+  .cta-btn
+    display: inline-block
+    padding: 0.85rem 2.25rem
+    min-height: 48px
+    font-size: 1.15rem
+    font-weight: 600
+    letter-spacing: 0.04em
+    color: #fff
+    text-decoration: none
+    border: 2px solid #7c4dff
+    border-radius: 999px
+    background: rgba(124, 77, 255, 0.18)
+    box-shadow: 0 0 18px rgba(124, 77, 255, 0.35)
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s
+    &:hover
+      background: #7c4dff
+      box-shadow: 0 0 28px rgba(124, 77, 255, 0.7)
+      transform: translateY(-2px)
+    &:focus-visible
+      outline: 3px solid #fff
+      outline-offset: 3px
   @media (max-width: 600px)
     .brand-name
       font-size: 3.5rem
     .slogan
       font-size: 1.6rem
+      margin: 1rem
+    .cta-btn
+      font-size: 1rem
+      padding: 0.75rem 1.75rem
 </style>
