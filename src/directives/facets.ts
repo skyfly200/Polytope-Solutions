@@ -1,10 +1,9 @@
 // Faceted buttons. Every button-like element (.v-btn, .btn, .cta-btn) gets an
-// SVG polygon behind its text. The polygon's outline is a slice of a turning
-// 4D shape: 12 points around the button's rectangle, each pulled inward by the
-// depth of one vertex of a rotating 24-cell. At rest each button holds its own
-// irregular pose; while hovered or focused the shape turns. Points can only
-// move inward by an amount that leaves the text box and the button's size
-// untouched, so the label always has its room.
+// SVG polygon behind its text: a six-sided gem outline whose two opposite
+// corner cuts are sized by the depth of two vertices of a rotating 24-cell.
+// At rest each button holds its own pose; while hovered or focused the cuts
+// drift slowly. The cuts are small and capped, so the button's size and the
+// room around its text never change.
 //
 // Reduced-motion users get the static pose only. Nothing here depends on
 // scroll position.
@@ -13,13 +12,12 @@ import { getPolytope } from "@/lib/polytopes";
 
 const SELECTOR = ".v-btn, .btn, .cta-btn";
 const NS = "http://www.w3.org/2000/svg";
-const POINTS = 12;
+const POINTS = 2;
 
 interface State {
   el: HTMLElement;
   svg: SVGSVGElement;
   poly: SVGPolygonElement;
-  lines: SVGPathElement;
   t: number;
   energy: number;
   hot: boolean;
@@ -64,7 +62,7 @@ function depth(v: number[], t: number): number {
 }
 
 function draw(s: State) {
-  const { el, svg, poly, lines } = s;
+  const { el, svg, poly } = s;
   const w = el.offsetWidth;
   const h = el.offsetHeight;
   if (!w || !h) return;
@@ -77,35 +75,22 @@ function draw(s: State) {
   const padH = parseFloat(cs.paddingLeft) || 12;
   const fs = parseFloat(cs.fontSize) || 14;
   const padV = Math.max(0, (h - fs * 1.3) / 2);
-  // Largest inward move allowed on each axis so the label is never touched.
-  const ix = Math.max(2, Math.min(11, padH * 0.7, w * 0.15));
-  const iy = Math.max(2, Math.min(9, padV * 1, h * 0.3));
-  const ex = Math.max(0, Math.min(5, padV * 0.5));
-
+  // Corner cuts, kept small so the label never loses room.
+  const maxCut = Math.max(3, Math.min(9, padV * 0.9, padH * 0.5));
+  const minCut = maxCut * 0.35;
   const v = shape();
-  const d: number[] = [];
-  for (let i = 0; i < POINTS; i++) d.push(depth(v[i], s.t));
-
-  // Points around the rectangle, clockwise from the top-left corner.
+  const c1 = minCut + (maxCut - minCut) * depth(v[0], s.t);
+  const c2 = minCut + (maxCut - minCut) * depth(v[1], s.t);
+  // Six points: the top-left and bottom-right corners are cut.
   const pts: [number, number][] = [
-    [d[0] * ix, d[0] * iy], // top-left corner, cut along the diagonal
-    [w * 0.34, d[1] * ex],
-    [w * 0.67, d[2] * ex],
-    [w - d[3] * ix, d[3] * iy], // top-right corner
-    [w - d[4] * ix * 0.5, h * 0.5 + (d[4] - 0.5) * h * 0.1],
-    [w - d[5] * ix, h - d[5] * iy], // bottom-right
-    [w * 0.67, h - d[6] * ex],
-    [w * 0.34, h - d[7] * ex],
-    [d[8] * ix, h - d[8] * iy], // bottom-left
-    [d[9] * ix * 0.5, h * 0.5 + (d[9] - 0.5) * h * 0.1]
+    [c1, 0],
+    [w, 0],
+    [w, h - c2],
+    [w - c2, h],
+    [0, h],
+    [0, c1]
   ];
   poly.setAttribute("points", pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" "));
-  // Faint facet edges across the face, like the far edges of the shape.
-  const c = pts;
-  lines.setAttribute(
-    "d",
-    "M" + c[0] + "L" + c[4] + "M" + c[2] + "L" + c[7] + "M" + c[1] + "L" + c[5] + "M" + c[3] + "L" + c[8]
-  );
 }
 
 function frame(now: number) {
@@ -117,7 +102,7 @@ function frame(now: number) {
     const target = s.hot ? 1 : 0;
     s.energy += (target - s.energy) * Math.min(1, dt * 4);
     if (s.hot || s.energy > 0.01) {
-      s.t += dt * 0.9 * s.energy;
+      s.t += dt * 0.5 * s.energy;
       draw(s);
       busy = true;
     }
@@ -139,7 +124,6 @@ function attach(el: HTMLElement) {
   svg.setAttribute("aria-hidden", "true");
   svg.setAttribute("preserveAspectRatio", "none");
   const poly = document.createElementNS(NS, "polygon") as SVGPolygonElement;
-  const lines = document.createElementNS(NS, "path") as SVGPathElement;
   const ghost = /rgba\(\s*255,\s*255,\s*255|rgba\(.*,\s*0\)$/.test(fill) || fill === "transparent";
   poly.setAttribute("fill", ghost ? "rgba(255,255,255,0.1)" : fill);
   if (ghost) {
@@ -147,15 +131,10 @@ function attach(el: HTMLElement) {
     poly.setAttribute("stroke-width", "1");
   }
   poly.setAttribute("vector-effect", "non-scaling-stroke");
-  lines.setAttribute("fill", "none");
-  lines.setAttribute("stroke", "rgba(255,255,255,0.22)");
-  lines.setAttribute("stroke-width", "1");
-  lines.setAttribute("vector-effect", "non-scaling-stroke");
   svg.appendChild(poly);
-  svg.appendChild(lines);
   el.classList.add("facet");
   el.appendChild(svg);
-  const s: State = { el, svg, poly, lines, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost };
+  const s: State = { el, svg, poly, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost };
   states.set(el, s);
   const on = () => {
     s.hot = true;
