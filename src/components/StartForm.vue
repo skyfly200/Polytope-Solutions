@@ -255,14 +255,17 @@ export default class StartForm extends Vue {
     return { left: p.left + "px", top: p.top + "px", width: p.width + "px", height: p.height + "px" };
   }
 
-  // The seal emblem: a 4-simplex (5-cell) drawn as a pentagon with all ten
-  // edges between its five vertices.
+  // The seal emblem: a 4-simplex (5-cell) projected from 4D. Four vertices form
+  // a skewed outer quadrilateral and the fifth sits off-center inside it, so all
+  // ten edges show (4 rim, 2 crossing diagonals, 4 spokes) and it does not read
+  // as a regular pentagram.
   get sealPoints(): { x: number; y: number }[] {
-    const pts: { x: number; y: number }[] = [];
-    for (let i = 0; i < 5; i++) {
-      const a = ((-90 + i * 72) * Math.PI) / 180;
-      pts.push({ x: +(14 * Math.cos(a)).toFixed(2), y: +(14 * Math.sin(a)).toFixed(2) });
-    }
+    const rim: [number, number][] = [[-80, 14], [8, 13], [128, 14], [212, 12]];
+    const pts = rim.map(([deg, r]) => {
+      const a = (deg * Math.PI) / 180;
+      return { x: +(r * Math.cos(a)).toFixed(2), y: +(r * Math.sin(a)).toFixed(2) };
+    });
+    pts.push({ x: 1.6, y: 1.2 });
     return pts;
   }
 
