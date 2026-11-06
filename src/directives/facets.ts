@@ -39,6 +39,8 @@ const MAX_TILT = 14;
 const DEPTH = 6 * DEPTH_SCALE;
 const PERSPECTIVE = 700;
 const LAYERS = 6;
+// Label extrusion relative to the button's, so the text sits just above the face.
+const LABEL_DEPTH = 0.35;
 let tiltOn = false;
 
 const states = new Map<HTMLElement, State>();
@@ -144,7 +146,7 @@ function applyTilt(s: State) {
     for (let i = 1; i <= 8; i++) {
       const f = i / 8;
       // Dark shadow: the button face is the same purple as the text extrusion.
-      ls.push((sx * f).toFixed(1) + "px " + (sy * f).toFixed(1) + "px 0 rgba(30,8,90," + (0.85 * (1 - f) + 0.1).toFixed(2) + ")");
+      ls.push((sx * LABEL_DEPTH * f).toFixed(1) + "px " + (sy * LABEL_DEPTH * f).toFixed(1) + "px 0 rgba(30,8,90," + (0.85 * (1 - f) + 0.1).toFixed(2) + ")");
     }
     s.label.style.textShadow = ls.join(",");
   }
