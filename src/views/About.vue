@@ -6,6 +6,14 @@ Base.about
   PageSection(title="Story")
     p(v-for="p in a.story" :key="p") {{ p }}
     Placeholder(icon="fa-pen" :label="a.placeholders.bio")
+  PageSection(title="Humans, augmented")
+    p(v-for="p in a.perspective" :key="p") {{ p }}
+  PageSection(title="One partner, the whole stack")
+    p {{ a.partner.lead }}
+    ul
+      li(v-for="i in a.partner.items" :key="i") {{ i }}
+    router-link(to="/solutions") See all solutions
+    Placeholder(icon="fa-certificate" :label="a.placeholders.credentials")
   PageSection(title="What I value")
     ul
       li(v-for="v in a.values" :key="v") {{ v }}
