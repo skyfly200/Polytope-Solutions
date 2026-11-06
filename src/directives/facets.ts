@@ -131,7 +131,8 @@ function draw(s: State) {
 function applyTilt(s: State) {
   const sx = (-s.ry / MAX_TILT) * DEPTH;
   const sy = (s.rx / MAX_TILT) * DEPTH;
-  s.svg.style.transform =
+  // Rotate the whole button (shape, extrusion and label) as one rigid piece.
+  s.el.style.transform =
     "perspective(" + PERSPECTIVE + "px) rotateX(" + s.rx.toFixed(2) + "deg) rotateY(" + s.ry.toFixed(2) + "deg)";
   s.layers.forEach((l, i) => {
     const f = (i + 1) / LAYERS;
@@ -139,7 +140,6 @@ function applyTilt(s: State) {
   });
   if (s.label) {
     // Label gets the same tilt and stacked-shadow extrusion as v-tilt text.
-    s.label.style.transform = s.svg.style.transform;
     const ls: string[] = [];
     for (let i = 1; i <= 8; i++) {
       const f = i / 8;
@@ -208,7 +208,7 @@ function attach(el: HTMLElement) {
       svg.appendChild(l);
       layers.unshift(l);
     }
-    svg.style.transformStyle = "preserve-3d";
+    el.style.transformStyle = "preserve-3d";
   }
   svg.appendChild(poly);
   const lite = document.createElementNS(NS, "polygon") as SVGPolygonElement;
@@ -225,7 +225,6 @@ function attach(el: HTMLElement) {
       el.appendChild(label);
     }
     label.style.display = "inline-flex";
-    label.style.transformStyle = "preserve-3d";
   }
   el.classList.add("facet");
   el.appendChild(svg);
