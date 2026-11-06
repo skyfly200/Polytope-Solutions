@@ -32,6 +32,7 @@ interface State {
   rx: number;
   ry: number;
   layers: SVGPolygonElement[];
+  label: HTMLElement | null;
 }
 
 const MAX_TILT = 14;
@@ -136,6 +137,16 @@ function applyTilt(s: State) {
     const f = (i + 1) / LAYERS;
     l.setAttribute("transform", "translate(" + (sx * f).toFixed(2) + " " + (sy * f).toFixed(2) + ")");
   });
+  if (s.label) {
+    // Label gets the same tilt and stacked-shadow extrusion as v-tilt text.
+    s.label.style.transform = s.svg.style.transform;
+    const ls: string[] = [];
+    for (let i = 1; i <= 8; i++) {
+      const f = i / 8;
+      ls.push((sx * f).toFixed(1) + "px " + (sy * f).toFixed(1) + "px 0 rgba(124,77,255," + (0.6 * (1 - f) + 0.08).toFixed(2) + ")");
+    }
+    s.label.style.textShadow = ls.join(",");
+  }
 }
 
 function frame(now: number) {
@@ -202,9 +213,22 @@ function attach(el: HTMLElement) {
   const lite = document.createElementNS(NS, "polygon") as SVGPolygonElement;
   lite.setAttribute("class", "facet-lite");
   svg.appendChild(lite);
+  let label: HTMLElement | null = null;
+  if (tiltOn) {
+    label = el.querySelector<HTMLElement>(".v-btn__content");
+    if (!label) {
+      // Plain buttons/links: wrap the existing content so it can tilt.
+      label = document.createElement("span");
+      label.className = "facet-label";
+      Array.from(el.childNodes).forEach(n => label!.appendChild(n));
+      el.appendChild(label);
+    }
+    label.style.display = "inline-flex";
+    label.style.transformStyle = "preserve-3d";
+  }
   el.classList.add("facet");
   el.appendChild(svg);
-  const s: State = { el, svg, poly, lite, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost, rx: 0, ry: 0, layers };
+  const s: State = { el, svg, poly, lite, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost, rx: 0, ry: 0, layers, label };
   states.set(el, s);
   const on = () => {
     s.hot = true;
