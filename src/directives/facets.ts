@@ -143,7 +143,8 @@ function applyTilt(s: State) {
     const ls: string[] = [];
     for (let i = 1; i <= 8; i++) {
       const f = i / 8;
-      ls.push((sx * f).toFixed(1) + "px " + (sy * f).toFixed(1) + "px 0 rgba(124,77,255," + (0.6 * (1 - f) + 0.08).toFixed(2) + ")");
+      // Dark shadow: the button face is the same purple as the text extrusion.
+      ls.push((sx * f).toFixed(1) + "px " + (sy * f).toFixed(1) + "px 0 rgba(30,8,90," + (0.85 * (1 - f) + 0.1).toFixed(2) + ")");
     }
     s.label.style.textShadow = ls.join(",");
   }
