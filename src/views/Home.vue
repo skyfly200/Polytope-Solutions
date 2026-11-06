@@ -54,8 +54,8 @@ export default class Home extends Vue {
       shape: "tesseract",
       color: "255,160,0",
       weight: 1,
-      title: "AI that does real work",
-      text: "We build AI harnesses and agentic workflows that take on tasks in your business. Risky steps keep a human in the loop for approval; routine work runs on its own, out of the loop, within clear limits."
+      title: "AI that makes people better",
+      text: "We build AI harnesses and agentic workflows that augment your people instead of replacing them. Routine work runs on its own within clear limits; the calls that matter stay with a human, who sees more and decides better."
     },
     {
       shape: "cell24",
@@ -69,7 +69,7 @@ export default class Home extends Vue {
       color: "120,200,255",
       weight: 0.5,
       title: "One partner,|the whole stack",
-      text: "From smart contracts and hardware to the site in front of them, we design it, build it, and keep it running."
+      text: "From smart contracts and hardware to the site in front of them, we design it, build it, and keep it running, so you and your customers get a seamless experience."
     }
   ];
 

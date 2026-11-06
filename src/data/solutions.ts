@@ -52,7 +52,7 @@ export const solutions: Solution[] = [
     title: "AI Harnesses & Model Routing",
     short: "Custom Claude Code setups and model routing that do real work for a smaller AI bill.",
     tagline:
-      "Custom AI coding setups for teams and solo operators, built to ship work and shrink the bill.",
+      "Custom AI coding setups that augment your team, not replace it: people make better-informed decisions while the harness ships the work and shrinks the bill.",
     forWho: [
       "Teams already paying for AI tools who suspect the spend is not matched by the results",
       "Solo founders and operators who want a coding workflow they can trust",
