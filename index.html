@@ -17,9 +17,20 @@
     <link rel="apple-touch-icon" href="/img/polytopes/favicon-tesseract-180.png">
     <link rel="icon" href="/favicon.ico">
     <link rel="manifest" href="/manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sirin+Stencil&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Self-hosted fonts: preloaded so the brand font is ready at first paint -->
+    <link rel="preload" href="/fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/space-grotesk-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/sirin-stencil-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+      @font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/space-grotesk-latin-400-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/space-grotesk-latin-500-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/space-grotesk-latin-600-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url(/fonts/space-grotesk-latin-700-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Sirin Stencil"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/sirin-stencil-latin-400-normal.woff2) format("woff2"); }
+      /* Metric-adjusted local fallbacks so the swap barely shifts layout */
+      @font-face { font-family: "Space Grotesk Fallback"; src: local("Arial"), local("Helvetica"), local("Liberation Sans"); size-adjust: 103%; ascent-override: 93%; descent-override: 26%; line-gap-override: 0%; }
+      @font-face { font-family: "Sirin Stencil Fallback"; src: local("Arial Black"), local("Impact"), local("Arial"), local("Liberation Sans"); font-weight: 400; }
+    </style>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <title>Polytope Solutions</title>
   </head>

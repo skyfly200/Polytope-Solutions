@@ -33,7 +33,7 @@ export default class Landing extends Vue {
   .tilt
     display: inline-block
   .brand-name
-    font-family: "Sirin Stencil", cursive
+    font-family: "Sirin Stencil", "Sirin Stencil Fallback", system-ui, sans-serif
     font-size: 7rem
     line-height: 1.1
   .slogan

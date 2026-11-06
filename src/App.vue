@@ -150,7 +150,7 @@ body
     border-top: 1px solid rgba(255,255,255,0.18) !important
 
 #app
-  font-family: 'Space Grotesk', Arial, sans-serif
+  font-family: 'Space Grotesk', 'Space Grotesk Fallback', system-ui, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
