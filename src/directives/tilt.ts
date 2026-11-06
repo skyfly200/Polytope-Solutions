@@ -30,6 +30,9 @@ interface TiltState {
   ry: number;
 }
 
+// Extrusion thickness multiplier for all 3D text (and, via facets.ts, buttons).
+export const DEPTH_SCALE = 1.5;
+
 const DEFAULTS: TiltOptions = { max: 14, depth: 6, perspective: 700 };
 
 const items: TiltState[] = [];
@@ -38,6 +41,37 @@ let mouseY = 0;
 let hasMouse = false;
 let raf = 0;
 let listening = false;
+
+// Shared perspective source, also used by the facet buttons (facets.ts) so
+// buttons and text always lean toward the cursor together.
+const subscribers: Array<() => void> = [];
+
+export function perspectiveEnabled(): boolean {
+  return enabled();
+}
+
+// Target tilt (degrees) for an element at `r`, using the same mapping as
+// v-tilt. Returns zeros when the pointer is not over the page.
+export function tiltTarget(r: DOMRect, max: number): { rx: number; ry: number } {
+  if (!hasMouse) return { rx: 0, ry: 0 };
+  const dx = (mouseX - (r.left + r.width / 2)) / (window.innerWidth / 2);
+  const dy = (mouseY - (r.top + r.height / 2)) / (window.innerHeight / 2);
+  return {
+    ry: Math.max(-1, Math.min(1, dx)) * max,
+    rx: -Math.max(-1, Math.min(1, dy)) * max
+  };
+}
+
+// Called on every pointer change; returns an unsubscribe function. Attaches
+// the shared mouse listeners if v-tilt hasn't already.
+export function onPerspective(fn: () => void): void {
+  subscribers.push(fn);
+  if (!listening && enabled()) {
+    window.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseout", onLeave);
+    listening = true;
+  }
+}
 
 function enabled(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
@@ -49,12 +83,14 @@ function onMove(e: MouseEvent) {
   mouseX = e.clientX;
   mouseY = e.clientY;
   hasMouse = true;
+  subscribers.forEach(f => f());
   kick();
 }
 
 function onLeave(e: MouseEvent) {
   if (!e.relatedTarget) {
     hasMouse = false;
+    subscribers.forEach(f => f());
     kick();
   }
 }
@@ -98,8 +134,8 @@ function apply(s: TiltState) {
   // Extrude the text away from the viewer with stacked shadows. Each layer
   // sits a little further back along the tilt direction, so the sides of the
   // letters read as solid and the depth grows with the tilt.
-  const sx = (-ry / opts.max) * opts.depth;
-  const sy = (rx / opts.max) * opts.depth;
+  const sx = (-ry / opts.max) * opts.depth * DEPTH_SCALE;
+  const sy = (rx / opts.max) * opts.depth * DEPTH_SCALE;
   const layers: string[] = [];
   const steps = 12;
   for (let i = 1; i <= steps; i++) {
@@ -139,7 +175,7 @@ const tilt: DirectiveOptions = {
   unbind(el) {
     const idx = items.findIndex(i => i.el === el);
     if (idx >= 0) items.splice(idx, 1);
-    if (!items.length && listening) {
+    if (!items.length && !subscribers.length && listening) {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseout", onLeave);
       listening = false;

@@ -5,10 +5,14 @@
 // drift slowly. The cuts are small and capped, so the button's size and the
 // room around its text never change.
 //
-// Reduced-motion users get the static pose only. Nothing here depends on
-// scroll position.
+// The gem also leans toward the cursor with the same mouse-driven perspective
+// as v-tilt text (tilt.ts): the polygon rotates in 3D and trails stacked,
+// darker copies behind it for depth. Label text stays flat and readable.
+// Touch devices and reduced-motion users get the static pose only. Nothing
+// here depends on scroll position.
 
 import { getPolytope } from "@/lib/polytopes";
+import { perspectiveEnabled, tiltTarget, onPerspective, DEPTH_SCALE } from "./tilt";
 
 const SELECTOR = ".v-btn, .btn, .cta-btn";
 const NS = "http://www.w3.org/2000/svg";
@@ -25,7 +29,16 @@ interface State {
   w: number;
   h: number;
   ghost: boolean;
+  rx: number;
+  ry: number;
+  layers: SVGPolygonElement[];
 }
+
+const MAX_TILT = 14;
+const DEPTH = 6 * DEPTH_SCALE;
+const PERSPECTIVE = 700;
+const LAYERS = 6;
+let tiltOn = false;
 
 const states = new Map<HTMLElement, State>();
 let raf = 0;
@@ -96,6 +109,7 @@ function draw(s: State) {
   ];
   const fmt = (a: [number, number][]) => a.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
   poly.setAttribute("points", fmt(pts));
+  for (const l of s.layers) l.setAttribute("points", fmt(pts));
   // Second tone: a lighter facet across the cut top-left corner, bounded by
   // the line x + y = k (the original gem-button look). Clip the outline to
   // that half-plane.
@@ -113,12 +127,33 @@ function draw(s: State) {
   lite.setAttribute("points", fmt(out));
 }
 
+function applyTilt(s: State) {
+  const sx = (-s.ry / MAX_TILT) * DEPTH;
+  const sy = (s.rx / MAX_TILT) * DEPTH;
+  s.svg.style.transform =
+    "perspective(" + PERSPECTIVE + "px) rotateX(" + s.rx.toFixed(2) + "deg) rotateY(" + s.ry.toFixed(2) + "deg)";
+  s.layers.forEach((l, i) => {
+    const f = (i + 1) / LAYERS;
+    l.setAttribute("transform", "translate(" + (sx * f).toFixed(2) + " " + (sy * f).toFixed(2) + ")");
+  });
+}
+
 function frame(now: number) {
   const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
   last = now;
   let busy = false;
   states.forEach(s => {
     if (!s.el.isConnected) return;
+    if (tiltOn) {
+      const r = s.el.getBoundingClientRect();
+      if (r.bottom >= 0 && r.top <= window.innerHeight) {
+        const t = tiltTarget(r, MAX_TILT);
+        s.rx += (t.rx - s.rx) * 0.12;
+        s.ry += (t.ry - s.ry) * 0.12;
+        applyTilt(s);
+        if (Math.abs(t.rx - s.rx) > 0.01 || Math.abs(t.ry - s.ry) > 0.01) busy = true;
+      }
+    }
     const target = s.hot ? 1 : 0;
     s.energy += (target - s.energy) * Math.min(1, dt * 4);
     if (s.hot || s.energy > 0.01) {
@@ -151,13 +186,25 @@ function attach(el: HTMLElement) {
     poly.setAttribute("stroke-width", "1");
   }
   poly.setAttribute("vector-effect", "non-scaling-stroke");
+  const layers: SVGPolygonElement[] = [];
+  if (tiltOn) {
+    // Extrusion copies sit behind the face, darker and fainter the deeper.
+    for (let i = LAYERS; i >= 1; i--) {
+      const l = document.createElementNS(NS, "polygon") as SVGPolygonElement;
+      l.setAttribute("fill", "rgba(124,77,255," + (0.5 * (1 - i / LAYERS) + 0.12).toFixed(2) + ")");
+      l.setAttribute("class", "facet-depth");
+      svg.appendChild(l);
+      layers.unshift(l);
+    }
+    svg.style.transformStyle = "preserve-3d";
+  }
   svg.appendChild(poly);
   const lite = document.createElementNS(NS, "polygon") as SVGPolygonElement;
   lite.setAttribute("class", "facet-lite");
   svg.appendChild(lite);
   el.classList.add("facet");
   el.appendChild(svg);
-  const s: State = { el, svg, poly, lite, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost };
+  const s: State = { el, svg, poly, lite, t: 0.7 + seed++ * 1.9, energy: 0, hot: false, w: 0, h: 0, ghost, rx: 0, ry: 0, layers };
   states.set(el, s);
   const on = () => {
     s.hot = true;
@@ -183,6 +230,8 @@ function scan(root: ParentNode) {
 export function startFacets() {
   if (typeof document === "undefined") return;
   reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  tiltOn = !reduced && perspectiveEnabled();
+  if (tiltOn) onPerspective(wake);
   scan(document);
   new MutationObserver(muts => {
     for (const m of muts) {
