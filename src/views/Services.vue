@@ -92,7 +92,7 @@ export default class Services extends Vue {
 .hero
   margin-bottom: 6vh
   h1
-    font-family: "Sirin Stencil", cursive
+    font-family: "Sirin Stencil", "Sirin Stencil Fallback", system-ui, sans-serif
     font-size: 5rem
     line-height: 1.1
   .lead
