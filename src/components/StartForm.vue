@@ -19,7 +19,7 @@ section#contact-form.contact-card
         img(src="/img/polytopes/seal-5cell.svg" alt="" width="56" height="56")
         img(src="/img/polytopes/seal-tesseract.svg" alt="" width="56" height="56")
       h2.header Get started with us
-      p.intro Tell us a little about you and what you are working on, and we will reply within a day or two.
+      p.intro Tell us a little about you and what you are working on, and we will reply asap.
     form.form(novalidate @submit.prevent="sendContact")
       .field
         label(for="cf-name") Name
@@ -115,7 +115,7 @@ section#contact-form.contact-card
         rect.nozzle(x="20" y="100" width="20" height="6" rx="2")
   .card.confirmation(v-if="sent")
     h2.header Thanks for reaching out!
-    p.intro We sent a confirmation to your inbox and will reply within a day or two.
+    p.intro We sent a confirmation to your inbox and will reply asap.
     .actions
       button.btn.btn-ghost(type="button" @click="sent = false") Send another request
 </template>
