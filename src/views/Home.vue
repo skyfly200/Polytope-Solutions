@@ -15,8 +15,8 @@ v-container(fluid).home
     Projection4D(shape="cell16" color="200,140,255" :active="contactActive" :weight="0.8")
     .start-cta
       i.fas.fa-rocket(aria-hidden="true")
-      h2 Let us help you find solutions today!
-      p Tell us what you are working on and we will reply asap.
+      h2(v-tilt="{ max: 10, depth: 4 }") Let us help you find solutions today!
+      p(v-tilt="{ max: 8, depth: 3 }") Tell us what you are working on and we will reply asap.
       v-btn(to="/start" color="primary" large) Get started
   Footer
 </template>
