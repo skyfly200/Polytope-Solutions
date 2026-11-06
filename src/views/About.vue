@@ -10,7 +10,7 @@ Base.about
     ul
       li(v-for="v in a.values" :key="v") {{ v }}
   PageSection.cta
-    v-btn(to="/start" color="secondary" large depressed) Start a project
+    v-btn(to="/start" color="secondary" large depressed) Get started
 </template>
 
 <script lang="ts">

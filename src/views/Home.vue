@@ -14,8 +14,8 @@ v-container(fluid).home
     .start-cta
       i.fas.fa-rocket(aria-hidden="true")
       h2 Let us help you find solutions today!
-      p Tell us what you are working on and we will reply within a day or two.
-      v-btn(to="/start" color="primary" large) Start a project
+      p Tell us what you are working on and we will reply asap.
+      v-btn(to="/start" color="primary" large) Get started
   Footer
 </template>
 

@@ -39,7 +39,7 @@ Base.solution
             v-card-text {{ f.a }}
     PageSection.cta
       h2 Ready to talk?
-      v-btn(to="/start" color="secondary" large depressed) Start a project
+      v-btn(to="/start" color="secondary" large depressed) Get started
   PageSection(v-else)
     h1 Solution not found
     v-btn(to="/solutions" depressed) All solutions

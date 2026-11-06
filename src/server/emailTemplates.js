@@ -154,7 +154,7 @@ export function leadAutoReplyEmail(lead) {
     heading("We have received your request") +
     paragraph(`Hello ${esc(first)},`) +
     paragraph(
-      "Thank you for contacting Polytope Solutions. Your project request has reached us, and you can expect a personal reply within a day or two."
+      "Thank you for contacting Polytope Solutions. Your project request has reached us, and you can expect a personal reply asap."
     ) +
     label("What you sent us") +
     fieldTable(rows) +
@@ -167,7 +167,7 @@ export function leadAutoReplyEmail(lead) {
     paragraph("Kind regards,<br><b>Polytope Solutions</b>");
   const text =
     `Hello ${first},\n\n` +
-    `Thank you for contacting Polytope Solutions. Your project request has reached us, and you can expect a personal reply within a day or two.\n\n` +
+    `Thank you for contacting Polytope Solutions. Your project request has reached us, and you can expect a personal reply asap.\n\n` +
     `WHAT YOU SENT US\n${plainRows(rows)}\n\n` +
     `PROJECT DESCRIPTION\n${lead.project_description}\n\n` +
     `If anything above is incorrect or incomplete, simply reply to this email and we will update our notes before we respond.\n\n` +

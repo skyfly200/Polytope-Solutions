@@ -10,7 +10,7 @@ v-toolbar#nav(color="black" flat)
         v-btn(to="/solutions" flat) Solutions
         v-btn(to="/work" flat) Work
         v-btn(to="/about" flat) About
-        v-btn(to="/start" color="secondary" depressed) Start a project
+        v-btn(to="/start" color="secondary" depressed) Get started
     v-menu.hidden-md-and-up(offset-y left)
         v-btn(slot="activator" icon aria-label="Menu")
             i.fas.fa-bars
@@ -31,7 +31,7 @@ export default class Nav extends Vue {
         { to: "/solutions", text: "Solutions" },
         { to: "/work", text: "Work" },
         { to: "/about", text: "About" },
-        { to: "/start", text: "Start a project" }
+        { to: "/start", text: "Get started" }
     ];
 }
 </script>

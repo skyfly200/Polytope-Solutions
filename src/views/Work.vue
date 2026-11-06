@@ -13,7 +13,7 @@ Base.work
           v-card-actions
             v-btn(:to="'/work/' + c.slug" flat) Read more
   PageSection
-    v-btn(to="/start" color="secondary" large depressed) Start a project
+    v-btn(to="/start" color="secondary" large depressed) Get started
 </template>
 
 <script lang="ts">

@@ -13,7 +13,7 @@ Base.solutions
             v-spacer
             v-btn(:to="'/solutions/' + s.slug" color="primary" depressed) Learn more
   PageSection
-    v-btn(to="/start" color="secondary" large depressed) Start a project
+    v-btn(to="/start" color="secondary" large depressed) Get started
 </template>
 
 <script lang="ts">

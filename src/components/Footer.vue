@@ -5,7 +5,7 @@ footer#footer
     router-link(to="/solutions") Solutions
     router-link(to="/work") Work
     router-link(to="/about") About
-    router-link(to="/start") Start a project
+    router-link(to="/start") Get started
 </template>
 
 <script lang="ts">
