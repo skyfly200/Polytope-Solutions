@@ -16,7 +16,7 @@ Base.case-study
     PageSection.cta
       v-btn(v-if="c.link" :to="c.link" outline) Learn more
       v-btn(to="/work" flat) All work
-      v-btn(to="/start" color="secondary" depressed) Start a project
+      v-btn(to="/start" color="secondary" depressed) Get started
   PageSection(v-else)
     h1 Case study not found
     v-btn(to="/work" depressed) All work

@@ -7,7 +7,7 @@ v-layout#landing.snap-section
   .slogan(data-aos="fade" data-aos-delay="750" data-aos-offset="-100")
     span.tilt(v-tilt="{ max: 12, depth: 4 }") Gain Higher Perspectives
   .cta(data-aos="fade" data-aos-delay="1000" data-aos-offset="-100")
-    router-link.cta-btn(to="/start") Start a project
+    router-link.cta-btn(to="/start") Get started
 </template>
 
 <script lang="ts">

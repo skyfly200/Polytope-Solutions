@@ -18,7 +18,7 @@ section#contact-form.contact-card
       .seals(aria-hidden="true")
         img(src="/img/polytopes/seal-5cell.svg" alt="" width="56" height="56")
         img(src="/img/polytopes/seal-tesseract.svg" alt="" width="56" height="56")
-      h2.header Start a project with us
+      h2.header Get started with us
       p.intro Tell us a little about you and what you are working on, and we will reply within a day or two.
     form.form(novalidate @submit.prevent="sendContact")
       .field
