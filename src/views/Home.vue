@@ -11,7 +11,8 @@ v-container(fluid).home
           p.blurb-text {{ b.text }}
   #solutions.snap-section(ref="solutions")
     Solutions(:class="{ 'is-on': solutionsActive }")
-  v-layout.contact.snap-section#contact
+  v-layout.contact.snap-section#contact(ref="contact")
+    Projection4D(shape="cell16" color="200,140,255" :active="contactActive" :weight="0.8")
     .start-cta
       i.fas.fa-rocket(aria-hidden="true")
       h2 Let us help you find solutions today!
@@ -46,6 +47,9 @@ export default class Home extends Vue {
   activeBlurb = -1;
   // True while the Solutions section is snapped into view.
   solutionsActive = false;
+  // True while the closing Get started panel is snapped into view.
+  contactActive = false;
+  private contactObserver!: IntersectionObserver | null;
   private observer!: IntersectionObserver | null;
   private solutionsObserver!: IntersectionObserver | null;
 
@@ -110,11 +114,25 @@ export default class Home extends Vue {
       );
       this.solutionsObserver.observe(solutions);
     }
+
+    const contact = (this.$refs.contact as Vue | undefined)?.$el as HTMLElement | undefined;
+    if (contact) {
+      this.contactObserver = new IntersectionObserver(
+        entries => {
+          for (const entry of entries) {
+            this.contactActive = entry.intersectionRatio >= 0.6;
+          }
+        },
+        { threshold: [0, 0.6, 1] }
+      );
+      this.contactObserver.observe(contact);
+    }
   }
 
   beforeDestroy() {
     if (this.observer) this.observer.disconnect();
     if (this.solutionsObserver) this.solutionsObserver.disconnect();
+    if (this.contactObserver) this.contactObserver.disconnect();
   }
 }
 </script>
@@ -177,7 +195,13 @@ export default class Home extends Vue {
     min-height: 100vh
     align-items: center
     justify-content: center
+    position: relative
+    overflow: hidden
+    .projection4d
+      opacity: 0.6
     .start-cta
+      position: relative
+      z-index: 1
       text-align: center
       padding: 0 1.5rem
       .fa-rocket
