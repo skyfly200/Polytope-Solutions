@@ -1,7 +1,16 @@
 <template lang="pug">
 v-app(dark)#app
   router-view
+  StartModal
 </template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import StartModal from "@/components/StartModal.vue";
+
+@Component({ components: { StartModal } })
+export default class App extends Vue {}
+</script>
 
 <style lang="sass">
 *
@@ -25,6 +34,10 @@ body
   .snap-section
     scroll-snap-align: start
     scroll-snap-stop: normal
+
+// Popup open: freeze the page behind it, keeping its scroll position.
+html.modal-open
+  overflow: hidden
 
 // Every top-level section is a full-height, centred block so the page reads as
 // a stack of screens at any width.
