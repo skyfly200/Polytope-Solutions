@@ -6,7 +6,8 @@ v-container(fluid).home
       .blurb(v-for="(b, i) in blurbs" :key="b.title" ref="blurb" :data-index="i")
         Projection4D(:shape="b.shape" :color="b.color" :active="activeBlurb === i" :weight="b.weight")
         .reveal(:class="{ 'is-on': activeBlurb === i }")
-          h2.blurb-title(v-tilt="{ max: 10, depth: 4 }") {{ b.title }}
+          h2.blurb-title(v-tilt="{ max: 10, depth: 4 }") 
+            span.title-line(v-for="(line, j) in b.title.split('|')" :key="j") {{ line }}
           p.blurb-text {{ b.text }}
   #solutions.snap-section(ref="solutions")
     Solutions(:class="{ 'is-on': solutionsActive }")
@@ -67,7 +68,7 @@ export default class Home extends Vue {
       shape: "cell600",
       color: "120,200,255",
       weight: 0.5,
-      title: "One partner, the whole stack",
+      title: "One partner,|the whole stack",
       text: "From smart contracts and hardware to the site in front of them, we design it, build it, and keep it running."
     }
   ];
@@ -149,6 +150,8 @@ export default class Home extends Vue {
         max-width: 18ch
         margin: 0 auto 1rem
         text-shadow: 0 2px 8px black
+        .title-line
+          display: block
       .blurb-text
         font-size: clamp(1rem, 1.8vw, 1.25rem)
         max-width: 40ch
