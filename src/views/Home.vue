@@ -115,7 +115,9 @@ export default class Home extends Vue {
       this.solutionsObserver.observe(solutions);
     }
 
-    const contact = (this.$refs.contact as Vue | undefined)?.$el as HTMLElement | undefined;
+    // v-layout is a functional component, so its ref is the DOM element itself.
+    const contactRef = this.$refs.contact as Vue | HTMLElement | undefined;
+    const contact = contactRef instanceof Vue ? (contactRef.$el as HTMLElement) : contactRef;
     if (contact) {
       this.contactObserver = new IntersectionObserver(
         entries => {
@@ -197,8 +199,12 @@ export default class Home extends Vue {
     justify-content: center
     position: relative
     overflow: hidden
+    // The shared snap-section rule caps direct children at 1100px wide, which
+    // pinned the canvas to the left. Let it span the whole panel.
     .projection4d
       opacity: 0.6
+      max-width: none
+      width: auto
     .start-cta
       position: relative
       z-index: 1
