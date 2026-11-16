@@ -1,4 +1,4 @@
-// v-tilt: gives text a 3D perspective tilt that follows the mouse cursor.
+// v-tilt: gives text a 3D perspective tilt that follows the mouse cursor or a touching finger.
 //
 //   h1(v-tilt) Title
 //   h1(v-tilt="{ max: 12, depth: 6 }") Title
@@ -9,8 +9,8 @@
 //
 // A single shared mousemove listener and a single requestAnimationFrame loop
 // drive every tilted element, and the loop stops as soon as everything has
-// settled. Nothing is attached on touch-only devices or when the user prefers
-// reduced motion.
+// settled. Nothing is attached when the user prefers reduced motion. On touch
+// devices the finger position is the driver; lifting it returns to rest.
 //
 // Do not put v-tilt on an element that is itself animated with a CSS transform
 // (e.g. an AOS `data-aos` element); wrap the text in an inner element instead.
@@ -66,17 +66,54 @@ export function tiltTarget(r: DOMRect, max: number): { rx: number; ry: number } 
 // the shared mouse listeners if v-tilt hasn't already.
 export function onPerspective(fn: () => void): void {
   subscribers.push(fn);
-  if (!listening && enabled()) {
-    window.addEventListener("mousemove", onMove, { passive: true });
-    document.addEventListener("mouseout", onLeave);
-    listening = true;
-  }
+  if (enabled()) listen();
 }
 
 function enabled(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  return true; // mouse or touch
+}
+
+// Attach the shared mouse and touch listeners once. Touch is passive, so
+// scrolling and the snap behaviour are untouched; the finger position simply
+// drives the same tilt target the cursor does, and releasing returns to rest.
+function listen() {
+  if (listening) return;
+  window.addEventListener("mousemove", onMove, { passive: true });
+  document.addEventListener("mouseout", onLeave);
+  window.addEventListener("touchstart", onTouch, { passive: true });
+  window.addEventListener("touchmove", onTouch, { passive: true });
+  window.addEventListener("touchend", onTouchEnd, { passive: true });
+  window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+  listening = true;
+}
+
+function unlisten() {
+  window.removeEventListener("mousemove", onMove);
+  document.removeEventListener("mouseout", onLeave);
+  window.removeEventListener("touchstart", onTouch);
+  window.removeEventListener("touchmove", onTouch);
+  window.removeEventListener("touchend", onTouchEnd);
+  window.removeEventListener("touchcancel", onTouchEnd);
+  listening = false;
+}
+
+function onTouch(e: TouchEvent) {
+  const t = e.touches[0];
+  if (!t) return;
+  mouseX = t.clientX;
+  mouseY = t.clientY;
+  hasMouse = true;
+  subscribers.forEach(f => f());
+  kick();
+}
+
+function onTouchEnd(e: TouchEvent) {
+  if (e.touches.length) return;
+  hasMouse = false;
+  subscribers.forEach(f => f());
+  kick();
 }
 
 function onMove(e: MouseEvent) {
@@ -160,11 +197,7 @@ const tilt: DirectiveOptions = {
     el.style.transformStyle = "preserve-3d";
     el.style.setProperty("will-change", "transform");
     items.push(s);
-    if (!listening) {
-      window.addEventListener("mousemove", onMove, { passive: true });
-      document.addEventListener("mouseout", onLeave);
-      listening = true;
-    }
+    listen();
     apply(s);
     if (hasMouse) kick();
   },
@@ -176,9 +209,7 @@ const tilt: DirectiveOptions = {
     const idx = items.findIndex(i => i.el === el);
     if (idx >= 0) items.splice(idx, 1);
     if (!items.length && !subscribers.length && listening) {
-      window.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseout", onLeave);
-      listening = false;
+      unlisten();
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
     }
